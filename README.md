@@ -76,8 +76,8 @@ smart-kitchen-assistant/
 ### Installation
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/smart-kitchen-assistant.git
-cd smart-kitchen-assistant
+git clone https://github.com/ghchen99/kitchen-copilot.git
+cd kitchen-copilot
 ```
 
 2. Install dependencies:
