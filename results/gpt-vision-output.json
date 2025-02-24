@@ -1,0 +1,104 @@
+{
+  "objects": [
+    {
+      "label": "maple syrup bottle",
+      "confidence": 0.95,
+      "bounding_box": [
+        0.04,
+        0.25,
+        0.1,
+        0.46
+      ]
+    },
+    {
+      "label": "ketchup bottle",
+      "confidence": 0.97,
+      "bounding_box": [
+        0.12,
+        0.25,
+        0.18,
+        0.47
+      ]
+    },
+    {
+      "label": "mayonnaise jar",
+      "confidence": 0.92,
+      "bounding_box": [
+        0.2,
+        0.2,
+        0.26,
+        0.42
+      ]
+    },
+    {
+      "label": "bag of carrots",
+      "confidence": 0.93,
+      "bounding_box": [
+        0.45,
+        0.72,
+        0.56,
+        0.86
+      ]
+    },
+    {
+      "label": "banana bunch",
+      "confidence": 0.98,
+      "bounding_box": [
+        0.7,
+        0.4,
+        0.8,
+        0.5
+      ]
+    },
+    {
+      "label": "carton of eggs",
+      "confidence": 0.9,
+      "bounding_box": [
+        0.25,
+        0.05,
+        0.35,
+        0.18
+      ]
+    },
+    {
+      "label": "bowl of fruits",
+      "confidence": 0.94,
+      "bounding_box": [
+        0.55,
+        0.3,
+        0.7,
+        0.5
+      ]
+    },
+    {
+      "label": "jar of pickles",
+      "confidence": 0.88,
+      "bounding_box": [
+        0.04,
+        0.05,
+        0.1,
+        0.15
+      ]
+    },
+    {
+      "label": "bag of spinach",
+      "confidence": 0.91,
+      "bounding_box": [
+        0.77,
+        0.62,
+        0.88,
+        0.82
+      ]
+    },
+    {
+      "label": "red cabbage",
+      "confidence": 0.87,
+      "bounding_box": [
+        0.04,
+        0.78,
+        0.14,
+        0.91
+      ]
+    }
+  ]
+}

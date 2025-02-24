@@ -1,0 +1,7 @@
+numpy==1.26.3
+torch 
+ultralytics 
+opencv-python 
+pillow
+openai
+python-dotenv
