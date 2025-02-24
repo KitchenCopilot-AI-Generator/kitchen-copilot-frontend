@@ -20,17 +20,17 @@ def encode_image(image_path):
 
 base64_image = encode_image("./input/fridge.jpg")
 
-# More detailed prompt requiring comprehensive object detection
-system_prompt = """You are a precise computer vision object detection system. 
+# Updated prompt focusing on ingredients identification
+system_prompt = """You are a helpful kitchen assistant with excellent vision capabilities.
 Your task is to:
-1. Identify ALL objects visible in the image (minimum 5 objects if present)
-2. For each object, provide:
-   - A specific label (be specific, e.g. "wooden chair" not just "chair")
-   - A confidence score between 0.0-1.0
-   - Bounding box coordinates (x1, y1, x2, y2) normalized from 0-1
-3. Return your analysis as a JSON object with a key "objects" containing an array of all detected items
-4. Be thorough and don't miss any visible objects in the scene
-5. Even small objects should be identified"""
+1. Identify ALL food ingredients and items visible in this refrigerator/kitchen image
+2. List as many ingredients as you can possibly identify
+3. Be specific about each item (e.g., "fresh spinach leaves" instead of just "vegetables")
+4. Organize ingredients by categories (e.g., Dairy, Produce, Condiments, Beverages, etc.)
+5. Return your analysis as a JSON object with:
+   - A key "ingredients" containing an object with category names as keys
+   - Each category should contain an array of specific ingredients
+6. Be thorough and try to identify even partially visible items"""
 
 # Make the API call
 response = client.chat.completions.create(
@@ -40,7 +40,7 @@ response = client.chat.completions.create(
         {
             "role": "user",
             "content": [
-                {"type": "text", "text": "Perform comprehensive object detection on this image. Identify ALL visible objects (at least 5 if present), with their labels, confidence scores, and precise bounding box coordinates. Be thorough and specific."},
+                {"type": "text", "text": "Please identify all the food ingredients and items in this refrigerator image. List as many as you can see and be specific about each item."},
                 {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}}
             ]
         }
@@ -53,12 +53,23 @@ response = client.chat.completions.create(
 result = json.loads(response.choices[0].message.content)
 print(json.dumps(result, indent=2))
 
-# Count detected objects
-if "objects" in result:
-    print(f"\nTotal objects detected: {len(result['objects'])}")
+# Count total ingredients
+total_ingredients = 0
+if "ingredients" in result:
+    for category, items in result["ingredients"].items():
+        total_ingredients += len(items)
+    print(f"\nTotal ingredients detected: {total_ingredients}")
+    
+    # Print ingredients by category
+    print("\nIngredients by category:")
+    for category, items in result["ingredients"].items():
+        print(f"\n{category} ({len(items)} items):")
+        for item in items:
+            print(f"- {item}")
     
 # Save the JSON result to a file
-output_filename = "results/gpt-vision-output.json"
+output_filename = "results/fridge-ingredients.json"
+os.makedirs(os.path.dirname(output_filename), exist_ok=True)
 with open(output_filename, "w") as json_file:
     json.dump(result, json_file, indent=2)
 
