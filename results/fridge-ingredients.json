@@ -1,0 +1,51 @@
+{
+  "ingredients": {
+    "Condiments": [
+      "Maple syrup",
+      "Annie's organic mustard",
+      "Heinz tomato ketchup",
+      "Miso paste",
+      "Japanese red miso paste",
+      "Hellmann's mayonnaise"
+    ],
+    "Produce": [
+      "Cilantro",
+      "Mint leaves",
+      "Red cabbage",
+      "Carrots",
+      "Yellow bell pepper",
+      "Red bell pepper",
+      "Green bell pepper",
+      "Mixed salad greens",
+      "Spinach leaves",
+      "Apples",
+      "Pears",
+      "Bananas",
+      "Oranges",
+      "Grapefruit"
+    ],
+    "Dairy": [
+      "Egg carton with eggs",
+      "Philadelphia cream cheese",
+      "Packaged mozzarella cheese"
+    ],
+    "Beverages": [
+      "Apple cider vinegar",
+      "Maple syrup"
+    ],
+    "Grains": [
+      "Tortillas",
+      "Jar of oatmeal"
+    ],
+    "Snacks": [
+      "Jar of mixed nuts",
+      "Jar of almonds",
+      "Dried dates in jar"
+    ],
+    "Other": [
+      "Jar with pickled carrots",
+      "Jar with pickles",
+      "Sunflower seeds"
+    ]
+  }
+}
