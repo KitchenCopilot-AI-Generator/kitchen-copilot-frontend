@@ -1,146 +1,110 @@
-# Kitchen Copilot
+# Fridge Recipe Generator
 
-An AI-powered kitchen assistant that helps you cook by scanning your pantry, suggesting recipes, and providing real-time cooking guidance.
+An application that analyzes your refrigerator contents through images and suggests recipes based on available ingredients.
 
-## 🌟 Features
-- **Pantry Scanner**: Computer vision system to detect and track ingredients
-- **Recipe Generator**: Smart recipe suggestions based on available ingredients
-- **Cooking Coach**: Real-time cooking guidance and technique correction
-- **Inventory Management**: Track ingredient freshness and expiration dates
+## Features
 
-## 🏗️ Project Structure
-```
-smart-kitchen-assistant/
-├── .github/
-│   ├── workflows/
-│   │   ├── tests.ymlx
-│   │   └── lint.yml
-├── src/
-│   ├── pantry_scanner/
-│   │   ├── __init__.py
-│   │   ├── detector.py        # Object detection models
-│   │   ├── inventory.py       # Inventory management
-│   │   └── utils.py          # Scanner utilities
-│   ├── recipe_generator/
-│   │   ├── __init__.py
-│   │   ├── generator.py      # Recipe generation logic
-│   │   ├── matcher.py        # Ingredient matching
-│   │   └── database.py       # Recipe database interactions
-│   ├── cooking_coach/
-│   │   ├── __init__.py
-│   │   ├── monitor.py        # Real-time monitoring
-│   │   ├── guidance.py       # Cooking instructions
-│   │   └── analysis.py       # Technique analysis
-│   └── common/
-│       ├── __init__.py
-│       ├── config.py         # Configuration management
-│       ├── models.py         # Shared data models
-│       └── utils.py          # Common utilities
-├── tests/
-│   ├── test_pantry_scanner.py
-│   ├── test_recipe_generator.py
-│   └── test_cooking_coach.py
-├── api/
-│   ├── __init__.py
-│   ├── routes.py            # API endpoints
-│   └── schemas.py           # API schemas
-├── web/
-│   ├── src/
-│   │   ├── components/      # React components
-│   │   ├── pages/          # Page layouts
-│   │   └── utils/          # Frontend utilities
-│   └── public/
-├── docs/
-│   ├── api.md              # API documentation
-│   ├── setup.md            # Setup instructions
-│   └── architecture.md     # System architecture
-├── scripts/
-│   ├── setup.sh            # Setup script
-│   └── train.py            # Model training
-├── .gitignore
-├── requirements.txt
-├── setup.py
-└── README.md
-```
+- **Image Analysis**: Upload a photo of your fridge or food items to identify ingredients
+- **Recipe Generation**: Get customized recipe suggestions based on identified ingredients
+- **Dual Operation Modes**: Run as a CLI tool or as an API backend
 
-## 🚀 Getting Started
+## Requirements
 
-### Prerequisites
-- Python 3.9+
-- OpenCV
-- PyTorch
-- FastAPI
-- React 18+
-- Node.js 16+
+- Python 3.8+
+- Azure OpenAI API access with a deployed GPT-4 Vision model
 
-### Installation
-1. Clone the repository:
-```bash
-git clone https://github.com/ghchen99/kitchen-copilot.git
-cd kitchen-copilot
-```
+## Setup
 
+1. Clone the repository
 2. Install dependencies:
+   ```
+   pip install -r requirements.txt
+   ```
+3. Copy the `.env.example` file to `.env` and add your Azure OpenAI API keys and settings
+
+## Usage
+
+### CLI Mode
+
+Analyze an image and generate recipes:
+
 ```bash
-pip install -r requirements.txt
-cd web && npm install
+python main.py --mode cli --action both --image fridge.jpg --recipes 5
 ```
 
-3. Set up environment variables:
+Just analyze an image:
+
 ```bash
-cp .env.example .env
-# Edit .env with your configurations
+python main.py --mode cli --action analyze --image fridge.jpg
 ```
 
-4. Run the application:
+Just generate recipes from previous analysis:
+
 ```bash
-# Backend
-uvicorn api.main:app --reload
-
-# Frontend
-cd web && npm start
+python main.py --mode cli --action recipes --recipes 7
 ```
 
-## 📝 API Documentation
+### API Mode
 
-### Pantry Scanner
-```python
-@app.post("/api/v1/pantry/scan")
-async def scan_pantry(image: UploadFile) -> PantryContents:
-    """
-    Scan pantry contents from an image
-    """
+Start the API server:
+
+```bash
+python main.py --mode api --host 0.0.0.0 --port 8000
 ```
 
-### Recipe Generator
-```python
-@app.post("/api/v1/recipes/suggest")
-async def suggest_recipes(
-    ingredients: List[Ingredient],
-    preferences: CookingPreferences
-) -> List[Recipe]:
-    """
-    Generate recipe suggestions based on available ingredients
-    """
+#### API Endpoints
+
+- `POST /analyze-image`: Upload and analyze a fridge image
+- `GET /ingredients`: Get ingredients from the most recent analysis
+- `POST /generate-recipes`: Generate recipe suggestions based on available ingredients
+
+## Project Structure
+
+```
+fridge-recipes/
+├── .env                     # Environment variables
+├── main.py                  # Main entry point
+├── config.py                # Configuration and environment loading
+├── utils/                   # Utility functions
+├── services/                # Core services
+├── models/                  # Data models
+├── data/                    # Data and prompts
+│   ├── prompts/             # System prompts
+│   └── results/             # Output directory
+└── api/                     # API endpoints
 ```
 
-### Cooking Coach
-```python
-@app.websocket("/api/v1/cooking/monitor")
-async def monitor_cooking(websocket: WebSocket):
-    """
-    Real-time cooking monitoring and guidance
-    """
+## Example Response
+
+### Ingredients Analysis
+
+```json
+{
+  "ingredients": {
+    "Dairy": ["milk", "cheddar cheese", "yogurt"],
+    "Produce": ["carrots", "lettuce", "tomatoes", "onions"],
+    "Proteins": ["chicken breast", "eggs"],
+    "Condiments": ["ketchup", "mayonnaise", "mustard"]
+  }
+}
 ```
 
-## 🤝 Contributing
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+### Recipes Suggestions
 
-## 📄 License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-- OpenAI for function calling capabilities
-- YOLO for object detection
-- FastAPI for the web framework
-- React for the frontend framework
+```json
+{
+  "recipes": [
+    {
+      "name": "Quick Chicken Salad",
+      "total_ingredients": ["chicken breast", "lettuce", "tomatoes", "onions", "mayonnaise", "salt", "pepper"],
+      "available_ingredients": ["chicken breast", "lettuce", "tomatoes", "onions", "mayonnaise"],
+      "missing_ingredients": ["salt", "pepper"],
+      "completeness_score": 71,
+      "instructions": ["Step 1...", "Step 2..."],
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    },
+    ...
+  ]
+}
+```

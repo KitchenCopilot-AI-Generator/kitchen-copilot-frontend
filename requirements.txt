@@ -5,3 +5,8 @@ opencv-python
 pillow
 openai
 python-dotenv
+uvicorn
+fastapi
+pydantic
+pandas
+python-multipart
