@@ -11,13 +11,9 @@ The application can be run in:
 """
 
 import argparse
-import json
 import os
 import uvicorn
-import pandas as pd
 from typing import Optional
-from pydantic import BaseModel
-from fastapi import FastAPI
 
 # Import services and config
 from config import Config
@@ -25,7 +21,6 @@ from services.azure_client import AzureClientService
 from services.vision_service import VisionService
 from services.recipe_service import RecipeService
 from api.routes import app as api_app
-from api.routes import vision_service, recipe_service, config
 
 class CLIProcessor:
     """Command-line interface processor for the application"""

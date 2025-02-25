@@ -3,7 +3,7 @@ Recipe Models - Data models for recipes
 """
 
 from dataclasses import dataclass
-from typing import Dict, List
+from typing import List
 
 @dataclass
 class Recipe:
