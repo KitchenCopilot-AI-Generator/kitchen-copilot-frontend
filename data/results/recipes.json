@@ -1,180 +1,166 @@
 {
   "recipes": [
     {
-      "name": "Vegetarian Breakfast Wraps",
+      "name": "Cheesy Egg and Veggie Wraps",
       "total_ingredients": [
         "eggs",
-        "flour tortillas",
-        "red pepper",
-        "green pepper",
-        "yellow pepper",
-        "fresh spinach leaves",
-        "Land O Lakes butter",
-        "Hellmann's mayonnaise",
-        "salt",
-        "black pepper"
+        "Philadephia cream cheese",
+        "string cheese stick",
+        "Land O\u2019Lakes butter",
+        "arugula",
+        "Yellow bell pepper",
+        "red bell pepper",
+        "green bell pepper",
+        "tortillas"
       ],
       "available_ingredients": [
         "eggs",
-        "flour tortillas",
-        "peppers (green, red, yellow)",
-        "fresh spinach leaves",
-        "Land O Lakes butter",
-        "Hellmann's mayonnaise"
+        "Philadephia cream cheese",
+        "string cheese stick",
+        "Land O\u2019Lakes butter",
+        "arugula",
+        "Yellow bell pepper",
+        "red bell pepper",
+        "green bell pepper",
+        "tortillas"
       ],
-      "missing_ingredients": [
-        "salt",
-        "black pepper"
-      ],
-      "completeness_score": 80,
+      "missing_ingredients": [],
+      "completeness_score": 100,
       "instructions": [
-        "Step 1: Whisk eggs in a bowl with a pinch of salt and black pepper.",
-        "Step 2: Heat Land O Lakes butter in a pan over medium heat.",
-        "Step 3: Add diced green, red, and yellow peppers to the pan and saut\u00e9 until soft.",
-        "Step 4: Add whisked eggs and spinach leaves to the pan and scramble until cooked through.",
-        "Step 5: Warm the flour tortillas and spread a thin layer of Hellmann's mayonnaise.",
-        "Step 6: Fill the tortillas with the scramble and wrap tightly. Serve hot."
+        "Step 1: Scramble the eggs with a little butter until fully cooked.",
+        "Step 2: Chop the bell peppers and saut\u00e9 them with some butter until slightly soft.",
+        "Step 3: Spread cream cheese on the tortillas.",
+        "Step 4: Add cooked scrambled eggs, saut\u00e9ed peppers, and string cheese to the tortilla.",
+        "Step 5: Roll the tortillas and warm them on a skillet until the cheese melts.",
+        "Step 6: Add fresh arugula before serving."
       ],
       "cooking_time": "20 minutes",
       "difficulty": "Easy"
     },
     {
-      "name": "Almond & Citrus Salad",
+      "name": "Fruit and Nut Arugula Salad",
       "total_ingredients": [
-        "oranges",
-        "pears",
-        "red cabbage",
-        "fresh cilantro",
-        "almonds",
-        "croutons",
-        "white vinegar",
-        "maple syrup",
-        "olive oil",
-        "salt",
-        "black pepper"
-      ],
-      "available_ingredients": [
-        "oranges",
-        "pears",
-        "red cabbage",
-        "fresh cilantro",
-        "almonds",
-        "croutons",
-        "white vinegar",
-        "maple syrup"
-      ],
-      "missing_ingredients": [
-        "olive oil",
-        "salt",
-        "black pepper"
-      ],
-      "completeness_score": 80,
-      "instructions": [
-        "Step 1: Thinly slice the red cabbage and place in a large salad bowl.",
-        "Step 2: Segment the oranges and slice the pears, adding them to the bowl.",
-        "Step 3: Roughly chop almonds and add to the salad along with croutons.",
-        "Step 4: Finely chop fresh cilantro and sprinkle over the salad.",
-        "Step 5: In a small bowl, whisk together white vinegar, maple syrup, olive oil, salt, and black pepper to make the dressing.",
-        "Step 6: Drizzle the dressing over the salad and toss well. Serve immediately."
-      ],
-      "cooking_time": "15 minutes",
-      "difficulty": "Easy"
-    },
-    {
-      "name": "Sweet & Savory Brie Stuffed Peppers",
-      "total_ingredients": [
-        "President Brie cheese",
-        "green pepper",
-        "red pepper",
-        "yellow pepper",
-        "dates",
-        "almonds",
-        "honey"
-      ],
-      "available_ingredients": [
-        "President Brie cheese",
-        "peppers (green, red, yellow)",
-        "dates",
-        "almonds"
-      ],
-      "missing_ingredients": [
-        "honey"
-      ],
-      "completeness_score": 85,
-      "instructions": [
-        "Step 1: Preheat the oven to 350\u00b0F (175\u00b0C).",
-        "Step 2: Cut the tops off the peppers and remove the seeds.",
-        "Step 3: Slice the President Brie cheese into chunks and stuff inside the peppers.",
-        "Step 4: Chop dates and almonds, and mix them together. Add to the stuffed peppers.",
-        "Step 5: Drizzle honey over each stuffed pepper.",
-        "Step 6: Place the peppers in a baking dish and bake for 25 minutes or until the peppers are tender.",
-        "Step 7: Serve warm as an appetizer or side dish."
-      ],
-      "cooking_time": "35 minutes",
-      "difficulty": "Medium"
-    },
-    {
-      "name": "Creamy Spinach & Almond Ketchup Dip",
-      "total_ingredients": [
-        "Philadephia cream cheese",
-        "fresh spinach leaves",
-        "almonds",
-        "Heinz tomato ketchup",
-        "Hellmann's mayonnaise",
-        "soy sauce",
-        "green onion"
-      ],
-      "available_ingredients": [
-        "Philadephia cream cheese",
-        "fresh spinach leaves",
-        "almonds",
-        "Heinz tomato ketchup",
-        "Hellmann's mayonnaise",
-        "soy sauce"
-      ],
-      "missing_ingredients": [
-        "green onion"
-      ],
-      "completeness_score": 90,
-      "instructions": [
-        "Step 1: Finely chop the fresh spinach leaves and almonds.",
-        "Step 2: In a mixing bowl, combine Philadephia cream cheese, Heinz tomato ketchup, and Hellmann's mayonnaise.",
-        "Step 3: Stir in the chopped spinach and almonds.",
-        "Step 4: Add a splash of soy sauce and mix thoroughly.",
-        "Step 5: Thinly slice green onion and use it to garnish the dip.",
-        "Step 6: Serve with crackers or as a spread for sandwiches."
-      ],
-      "cooking_time": "10 minutes",
-      "difficulty": "Easy"
-    },
-    {
-      "name": "Maple Glazed Autumn Fruit Bowl",
-      "total_ingredients": [
+        "arugula",
         "apples",
         "pears",
-        "bananas",
-        "maple syrup",
-        "fresh mint"
+        "almonds",
+        "mint leaves",
+        "Annie's dressing"
       ],
       "available_ingredients": [
+        "arugula",
         "apples",
         "pears",
-        "bananas",
-        "maple syrup",
-        "fresh mint"
+        "almonds",
+        "mint leaves",
+        "Annie's dressing"
       ],
       "missing_ingredients": [],
       "completeness_score": 100,
       "instructions": [
-        "Step 1: Core and slice the apples and pears.",
-        "Step 2: Peel and slice the bananas.",
-        "Step 3: Arrange the fruit slices in a decorative bowl.",
-        "Step 4: Drizzle the fruit with maple syrup.",
-        "Step 5: Finely chop fresh mint and sprinkle over the top.",
-        "Step 6: Toss lightly to combine and serve as a refreshing dessert or snack."
+        "Step 1: Chop apples and pears into thin slices.",
+        "Step 2: Rinse and dry arugula, place in a large salad bowl.",
+        "Step 3: Add sliced apples, pears, and almonds to the arugula.",
+        "Step 4: Tear mint leaves into small pieces and add to salad.",
+        "Step 5: Toss everything with Annie's dressing.",
+        "Step 6: Serve immediately for a fresh salad."
       ],
       "cooking_time": "10 minutes",
       "difficulty": "Easy"
+    },
+    {
+      "name": "Apple Cheddar Panini",
+      "total_ingredients": [
+        "apples",
+        "Land O\u2019Lakes butter",
+        "string cheese stick",
+        "tortillas",
+        "basil"
+      ],
+      "available_ingredients": [
+        "apples",
+        "Land O\u2019Lakes butter",
+        "string cheese stick",
+        "tortillas"
+      ],
+      "missing_ingredients": [
+        "basil"
+      ],
+      "completeness_score": 80,
+      "instructions": [
+        "Step 1: Thinly slice the apple using a knife or mandoline.",
+        "Step 2: Spread butter on one side of each tortilla.",
+        "Step 3: On the non-buttered side, layer slices of apple and string cheese.",
+        "Step 4: Optionally, add fresh basil leaves for extra flavor.",
+        "Step 5: Fold the tortilla and grill on a panini press until golden and cheesy.",
+        "Step 6: Cut in half and serve warm."
+      ],
+      "cooking_time": "15 minutes",
+      "difficulty": "Medium"
+    },
+    {
+      "name": "Spicy Cream Cheese Stuffed Bell Peppers",
+      "total_ingredients": [
+        "Philadephia cream cheese",
+        "Gulden's spicy brown mustard",
+        "red bell pepper",
+        "green bell pepper",
+        "Yellow bell pepper"
+      ],
+      "available_ingredients": [
+        "Philadephia cream cheese",
+        "Gulden's spicy brown mustard",
+        "red bell pepper",
+        "green bell pepper",
+        "Yellow bell pepper"
+      ],
+      "missing_ingredients": [],
+      "completeness_score": 100,
+      "instructions": [
+        "Step 1: Preheat oven to 375\u00b0F (190\u00b0C).",
+        "Step 2: Cut the tops of the bell peppers and scoop out the seeds.",
+        "Step 3: Mix cream cheese with a drizzle of spicy brown mustard in a bowl.",
+        "Step 4: Stuff each bell pepper with the cream cheese mixture.",
+        "Step 5: Place stuffed peppers in a baking dish and bake for 20-25 minutes until peppers are tender.",
+        "Step 6: Serve warm as an appetizer or side dish."
+      ],
+      "cooking_time": "30 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Pasta Primavera with Tomato and Pickled Onions",
+      "total_ingredients": [
+        "cooked pasta",
+        "tomatoes",
+        "arugula",
+        "pickled onions",
+        "red cabbage",
+        "dijon mustard",
+        "Land O\u2019Lakes butter",
+        "sun-dried tomatoes"
+      ],
+      "available_ingredients": [
+        "cooked pasta",
+        "tomatoes",
+        "arugula",
+        "pickled onions",
+        "red cabbage",
+        "dijon mustard",
+        "Land O\u2019Lakes butter",
+        "sun-dried tomatoes"
+      ],
+      "missing_ingredients": [],
+      "completeness_score": 100,
+      "instructions": [
+        "Step 1: In a large skillet, melt butter over medium heat.",
+        "Step 2: Add chopped tomatoes and sun-dried tomatoes to the skillet and cook until soft.",
+        "Step 3: Toss in shredded red cabbage and cook until just wilted.",
+        "Step 4: Add cooked pasta to the skillet along with a splash of dijon mustard.",
+        "Step 5: Stir in pickled onions and arugula, cooking just until arugula is wilted.",
+        "Step 6: Serve hot, garnished with extra pickled onions if desired."
+      ],
+      "cooking_time": "25 minutes",
+      "difficulty": "Medium"
     }
   ]
 }

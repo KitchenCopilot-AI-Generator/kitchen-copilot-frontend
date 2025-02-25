@@ -2,47 +2,55 @@
   "ingredients": {
     "Dairy": [
       "eggs",
-      "Philadephia cream cheese",
-      "President Brie cheese",
-      "Land O Lakes butter"
+      "Philadelphia cream cheese",
+      "string cheese stick",
+      "Land O\u2019Lakes butter"
     ],
     "Produce": [
-      "bananas",
-      "pears",
-      "oranges",
+      "cilantro",
+      "mint leaves",
+      "arugula",
       "apples",
-      "peppers (green, red, yellow)",
+      "pears",
+      "bananas",
+      "oranges",
+      "Yellow bell pepper",
+      "red bell pepper",
+      "green bell pepper",
+      "tomatoes",
       "carrots",
-      "red cabbage",
-      "fresh cilantro",
-      "fresh mint",
-      "fresh spinach leaves"
+      "red cabbage"
     ],
     "Proteins": [],
     "Grains": [
-      "flour tortillas"
+      "tortillas"
     ],
     "Condiments": [
+      "mayonnaise (Hellman's)",
       "Heinz tomato ketchup",
-      "Annie's mustard",
-      "Hellmann's mayonnaise",
+      "Gulden's spicy brown mustard",
+      "Annie's dressing",
       "maple syrup",
       "soy sauce",
-      "white vinegar",
-      "mustard seeds"
+      "dijon mustard"
     ],
-    "Beverages": [],
+    "Beverages": [
+      "apple cider",
+      "grenadine"
+    ],
     "Snacks": [
       "almonds"
     ],
     "Frozen": [],
-    "Canned": [],
+    "Canned": [
+      "tomato paste"
+    ],
     "Other": [
-      "pickled beets",
+      "pickles",
+      "sun-dried tomatoes",
+      "jarred beets or pickled vegetables",
       "pickled onions",
-      "sunflower seeds",
-      "dates",
-      "croutons"
+      "cooked pasta"
     ]
   }
 }
