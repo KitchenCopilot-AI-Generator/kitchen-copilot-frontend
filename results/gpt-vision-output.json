@@ -1,49 +1,54 @@
 {
   "ingredients": {
     "Condiments": [
-      "Maple syrup",
-      "Annie's dressing",
+      "Polan red curry paste",
+      "Yokki sesame oil",
+      "Coleman's original mustard",
+      "Kewpie mayonnaise",
       "Heinz tomato ketchup",
-      "Hellman's mayonnaise",
-      "Yokki wasabi paste",
-      "Colman's mustard",
-      "Roland harissa paste"
+      "Maple syrup",
+      "Annie's honey mustard"
     ],
     "Dairy": [
-      "Eggs",
+      "Hellmann's mayonnaise",
+      "One dozen eggs",
       "Philadelphia cream cheese",
-      "Land O'Lakes butter"
+      "Parmigiano-Reggiano block cheese"
     ],
     "Produce": [
-      "Fresh parsley",
-      "Fresh mint",
-      "Apples",
-      "Pears",
-      "Bananas",
-      "Mixed bell peppers",
+      "Fresh bananas",
+      "Red apples",
+      "Green pears",
+      "Fresh cilantro bunch",
+      "Fresh parsley bunch",
+      "Mixed bell peppers (yellow, orange, green)",
+      "Bag of citrus fruits (likely oranges and grapefruit)",
       "Red cabbage",
       "Carrots",
-      "Mixed salad greens",
-      "Fresh arugula",
-      "Limes",
-      "Lemons"
+      "Zucchini",
+      "Romaine lettuce or arugula in a plastic container"
     ],
-    "Pantry Items": [
-      "Sunflower seeds",
-      "Almonds",
-      "Dates"
+    "Grains": [
+      "Soft tortillas"
     ],
     "Beverages": [
-      "Glass bottle of apple cider vinegar"
+      "Bottled apple cider vinegar"
     ],
-    "Packaged Goods": [
-      "Flour tortillas",
-      "Jar of pickles",
-      "Jar of marinated beets"
+    "Nuts & Seeds": [
+      "Chia seeds",
+      "Sunflower seeds",
+      "Whole almonds"
     ],
-    "Cheese": [
-      "Block of cheddar cheese",
-      "Grated parmesan cheese"
+    "Jars (Pickled/Fermented)": [
+      "Pickled jalape\u00f1os",
+      "Pickled onions",
+      "Pickled carrots"
+    ],
+    "Desserts/Snacks": [
+      "Chocolate chip cookie dough tub"
+    ],
+    "Additional": [
+      "Dates in a jar"
     ]
   }
 }

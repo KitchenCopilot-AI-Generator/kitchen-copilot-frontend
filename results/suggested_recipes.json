@@ -1,210 +1,255 @@
 {
   "recipes": [
     {
-      "name": "Cheddar & Mixed Pepper Quesadillas",
+      "name": "Spicy Red Curry Veggie Wraps",
       "total_ingredients": [
-        "Flour tortillas",
-        "Cheddar cheese",
+        "Polan red curry paste",
         "Mixed bell peppers",
-        "Hellman's mayonnaise",
-        "Colman's mustard"
-      ],
-      "available_ingredients": [
-        "Flour tortillas",
-        "Cheddar cheese",
-        "Mixed bell peppers",
-        "Hellman's mayonnaise",
-        "Colman's mustard"
-      ],
-      "missing_ingredients": [],
-      "completeness_score": 100,
-      "instructions": [
-        "Step 1: Preheat a skillet over medium heat.",
-        "Step 2: Spread a thin layer of Hellman's mayonnaise on each tortilla.",
-        "Step 3: In a bowl, mix shredded cheddar cheese and thinly sliced mixed bell peppers.",
-        "Step 4: Place a tortilla in the skillet, and spread the cheese and pepper mixture evenly over half.",
-        "Step 5: Fold the tortilla and cook until the cheese is melted and the tortilla is golden brown, about 3-4 minutes per side.",
-        "Step 6: Serve with a dollop of Colman's mustard as a dipping sauce."
-      ],
-      "cooking_time": "15 minutes",
-      "difficulty": "Easy"
-    },
-    {
-      "name": "Wasabi & Harissa Slaw",
-      "total_ingredients": [
         "Red cabbage",
         "Carrots",
-        "Yokki wasabi paste",
-        "Roland harissa paste",
-        "Jar of pickles",
-        "Hellman's mayonnaise"
+        "Zucchini",
+        "Fresh cilantro",
+        "Fresh parsley",
+        "Apple cider vinegar",
+        "Soft tortillas",
+        "Salt",
+        "Black pepper"
       ],
       "available_ingredients": [
+        "Polan red curry paste",
+        "Mixed bell peppers",
         "Red cabbage",
         "Carrots",
-        "Yokki wasabi paste",
-        "Roland harissa paste",
-        "Jar of pickles",
-        "Hellman's mayonnaise"
+        "Zucchini",
+        "Fresh cilantro",
+        "Fresh parsley",
+        "Apple cider vinegar",
+        "Soft tortillas"
       ],
-      "missing_ingredients": [],
-      "completeness_score": 100,
+      "missing_ingredients": [
+        "Salt",
+        "Black pepper"
+      ],
+      "completeness_score": 91,
       "instructions": [
-        "Step 1: Shred the red cabbage and carrots into a mixing bowl.",
-        "Step 2: Chop pickles and add them to the bowl.",
-        "Step 3: In a separate small bowl, mix Yokki wasabi paste, Roland harissa paste, and Hellman's mayonnaise to create the dressing.",
-        "Step 4: Pour the dressing over the shredded vegetables and toss until well combined.",
-        "Step 5: Chill the slaw in the refrigerator for 20 minutes before serving."
+        "Step 1: Slice the mixed bell peppers, red cabbage, carrots, and zucchini into thin strips.",
+        "Step 2: Saut\u00e9 vegetables in a pan with sesame oil until tender.",
+        "Step 3: Stir in red curry paste and a splash of apple cider vinegar, cook for 2 more minutes.",
+        "Step 4: Lay out tortillas and fill with cooked veggies, cilantro, and parsley.",
+        "Step 5: Season with salt and pepper before wrapping.",
+        "Step 6: Serve with extra cilantro and enjoy hot or cold."
       ],
       "cooking_time": "25 minutes",
       "difficulty": "Easy"
     },
     {
-      "name": "Arugula & Parsley Pesto Pasta",
+      "name": "Mustard Maple Glazed Grilled Veggies",
       "total_ingredients": [
-        "Fresh arugula",
-        "Fresh parsley",
+        "Coleman's original mustard",
+        "Maple syrup",
+        "Mixed bell peppers",
+        "Zucchini",
         "Sunflower seeds",
-        "Land O'Lakes butter",
-        "Grated parmesan cheese",
-        "Pasta"
+        "Salt",
+        "Olive oil"
       ],
       "available_ingredients": [
-        "Fresh arugula",
-        "Fresh parsley",
-        "Sunflower seeds",
-        "Land O'Lakes butter",
-        "Grated parmesan cheese"
+        "Coleman's original mustard",
+        "Maple syrup",
+        "Mixed bell peppers",
+        "Zucchini",
+        "Sunflower seeds"
       ],
       "missing_ingredients": [
-        "Pasta"
+        "Salt",
+        "Olive oil"
       ],
       "completeness_score": 83,
       "instructions": [
-        "Step 1: In a food processor, blend fresh arugula, parsley, and sunflower seeds.",
-        "Step 2: Gradually add melted Land O'Lakes butter while blending until smooth.",
-        "Step 3: Add grated parmesan cheese and pulse until just combined.",
-        "Step 4: In a large pot, cook pasta according to package instructions.",
-        "Step 5: Drain pasta and mix with the arugula-parsley pesto.",
-        "Step 6: Serve immediately."
+        "Step 1: Mix together Coleman's mustard and maple syrup to make a glaze.",
+        "Step 2: Chop mixed bell peppers and zucchini into large pieces.",
+        "Step 3: Coat the veggies with the mustard maple glaze.",
+        "Step 4: Heat olive oil in a grill pan, and grill vegetables until caramelized and tender.",
+        "Step 5: Season with a pinch of salt and sprinkle sunflower seeds on top.",
+        "Step 6: Serve warm as a side dish or main."
       ],
-      "cooking_time": "20 minutes",
+      "cooking_time": "30 minutes",
       "difficulty": "Medium"
     },
     {
-      "name": "Apple & Almond Salad",
+      "name": "Cilantro Lime Apple Slaw",
       "total_ingredients": [
-        "Mixed salad greens",
-        "Apples",
-        "Almonds",
-        "Annie's dressing",
-        "Lemon"
-      ],
-      "available_ingredients": [
-        "Mixed salad greens",
-        "Apples",
-        "Almonds",
-        "Annie's dressing",
-        "Lemons"
-      ],
-      "missing_ingredients": [],
-      "completeness_score": 100,
-      "instructions": [
-        "Step 1: In a large bowl, combine mixed salad greens.",
-        "Step 2: Thinly slice apples and add them to the bowl.",
-        "Step 3: Add almonds and toss to combine.",
-        "Step 4: Squeeze fresh lemon juice over the salad.",
-        "Step 5: Drizzle Annie's dressing over the top and serve."
-      ],
-      "cooking_time": "10 minutes",
-      "difficulty": "Easy"
-    },
-    {
-      "name": "Cheese & Pickle Stuffed Tortilla Rolls",
-      "total_ingredients": [
-        "Flour tortillas",
-        "Philadelphia cream cheese",
-        "Jar of pickles",
-        "Fresh mint",
-        "Cheddar cheese"
-      ],
-      "available_ingredients": [
-        "Flour tortillas",
-        "Philadelphia cream cheese",
-        "Jar of pickles",
-        "Fresh mint",
-        "Cheddar cheese"
-      ],
-      "missing_ingredients": [],
-      "completeness_score": 100,
-      "instructions": [
-        "Step 1: Spread Philadelphia cream cheese over the surface of each tortilla.",
-        "Step 2: Thinly slice pickles and arrange them evenly on top of the cream cheese.",
-        "Step 3: Sprinkle fresh mint leaves and shredded cheddar cheese over the pickles.",
-        "Step 4: Roll the tortillas tightly and slice each roll into 3-4 pieces.",
-        "Step 5: Serve immediately or chill for later."
-      ],
-      "cooking_time": "15 minutes",
-      "difficulty": "Easy"
-    },
-    {
-      "name": "Maple Drizzled Fruit Platter",
-      "total_ingredients": [
-        "Apples",
-        "Pears",
-        "Bananas",
-        "Maple syrup",
-        "Limes",
-        "Sunflower seeds"
-      ],
-      "available_ingredients": [
-        "Apples",
-        "Pears",
-        "Bananas",
-        "Maple syrup",
-        "Limes",
-        "Sunflower seeds"
-      ],
-      "missing_ingredients": [],
-      "completeness_score": 100,
-      "instructions": [
-        "Step 1: Slice apples, pears, and bananas into bite-size pieces.",
-        "Step 2: Arrange the fruit on a serving platter.",
-        "Step 3: Squeeze fresh lime juice over the fruit to prevent browning.",
-        "Step 4: Drizzle maple syrup over the fruit.",
-        "Step 5: Sprinkle sunflower seeds on top for added crunch."
-      ],
-      "cooking_time": "10 minutes",
-      "difficulty": "Easy"
-    },
-    {
-      "name": "Beet & Carrot Spicy Bite",
-      "total_ingredients": [
-        "Jar of marinated beets",
+        "Red cabbage",
         "Carrots",
-        "Roland harissa paste",
-        "Feta cheese",
-        "Fresh mint"
+        "Red apples",
+        "Cilantro",
+        "Apple cider vinegar",
+        "Hellmann's mayonnaise",
+        "Pickled onions",
+        "Lime",
+        "Salt",
+        "Pepper"
       ],
       "available_ingredients": [
-        "Jar of marinated beets",
+        "Red cabbage",
         "Carrots",
-        "Roland harissa paste",
-        "Fresh mint"
+        "Red apples",
+        "Cilantro",
+        "Apple cider vinegar",
+        "Hellmann's mayonnaise",
+        "Pickled onions"
       ],
       "missing_ingredients": [
-        "Feta cheese"
+        "Lime",
+        "Salt",
+        "Pepper"
       ],
-      "completeness_score": 80,
+      "completeness_score": 70,
       "instructions": [
-        "Step 1: Slice marinated beets and set aside.",
-        "Step 2: Grate carrots and mix with Roland harissa paste.",
-        "Step 3: On a serving platter, place slices of beets in a circle.",
-        "Step 4: Top each beet slice with a spoonful of the spicy carrot mixture.",
-        "Step 5: Garnish with crumbled feta cheese and fresh mint leaves."
+        "Step 1: Thinly slice red cabbage, carrots, and red apples into matchsticks.",
+        "Step 2: Chop cilantro and mix with cabbage, carrots, and apples in a large bowl.",
+        "Step 3: In a separate bowl, combine mayonnaise, apple cider vinegar, and a squeeze of lime juice.",
+        "Step 4: Add pickled onions to the slaw and pour the mayonnaise dressing over the top.",
+        "Step 5: Season with salt and pepper, toss well, and adjust to taste.",
+        "Step 6: Chill before serving for a refreshing side salad."
+      ],
+      "cooking_time": "20 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Egg and Parmigiano-Reggiano Breakfast Bake",
+      "total_ingredients": [
+        "Eggs",
+        "Parmigiano-Reggiano",
+        "Mixed bell peppers",
+        "Red cabbage",
+        "Zucchini",
+        "Salt",
+        "Pepper",
+        "Olive oil"
+      ],
+      "available_ingredients": [
+        "Eggs",
+        "Parmigiano-Reggiano",
+        "Mixed bell peppers",
+        "Red cabbage",
+        "Zucchini"
+      ],
+      "missing_ingredients": [
+        "Salt",
+        "Pepper",
+        "Olive oil"
+      ],
+      "completeness_score": 71,
+      "instructions": [
+        "Step 1: Preheat the oven to 375\u00b0F (190\u00b0C).",
+        "Step 2: Chop mixed bell peppers, red cabbage, and zucchini into small pieces.",
+        "Step 3: In a skillet, saut\u00e9 vegetables with olive oil until soft.",
+        "Step 4: In a baking dish, whisk eggs with grated Parmigiano-Reggiano cheese, salt, and pepper.",
+        "Step 5: Add saut\u00e9ed vegetables to the egg mixture and stir to combine.",
+        "Step 6: Bake for 25-30 minutes until golden brown and set in the middle.",
+        "Step 7: Slice and serve with additional grated cheese on top."
+      ],
+      "cooking_time": "40 minutes",
+      "difficulty": "Medium"
+    },
+    {
+      "name": "Spicy Mango Sesame Salad",
+      "total_ingredients": [
+        "Mango",
+        "Mixed bell peppers",
+        "Red cabbage",
+        "Citrus fruits",
+        "Yokki sesame oil",
+        "Pickled jalape\u00f1os",
+        "Chia seeds",
+        "Salt",
+        "Pepper"
+      ],
+      "available_ingredients": [
+        "Mixed bell peppers",
+        "Red cabbage",
+        "Citrus fruits",
+        "Yokki sesame oil",
+        "Pickled jalape\u00f1os",
+        "Chia seeds"
+      ],
+      "missing_ingredients": [
+        "Mango",
+        "Salt",
+        "Pepper"
+      ],
+      "completeness_score": 66,
+      "instructions": [
+        "Step 1: Peel and cube the mango.",
+        "Step 2: Julienne the mixed bell peppers and red cabbage.",
+        "Step 3: Slice citrus fruits to extract segments.",
+        "Step 4: Combine mango, bell peppers, red cabbage, citrus segments, and pickled jalape\u00f1os in a large bowl.",
+        "Step 5: Drizzle with Yokki sesame oil and toss well.",
+        "Step 6: Sprinkle with chia seeds, season with salt and pepper, and serve fresh."
       ],
       "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Ketchup and Honey Mustard Glazed Chicken",
+      "total_ingredients": [
+        "Chicken breasts",
+        "Heinz tomato ketchup",
+        "Annie's honey mustard",
+        "Apple cider vinegar",
+        "Salt",
+        "Pepper"
+      ],
+      "available_ingredients": [
+        "Heinz tomato ketchup",
+        "Annie's honey mustard",
+        "Apple cider vinegar"
+      ],
+      "missing_ingredients": [
+        "Chicken breasts",
+        "Salt",
+        "Pepper"
+      ],
+      "completeness_score": 50,
+      "instructions": [
+        "Step 1: Preheat oven to 400\u00b0F (200\u00b0C).",
+        "Step 2: Mix ketchup, honey mustard, and apple cider vinegar in a bowl.",
+        "Step 3: Season chicken breasts with salt and pepper.",
+        "Step 4: Place chicken in a baking dish and coat with the ketchup and mustard mixture.",
+        "Step 5: Bake for 25-30 minutes until chicken is cooked through and glaze is caramelized.",
+        "Step 6: Let rest for 5 minutes before slicing and serving."
+      ],
+      "cooking_time": "35 minutes",
       "difficulty": "Medium"
+    },
+    {
+      "name": "Banana and Date Smoothie",
+      "total_ingredients": [
+        "Fresh bananas",
+        "Dates",
+        "Citrus fruits",
+        "Yogurt or milk"
+      ],
+      "available_ingredients": [
+        "Fresh bananas",
+        "Dates",
+        "Citrus fruits"
+      ],
+      "missing_ingredients": [
+        "Yogurt or milk"
+      ],
+      "completeness_score": 75,
+      "instructions": [
+        "Step 1: Peel and slice bananas.",
+        "Step 2: Pit and chop dates.",
+        "Step 3: Squeeze citrus fruits to extract juice.",
+        "Step 4: In a blender, combine bananas, dates, citrus juice, and yogurt or milk.",
+        "Step 5: Blend until smooth and creamy.",
+        "Step 6: Serve chilled as a refreshing breakfast or snack."
+      ],
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
     }
   ]
 }
