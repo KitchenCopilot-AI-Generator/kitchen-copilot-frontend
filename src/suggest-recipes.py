@@ -71,36 +71,6 @@ def generate_recipe_suggestions(ingredients, num_recipes=5):
         print(f"Error generating recipes: {str(e)}")
         return {"recipes": []}
 
-# Function to display recipes in a user-friendly way
-def display_recipes(recipes_data):
-    # Sort recipes by completeness score (highest first)
-    sorted_recipes = sorted(recipes_data["recipes"], key=lambda x: x["completeness_score"], reverse=True)
-    
-    print("\n==== RECIPE SUGGESTIONS BASED ON YOUR INGREDIENTS ====\n")
-    
-    for i, recipe in enumerate(sorted_recipes, 1):
-        print(f"Recipe {i}: {recipe['name']}")
-        print(f"Completeness Score: {recipe['completeness_score']}% (you have {len(recipe['available_ingredients'])} of {len(recipe['total_ingredients'])} ingredients)")
-        print(f"Cooking Time: {recipe['cooking_time']}")
-        print(f"Difficulty: {recipe['difficulty']}")
-        
-        print("\nAvailable Ingredients:")
-        for ing in recipe['available_ingredients']:
-            print(f"  ✓ {ing}")
-        
-        print("\nMissing Ingredients:")
-        if recipe['missing_ingredients']:
-            for ing in recipe['missing_ingredients']:
-                print(f"  ✗ {ing}")
-        else:
-            print("  None - you have everything you need!")
-        
-        print("\nInstructions:")
-        for j, step in enumerate(recipe['instructions'], 1):
-            print(f"  {j}. {step}")
-        
-        print("\n" + "="*60 + "\n")
-
 # Function to save recipes to a file
 def save_recipes(recipes_data, output_file="results/suggested_recipes.json"):
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
@@ -117,9 +87,6 @@ def main():
     # Generate recipe suggestions
     print("Generating recipe suggestions...")
     recipes_data = generate_recipe_suggestions(ingredients, num_recipes=7)
-    
-    # Display recipes
-    display_recipes(recipes_data)
     
     # Save recipes to file
     save_recipes(recipes_data)

@@ -1,229 +1,209 @@
 {
   "recipes": [
     {
-      "name": "Cheesy Apple Pancake Wraps",
+      "name": "Cheddar & Mixed Pepper Quesadillas",
       "total_ingredients": [
         "Flour tortillas",
-        "Apples",
-        "Land O'Lakes butter",
-        "Philadelphia cream cheese",
-        "Maple syrup",
-        "Cinnamon"
+        "Cheddar cheese",
+        "Mixed bell peppers",
+        "Hellman's mayonnaise",
+        "Colman's mustard"
       ],
       "available_ingredients": [
         "Flour tortillas",
-        "Apples",
-        "Land O'Lakes butter",
-        "Philadelphia cream cheese",
-        "Maple syrup"
+        "Cheddar cheese",
+        "Mixed bell peppers",
+        "Hellman's mayonnaise",
+        "Colman's mustard"
       ],
-      "missing_ingredients": [
-        "Cinnamon"
-      ],
-      "completeness_score": 83,
+      "missing_ingredients": [],
+      "completeness_score": 100,
       "instructions": [
-        "Step 1: Core and thinly slice the apples.",
-        "Step 2: Heat a pan and melt a tablespoon of butter. Add apple slices and cook until they are tender.",
-        "Step 3: Add a hint of cinnamon to apples if available.",
-        "Step 4: Warm the flour tortillas and spread cream cheese over them.",
-        "Step 5: Place the cooked apples over the cream cheese and drizzle with maple syrup.",
-        "Step 6: Roll the tortillas and serve warm."
+        "Step 1: Preheat a skillet over medium heat.",
+        "Step 2: Spread a thin layer of Hellman's mayonnaise on each tortilla.",
+        "Step 3: In a bowl, mix shredded cheddar cheese and thinly sliced mixed bell peppers.",
+        "Step 4: Place a tortilla in the skillet, and spread the cheese and pepper mixture evenly over half.",
+        "Step 5: Fold the tortilla and cook until the cheese is melted and the tortilla is golden brown, about 3-4 minutes per side.",
+        "Step 6: Serve with a dollop of Colman's mustard as a dipping sauce."
       ],
       "cooking_time": "15 minutes",
       "difficulty": "Easy"
     },
     {
-      "name": "Spicy Harissa Egg Salad",
+      "name": "Wasabi & Harissa Slaw",
       "total_ingredients": [
-        "Eggs",
-        "Hellman's mayonnaise",
+        "Red cabbage",
+        "Carrots",
+        "Yokki wasabi paste",
         "Roland harissa paste",
-        "Mixed salad greens",
-        "Fresh parsley",
-        "Sunflower seeds",
-        "Bread"
+        "Jar of pickles",
+        "Hellman's mayonnaise"
       ],
       "available_ingredients": [
-        "Eggs",
-        "Hellman's mayonnaise",
+        "Red cabbage",
+        "Carrots",
+        "Yokki wasabi paste",
         "Roland harissa paste",
-        "Mixed salad greens",
+        "Jar of pickles",
+        "Hellman's mayonnaise"
+      ],
+      "missing_ingredients": [],
+      "completeness_score": 100,
+      "instructions": [
+        "Step 1: Shred the red cabbage and carrots into a mixing bowl.",
+        "Step 2: Chop pickles and add them to the bowl.",
+        "Step 3: In a separate small bowl, mix Yokki wasabi paste, Roland harissa paste, and Hellman's mayonnaise to create the dressing.",
+        "Step 4: Pour the dressing over the shredded vegetables and toss until well combined.",
+        "Step 5: Chill the slaw in the refrigerator for 20 minutes before serving."
+      ],
+      "cooking_time": "25 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Arugula & Parsley Pesto Pasta",
+      "total_ingredients": [
+        "Fresh arugula",
         "Fresh parsley",
-        "Sunflower seeds"
+        "Sunflower seeds",
+        "Land O'Lakes butter",
+        "Grated parmesan cheese",
+        "Pasta"
+      ],
+      "available_ingredients": [
+        "Fresh arugula",
+        "Fresh parsley",
+        "Sunflower seeds",
+        "Land O'Lakes butter",
+        "Grated parmesan cheese"
       ],
       "missing_ingredients": [
-        "Bread"
+        "Pasta"
       ],
-      "completeness_score": 86,
+      "completeness_score": 83,
       "instructions": [
-        "Step 1: Boil eggs until hard-boiled. Once cooled, peel and chop them.",
-        "Step 2: In a bowl, mix eggs with mayonnaise and harissa paste.",
-        "Step 3: Chop fresh parsley and incorporate it into the egg mixture.",
-        "Step 4: Toast some sunflower seeds and mix them into the salad for a crunchy texture.",
-        "Step 5: Serve the egg salad on a bed of mixed greens or between slices of bread."
+        "Step 1: In a food processor, blend fresh arugula, parsley, and sunflower seeds.",
+        "Step 2: Gradually add melted Land O'Lakes butter while blending until smooth.",
+        "Step 3: Add grated parmesan cheese and pulse until just combined.",
+        "Step 4: In a large pot, cook pasta according to package instructions.",
+        "Step 5: Drain pasta and mix with the arugula-parsley pesto.",
+        "Step 6: Serve immediately."
       ],
       "cooking_time": "20 minutes",
       "difficulty": "Medium"
     },
     {
-      "name": "Pear and Arugula Salad with Lemon Dressing",
+      "name": "Apple & Almond Salad",
       "total_ingredients": [
-        "Pears",
-        "Fresh arugula",
-        "Lemons",
-        "Sunflower seeds",
+        "Mixed salad greens",
+        "Apples",
         "Almonds",
-        "Honey",
-        "Olive oil"
+        "Annie's dressing",
+        "Lemon"
       ],
       "available_ingredients": [
-        "Pears",
-        "Fresh arugula",
-        "Lemons",
-        "Sunflower seeds",
-        "Almonds"
+        "Mixed salad greens",
+        "Apples",
+        "Almonds",
+        "Annie's dressing",
+        "Lemons"
       ],
-      "missing_ingredients": [
-        "Honey",
-        "Olive oil"
-      ],
-      "completeness_score": 71,
+      "missing_ingredients": [],
+      "completeness_score": 100,
       "instructions": [
-        "Step 1: Thinly slice the pears.",
-        "Step 2: In a bowl, combine fresh arugula, pear slices, and a handful of sunflower seeds.",
-        "Step 3: Toast almonds lightly to enhance their flavor, then mix them into the salad.",
-        "Step 4: Make a dressing by mixing freshly squeezed lemon juice, honey, and olive oil.",
-        "Step 5: Toss the salad with the dressing just before serving."
+        "Step 1: In a large bowl, combine mixed salad greens.",
+        "Step 2: Thinly slice apples and add them to the bowl.",
+        "Step 3: Add almonds and toss to combine.",
+        "Step 4: Squeeze fresh lemon juice over the salad.",
+        "Step 5: Drizzle Annie's dressing over the top and serve."
       ],
       "cooking_time": "10 minutes",
       "difficulty": "Easy"
     },
     {
-      "name": "Vegetable Stir-Fry Wraps",
+      "name": "Cheese & Pickle Stuffed Tortilla Rolls",
       "total_ingredients": [
         "Flour tortillas",
-        "Mixed bell peppers",
-        "Carrots",
-        "Red cabbage",
-        "Land O'Lakes butter",
-        "Soy sauce",
-        "Garlic"
+        "Philadelphia cream cheese",
+        "Jar of pickles",
+        "Fresh mint",
+        "Cheddar cheese"
       ],
       "available_ingredients": [
         "Flour tortillas",
-        "Mixed bell peppers",
-        "Carrots",
-        "Red cabbage",
-        "Land O'Lakes butter"
-      ],
-      "missing_ingredients": [
-        "Soy sauce",
-        "Garlic"
-      ],
-      "completeness_score": 71,
-      "instructions": [
-        "Step 1: Chop the mixed bell peppers, carrots, and red cabbage into strips.",
-        "Step 2: In a skillet, melt some butter and saut\u00e9 all the vegetables until tender.",
-        "Step 3: Add a splash of soy sauce and minced garlic, stirring until vegetables are coated.",
-        "Step 4: Warm flour tortillas and fill them with the vegetable stir-fry.",
-        "Step 5: Serve immediately as wraps."
-      ],
-      "cooking_time": "25 minutes",
-      "difficulty": "Medium"
-    },
-    {
-      "name": "Minty Fruit and Cheese Platter",
-      "total_ingredients": [
-        "Apples",
-        "Pears",
-        "Bananas",
-        "Fresh mint",
-        "Block of cheddar cheese",
-        "Grated parmesan cheese",
-        "Honey"
-      ],
-      "available_ingredients": [
-        "Apples",
-        "Pears",
-        "Bananas",
-        "Fresh mint",
-        "Block of cheddar cheese",
-        "Grated parmesan cheese"
-      ],
-      "missing_ingredients": [
-        "Honey"
-      ],
-      "completeness_score": 86,
-      "instructions": [
-        "Step 1: Slice apples, pears, and bananas nicely.",
-        "Step 2: Cut block of cheddar cheese into cubes.",
-        "Step 3: Arrange fruits and cheese cubes on a platter.",
-        "Step 4: Sprinkle some fresh mint leaves over the platter.",
-        "Step 5: Optionally drizzle some honey over whole platter for sweetness."
-      ],
-      "cooking_time": "10 minutes",
-      "difficulty": "Easy"
-    },
-    {
-      "name": "Beet and Pickle Salad with Arugula and Mint",
-      "total_ingredients": [
+        "Philadelphia cream cheese",
         "Jar of pickles",
-        "Jar of marinated beets",
-        "Fresh arugula",
         "Fresh mint",
-        "Limes",
-        "Olive oil"
+        "Cheddar cheese"
       ],
-      "available_ingredients": [
-        "Jar of pickles",
-        "Jar of marinated beets",
-        "Fresh arugula",
-        "Fresh mint",
-        "Limes"
-      ],
-      "missing_ingredients": [
-        "Olive oil"
-      ],
-      "completeness_score": 83,
+      "missing_ingredients": [],
+      "completeness_score": 100,
       "instructions": [
-        "Step 1: Drain and chop pickles and marinated beets.",
-        "Step 2: In a salad bowl, mix the chopped pickles and beets with fresh arugula.",
-        "Step 3: Chop fresh mint leaves and add them into the salad.",
-        "Step 4: Make a simple dressing with freshly squeezed lime juice and olive oil.",
-        "Step 5: Toss the salad with dressing before serving."
+        "Step 1: Spread Philadelphia cream cheese over the surface of each tortilla.",
+        "Step 2: Thinly slice pickles and arrange them evenly on top of the cream cheese.",
+        "Step 3: Sprinkle fresh mint leaves and shredded cheddar cheese over the pickles.",
+        "Step 4: Roll the tortillas tightly and slice each roll into 3-4 pieces.",
+        "Step 5: Serve immediately or chill for later."
       ],
       "cooking_time": "15 minutes",
       "difficulty": "Easy"
     },
     {
-      "name": "Tomato Ketchup and Mustard Deviled Eggs",
+      "name": "Maple Drizzled Fruit Platter",
       "total_ingredients": [
-        "Eggs",
-        "Hellman's mayonnaise",
-        "Heinz tomato ketchup",
-        "Colman's mustard",
-        "Fresh parsley",
-        "Paprika"
+        "Apples",
+        "Pears",
+        "Bananas",
+        "Maple syrup",
+        "Limes",
+        "Sunflower seeds"
       ],
       "available_ingredients": [
-        "Eggs",
-        "Hellman's mayonnaise",
-        "Heinz tomato ketchup",
-        "Colman's mustard",
-        "Fresh parsley"
+        "Apples",
+        "Pears",
+        "Bananas",
+        "Maple syrup",
+        "Limes",
+        "Sunflower seeds"
+      ],
+      "missing_ingredients": [],
+      "completeness_score": 100,
+      "instructions": [
+        "Step 1: Slice apples, pears, and bananas into bite-size pieces.",
+        "Step 2: Arrange the fruit on a serving platter.",
+        "Step 3: Squeeze fresh lime juice over the fruit to prevent browning.",
+        "Step 4: Drizzle maple syrup over the fruit.",
+        "Step 5: Sprinkle sunflower seeds on top for added crunch."
+      ],
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Beet & Carrot Spicy Bite",
+      "total_ingredients": [
+        "Jar of marinated beets",
+        "Carrots",
+        "Roland harissa paste",
+        "Feta cheese",
+        "Fresh mint"
+      ],
+      "available_ingredients": [
+        "Jar of marinated beets",
+        "Carrots",
+        "Roland harissa paste",
+        "Fresh mint"
       ],
       "missing_ingredients": [
-        "Paprika"
+        "Feta cheese"
       ],
-      "completeness_score": 83,
+      "completeness_score": 80,
       "instructions": [
-        "Step 1: Place eggs in a pot, cover with water, and boil until hard-boiled.",
-        "Step 2: Once cooled, peel the eggs and slice them in half.",
-        "Step 3: Scoop out the yolks into a bowl, mix them with mayonnaise, ketchup, and mustard.",
-        "Step 4: Spoon or pipe the yolk mixture back into the egg whites.",
-        "Step 5: Garnish with freshly chopped parsley and a sprinkle of paprika."
+        "Step 1: Slice marinated beets and set aside.",
+        "Step 2: Grate carrots and mix with Roland harissa paste.",
+        "Step 3: On a serving platter, place slices of beets in a circle.",
+        "Step 4: Top each beet slice with a spoonful of the spicy carrot mixture.",
+        "Step 5: Garnish with crumbled feta cheese and fresh mint leaves."
       ],
-      "cooking_time": "30 minutes",
+      "cooking_time": "15 minutes",
       "difficulty": "Medium"
     }
   ]
