@@ -68,7 +68,7 @@ if "ingredients" in result:
             print(f"- {item}")
     
 # Save the JSON result to a file
-output_filename = "results/fridge-ingredients.json"
+output_filename = "results/gpt-vision-output.json"
 os.makedirs(os.path.dirname(output_filename), exist_ok=True)
 with open(output_filename, "w") as json_file:
     json.dump(result, json_file, indent=2)

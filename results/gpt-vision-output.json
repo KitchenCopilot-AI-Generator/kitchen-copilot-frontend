@@ -1,104 +1,49 @@
 {
-  "objects": [
-    {
-      "label": "apple",
-      "confidence": 0.98,
-      "bounding_box": [
-        0.393,
-        0.155,
-        0.464,
-        0.271
-      ]
-    },
-    {
-      "label": "pear",
-      "confidence": 0.97,
-      "bounding_box": [
-        0.465,
-        0.153,
-        0.54,
-        0.278
-      ]
-    },
-    {
-      "label": "banana bunch",
-      "confidence": 0.98,
-      "bounding_box": [
-        0.55,
-        0.16,
-        0.658,
-        0.284
-      ]
-    },
-    {
-      "label": "orange",
-      "confidence": 0.97,
-      "bounding_box": [
-        0.54,
-        0.292,
-        0.612,
-        0.391
-      ]
-    },
-    {
-      "label": "plastic container with mixed salad",
-      "confidence": 0.95,
-      "bounding_box": [
-        0.695,
-        0.325,
-        0.837,
-        0.455
-      ]
-    },
-    {
-      "label": "plastic container with spinach",
-      "confidence": 0.95,
-      "bounding_box": [
-        0.056,
-        0.326,
-        0.193,
-        0.457
-      ]
-    },
-    {
-      "label": "maple syrup bottle",
-      "confidence": 0.99,
-      "bounding_box": [
-        0.072,
-        0.59,
-        0.187,
-        0.758
-      ]
-    },
-    {
-      "label": "tomato ketchup bottle",
-      "confidence": 0.98,
-      "bounding_box": [
-        0.211,
-        0.605,
-        0.3,
-        0.749
-      ]
-    },
-    {
-      "label": "red cabbage",
-      "confidence": 0.96,
-      "bounding_box": [
-        0.075,
-        0.762,
-        0.203,
-        0.879
-      ]
-    },
-    {
-      "label": "carrots",
-      "confidence": 0.95,
-      "bounding_box": [
-        0.247,
-        0.78,
-        0.31,
-        0.861
-      ]
-    }
-  ]
+  "ingredients": {
+    "Condiments": [
+      "Maple syrup",
+      "Annie's dressing",
+      "Heinz tomato ketchup",
+      "Hellman's mayonnaise",
+      "Yokki wasabi paste",
+      "Colman's mustard",
+      "Roland harissa paste"
+    ],
+    "Dairy": [
+      "Eggs",
+      "Philadelphia cream cheese",
+      "Land O'Lakes butter"
+    ],
+    "Produce": [
+      "Fresh parsley",
+      "Fresh mint",
+      "Apples",
+      "Pears",
+      "Bananas",
+      "Mixed bell peppers",
+      "Red cabbage",
+      "Carrots",
+      "Mixed salad greens",
+      "Fresh arugula",
+      "Limes",
+      "Lemons"
+    ],
+    "Pantry Items": [
+      "Sunflower seeds",
+      "Almonds",
+      "Dates"
+    ],
+    "Beverages": [
+      "Glass bottle of apple cider vinegar"
+    ],
+    "Packaged Goods": [
+      "Flour tortillas",
+      "Jar of pickles",
+      "Jar of marinated beets"
+    ],
+    "Cheese": [
+      "Block of cheddar cheese",
+      "Grated parmesan cheese"
+    ]
+  }
 }
