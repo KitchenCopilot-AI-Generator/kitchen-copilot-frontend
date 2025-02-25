@@ -1,48 +1,48 @@
 {
   "ingredients": {
-    "Beverages": [
-      "Maple syrup",
-      "Apple cider vinegar"
+    "Dairy": [
+      "eggs",
+      "Philadephia cream cheese",
+      "President Brie cheese",
+      "Land O Lakes butter"
+    ],
+    "Produce": [
+      "bananas",
+      "pears",
+      "oranges",
+      "apples",
+      "peppers (green, red, yellow)",
+      "carrots",
+      "red cabbage",
+      "fresh cilantro",
+      "fresh mint",
+      "fresh spinach leaves"
+    ],
+    "Proteins": [],
+    "Grains": [
+      "flour tortillas"
     ],
     "Condiments": [
       "Heinz tomato ketchup",
-      "Hellmann's mayonnaise",
       "Annie's mustard",
-      "Boland plum paste",
-      "Sarson's malt vinegar",
-      "Gould's traditional Dijon mustard",
-      "Pickled onions",
-      "Pickled carrots",
-      "Pickled gherkins"
+      "Hellmann's mayonnaise",
+      "maple syrup",
+      "soy sauce",
+      "white vinegar",
+      "mustard seeds"
     ],
-    "Dairy": [
-      "Eggs",
-      "Land O'Lakes butter",
-      "Cream cheese",
-      "Shredded cheese",
-      "Parmesan cheese block"
+    "Beverages": [],
+    "Snacks": [
+      "almonds"
     ],
-    "Produce": [
-      "Apples",
-      "Pears",
-      "Bananas",
-      "Lime",
-      "Lemon",
-      "Bell peppers (yellow, green, orange, red)",
-      "Arugula",
-      "Fresh cilantro",
-      "Fresh mint",
-      "Purple cabbage",
-      "Carrots",
-      "Cucumber"
-    ],
-    "Grains": [
-      "Tortillas"
-    ],
-    "Nuts and Seeds": [
-      "Sunflower seeds",
-      "Almonds",
-      "Dates"
+    "Frozen": [],
+    "Canned": [],
+    "Other": [
+      "pickled beets",
+      "pickled onions",
+      "sunflower seeds",
+      "dates",
+      "croutons"
     ]
   }
 }
