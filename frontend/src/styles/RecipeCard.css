@@ -1,0 +1,109 @@
+.recipe-card {
+    position: relative;
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-lg);
+    background-color: white;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    animation: fadeIn 0.5s ease forwards;
+  }
+  
+  .recipe-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+  }
+  
+  .recipe-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .recipe-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-gray-800);
+    margin-right: var(--spacing-md);
+    flex: 1;
+  }
+  
+  .completeness-badge {
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-full);
+    white-space: nowrap;
+  }
+  
+  .completeness-badge.green {
+    background-color: var(--color-secondary-light);
+    color: var(--color-secondary);
+  }
+  
+  .completeness-badge.blue {
+    background-color: var(--color-primary-light);
+    color: var(--color-primary-dark);
+  }
+  
+  .completeness-badge.yellow {
+    background-color: var(--color-accent-light);
+    color: var(--color-accent);
+  }
+  
+  .completeness-badge.red {
+    background-color: var(--color-danger-light);
+    color: var(--color-danger);
+  }
+  
+  .recipe-meta {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .recipe-meta-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-size: 0.875rem;
+    color: var(--color-gray-600);
+    background-color: var(--color-gray-100);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+  }
+  
+  .recipe-ingredients {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .ingredients-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-gray-700);
+    margin-bottom: var(--spacing-xs);
+  }
+  
+  .ingredients-list {
+    font-size: 0.875rem;
+    color: var(--color-gray-600);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .view-recipe-btn {
+    width: 100%;
+    margin-top: var(--spacing-sm);
+  }
+  
+  @media (max-width: 500px) {
+    .recipe-ingredients {
+      grid-template-columns: 1fr;
+      gap: var(--spacing-sm);
+    }
+  }
