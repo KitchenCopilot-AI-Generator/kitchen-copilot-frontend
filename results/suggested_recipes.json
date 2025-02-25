@@ -1,0 +1,230 @@
+{
+  "recipes": [
+    {
+      "name": "Cheesy Apple Pancake Wraps",
+      "total_ingredients": [
+        "Flour tortillas",
+        "Apples",
+        "Land O'Lakes butter",
+        "Philadelphia cream cheese",
+        "Maple syrup",
+        "Cinnamon"
+      ],
+      "available_ingredients": [
+        "Flour tortillas",
+        "Apples",
+        "Land O'Lakes butter",
+        "Philadelphia cream cheese",
+        "Maple syrup"
+      ],
+      "missing_ingredients": [
+        "Cinnamon"
+      ],
+      "completeness_score": 83,
+      "instructions": [
+        "Step 1: Core and thinly slice the apples.",
+        "Step 2: Heat a pan and melt a tablespoon of butter. Add apple slices and cook until they are tender.",
+        "Step 3: Add a hint of cinnamon to apples if available.",
+        "Step 4: Warm the flour tortillas and spread cream cheese over them.",
+        "Step 5: Place the cooked apples over the cream cheese and drizzle with maple syrup.",
+        "Step 6: Roll the tortillas and serve warm."
+      ],
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Spicy Harissa Egg Salad",
+      "total_ingredients": [
+        "Eggs",
+        "Hellman's mayonnaise",
+        "Roland harissa paste",
+        "Mixed salad greens",
+        "Fresh parsley",
+        "Sunflower seeds",
+        "Bread"
+      ],
+      "available_ingredients": [
+        "Eggs",
+        "Hellman's mayonnaise",
+        "Roland harissa paste",
+        "Mixed salad greens",
+        "Fresh parsley",
+        "Sunflower seeds"
+      ],
+      "missing_ingredients": [
+        "Bread"
+      ],
+      "completeness_score": 86,
+      "instructions": [
+        "Step 1: Boil eggs until hard-boiled. Once cooled, peel and chop them.",
+        "Step 2: In a bowl, mix eggs with mayonnaise and harissa paste.",
+        "Step 3: Chop fresh parsley and incorporate it into the egg mixture.",
+        "Step 4: Toast some sunflower seeds and mix them into the salad for a crunchy texture.",
+        "Step 5: Serve the egg salad on a bed of mixed greens or between slices of bread."
+      ],
+      "cooking_time": "20 minutes",
+      "difficulty": "Medium"
+    },
+    {
+      "name": "Pear and Arugula Salad with Lemon Dressing",
+      "total_ingredients": [
+        "Pears",
+        "Fresh arugula",
+        "Lemons",
+        "Sunflower seeds",
+        "Almonds",
+        "Honey",
+        "Olive oil"
+      ],
+      "available_ingredients": [
+        "Pears",
+        "Fresh arugula",
+        "Lemons",
+        "Sunflower seeds",
+        "Almonds"
+      ],
+      "missing_ingredients": [
+        "Honey",
+        "Olive oil"
+      ],
+      "completeness_score": 71,
+      "instructions": [
+        "Step 1: Thinly slice the pears.",
+        "Step 2: In a bowl, combine fresh arugula, pear slices, and a handful of sunflower seeds.",
+        "Step 3: Toast almonds lightly to enhance their flavor, then mix them into the salad.",
+        "Step 4: Make a dressing by mixing freshly squeezed lemon juice, honey, and olive oil.",
+        "Step 5: Toss the salad with the dressing just before serving."
+      ],
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Vegetable Stir-Fry Wraps",
+      "total_ingredients": [
+        "Flour tortillas",
+        "Mixed bell peppers",
+        "Carrots",
+        "Red cabbage",
+        "Land O'Lakes butter",
+        "Soy sauce",
+        "Garlic"
+      ],
+      "available_ingredients": [
+        "Flour tortillas",
+        "Mixed bell peppers",
+        "Carrots",
+        "Red cabbage",
+        "Land O'Lakes butter"
+      ],
+      "missing_ingredients": [
+        "Soy sauce",
+        "Garlic"
+      ],
+      "completeness_score": 71,
+      "instructions": [
+        "Step 1: Chop the mixed bell peppers, carrots, and red cabbage into strips.",
+        "Step 2: In a skillet, melt some butter and saut\u00e9 all the vegetables until tender.",
+        "Step 3: Add a splash of soy sauce and minced garlic, stirring until vegetables are coated.",
+        "Step 4: Warm flour tortillas and fill them with the vegetable stir-fry.",
+        "Step 5: Serve immediately as wraps."
+      ],
+      "cooking_time": "25 minutes",
+      "difficulty": "Medium"
+    },
+    {
+      "name": "Minty Fruit and Cheese Platter",
+      "total_ingredients": [
+        "Apples",
+        "Pears",
+        "Bananas",
+        "Fresh mint",
+        "Block of cheddar cheese",
+        "Grated parmesan cheese",
+        "Honey"
+      ],
+      "available_ingredients": [
+        "Apples",
+        "Pears",
+        "Bananas",
+        "Fresh mint",
+        "Block of cheddar cheese",
+        "Grated parmesan cheese"
+      ],
+      "missing_ingredients": [
+        "Honey"
+      ],
+      "completeness_score": 86,
+      "instructions": [
+        "Step 1: Slice apples, pears, and bananas nicely.",
+        "Step 2: Cut block of cheddar cheese into cubes.",
+        "Step 3: Arrange fruits and cheese cubes on a platter.",
+        "Step 4: Sprinkle some fresh mint leaves over the platter.",
+        "Step 5: Optionally drizzle some honey over whole platter for sweetness."
+      ],
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Beet and Pickle Salad with Arugula and Mint",
+      "total_ingredients": [
+        "Jar of pickles",
+        "Jar of marinated beets",
+        "Fresh arugula",
+        "Fresh mint",
+        "Limes",
+        "Olive oil"
+      ],
+      "available_ingredients": [
+        "Jar of pickles",
+        "Jar of marinated beets",
+        "Fresh arugula",
+        "Fresh mint",
+        "Limes"
+      ],
+      "missing_ingredients": [
+        "Olive oil"
+      ],
+      "completeness_score": 83,
+      "instructions": [
+        "Step 1: Drain and chop pickles and marinated beets.",
+        "Step 2: In a salad bowl, mix the chopped pickles and beets with fresh arugula.",
+        "Step 3: Chop fresh mint leaves and add them into the salad.",
+        "Step 4: Make a simple dressing with freshly squeezed lime juice and olive oil.",
+        "Step 5: Toss the salad with dressing before serving."
+      ],
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Tomato Ketchup and Mustard Deviled Eggs",
+      "total_ingredients": [
+        "Eggs",
+        "Hellman's mayonnaise",
+        "Heinz tomato ketchup",
+        "Colman's mustard",
+        "Fresh parsley",
+        "Paprika"
+      ],
+      "available_ingredients": [
+        "Eggs",
+        "Hellman's mayonnaise",
+        "Heinz tomato ketchup",
+        "Colman's mustard",
+        "Fresh parsley"
+      ],
+      "missing_ingredients": [
+        "Paprika"
+      ],
+      "completeness_score": 83,
+      "instructions": [
+        "Step 1: Place eggs in a pot, cover with water, and boil until hard-boiled.",
+        "Step 2: Once cooled, peel the eggs and slice them in half.",
+        "Step 3: Scoop out the yolks into a bowl, mix them with mayonnaise, ketchup, and mustard.",
+        "Step 4: Spoon or pipe the yolk mixture back into the egg whites.",
+        "Step 5: Garnish with freshly chopped parsley and a sprinkle of paprika."
+      ],
+      "cooking_time": "30 minutes",
+      "difficulty": "Medium"
+    }
+  ]
+}
