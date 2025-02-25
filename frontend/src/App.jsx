@@ -64,8 +64,8 @@ function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1 className="app-title">Fridge Recipe Generator</h1>
-        <p className="app-subtitle">Upload a photo of your fridge and get recipe suggestions</p>
+        <h1 className="app-title">AI Recipe Generator</h1>
+        <p className="app-subtitle">Upload a photo of your ingredients and get recipe suggestions!</p>
       </header>
       
       <main className="container">
