@@ -56,12 +56,12 @@ class VisionService:
         except Exception as e:
             raise Exception(f"Error analyzing image: {str(e)}")
     
-    def save_analysis(self, analysis_result, output_path):
+    def save_analysis(self, analysis_data, output_path):
         """
         Save the analysis result to a JSON file
         
         Args:
-            analysis_result: The analysis result from analyze_image
+            analysis_data: The complete analysis data to save
             output_path: Path to save the JSON output
             
         Returns:
@@ -69,7 +69,7 @@ class VisionService:
         """
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
         with open(output_path, "w") as json_file:
-            json.dump(analysis_result, json_file, indent=2)
+            json.dump(analysis_data, json_file, indent=2)
         
         return output_path
     

@@ -34,9 +34,18 @@ class RecipeService:
             with open(json_path, 'r') as f:
                 data = json.load(f)
             
+            # Extract ingredients from the full response
+            # Check if it's a full API response or just the ingredients
+            if 'result' in data and 'ingredients' in data['result']:
+                ingredients_data = data['result']['ingredients']
+            elif 'ingredients' in data:
+                ingredients_data = data['ingredients']
+            else:
+                raise ValueError("Could not find ingredients in the JSON file")
+            
             # Flatten the ingredients list
             all_ingredients = []
-            for category, items in data['ingredients'].items():
+            for category, items in ingredients_data.items():
                 all_ingredients.extend(items)
             
             return all_ingredients
@@ -80,7 +89,7 @@ require a few additional ingredients. Focus on wholesome, flavorful dishes."""
         Save recipes to a JSON file
         
         Args:
-            recipes_data: Recipe data from generate_recipes
+            recipes_data: Recipe data (complete response)
             output_path: Path to save the output file
             
         Returns:
@@ -101,7 +110,15 @@ require a few additional ingredients. Focus on wholesome, flavorful dishes."""
         Returns:
             DataFrame with recipe analysis or None if no recipes
         """
-        if not recipes_data.get("recipes", []):
+        # Check if recipes_data is already the full response or just the recipes
+        if isinstance(recipes_data, dict) and "recipes" in recipes_data:
+            recipes_list = recipes_data["recipes"]
+        elif isinstance(recipes_data, dict) and "items" in recipes_data:
+            recipes_list = recipes_data["items"]
+        else:
+            recipes_list = []
+        
+        if not recipes_list:
             return None
         
         return pd.DataFrame([{
@@ -112,4 +129,4 @@ require a few additional ingredients. Focus on wholesome, flavorful dishes."""
             "total_ingredients": len(r["total_ingredients"]),
             "cooking_time": r["cooking_time"],
             "difficulty": r["difficulty"]
-        } for r in recipes_data["recipes"]])
+        } for r in recipes_list])

@@ -1,0 +1,226 @@
+{
+  "items": [
+    {
+      "name": "Bell Pepper and Creamy Herb Savory Omelette",
+      "total_ingredients": [
+        "eggs",
+        "Philadelphia cream cheese",
+        "Land O'Lakes butter",
+        "cilantro",
+        "mint",
+        "red bell pepper",
+        "green bell pepper",
+        "yellow bell pepper",
+        "salt",
+        "pepper"
+      ],
+      "available_ingredients": [
+        "eggs",
+        "Philadelphia cream cheese",
+        "Land O'Lakes butter",
+        "cilantro",
+        "mint",
+        "red bell pepper",
+        "green bell pepper",
+        "yellow bell pepper"
+      ],
+      "missing_ingredients": [
+        "salt",
+        "pepper"
+      ],
+      "completeness_score": 80,
+      "instructions": [
+        "Step 1: Beat 4 eggs in a bowl and season with salt and pepper.",
+        "Step 2: Chop the bell peppers, cilantro, and mint finely.",
+        "Step 3: Heat a pan and add a tablespoon of Land O'Lakes butter.",
+        "Step 4: Saut\u00e9 the bell peppers until soft, then add them to the beaten eggs.",
+        "Step 5: Pour the egg mixture into the pan and cook on low heat.",
+        "Step 6: Add small dollops of cream cheese and fold the omelette when the edges are set.",
+        "Step 7: Cook until the omelette is fully cooked and serve with a garnish of cilantro and mint."
+      ],
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Cheesy Spice Roasted Carrot and Cabbage Rolls",
+      "total_ingredients": [
+        "red cabbage",
+        "carrots",
+        "block of cheese",
+        "cilantro",
+        "Hellmann's mayonnaise",
+        "cream cheese",
+        "spices"
+      ],
+      "available_ingredients": [
+        "red cabbage",
+        "carrots",
+        "block of cheese",
+        "cilantro",
+        "Hellmann's mayonnaise",
+        "Philadelphia cream cheese"
+      ],
+      "missing_ingredients": [
+        "spices"
+      ],
+      "completeness_score": 86,
+      "instructions": [
+        "Step 1: Preheat oven to 375\u00b0F (190\u00b0C).",
+        "Step 2: Peel and slice carrots lengthwise. Steam them until tender.",
+        "Step 3: Remove outer leaves of red cabbage and blanch them in hot water for 1 minute.",
+        "Step 4: Grate the block of cheese and mix with cream cheese, chopped cilantro, and spices.",
+        "Step 5: Spread mayonnaise on cabbage leaves, place a carrot slice and cheese mixture, and roll it up.",
+        "Step 6: Place rolls in a baking dish and bake for 20 minutes until the cheese is melted and bubbly.",
+        "Step 7: Serve warm garnished with more cilantro."
+      ],
+      "cooking_time": "40 minutes",
+      "difficulty": "Medium"
+    },
+    {
+      "name": "Minted Arugula and Apple Fresh Salad",
+      "total_ingredients": [
+        "arugula",
+        "red apples",
+        "green apples",
+        "mint",
+        "lime",
+        "Annie's salad dressing",
+        "almonds"
+      ],
+      "available_ingredients": [
+        "arugula",
+        "red apples",
+        "green apples",
+        "mint",
+        "lime",
+        "Annie's salad dressing",
+        "almonds"
+      ],
+      "missing_ingredients": [],
+      "completeness_score": 100,
+      "instructions": [
+        "Step 1: Core and thinly slice red and green apples.",
+        "Step 2: In a salad bowl, combine arugula, sliced apples, and chopped mint.",
+        "Step 3: Squeeze lime juice over the salad.",
+        "Step 4: Roughly chop almonds and sprinkle over the salad.",
+        "Step 5: Drizzle with Annie's salad dressing and toss gently.",
+        "Step 6: Serve immediately as a refreshing side."
+      ],
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Sweet and Savory Citrus Glazed Spaghetti",
+      "total_ingredients": [
+        "jar of spaghetti",
+        "Land O'Lakes butter",
+        "oranges",
+        "lemons",
+        "honey",
+        "creamy Dijon mustard",
+        "almonds",
+        "parsley"
+      ],
+      "available_ingredients": [
+        "jar of spaghetti",
+        "Land O'Lakes butter",
+        "oranges",
+        "lemons",
+        "honey",
+        "creamy Dijon mustard",
+        "almonds",
+        "parsley"
+      ],
+      "missing_ingredients": [],
+      "completeness_score": 100,
+      "instructions": [
+        "Step 1: Cook the jar of spaghetti according to package directions and drain.",
+        "Step 2: Zest and juice the oranges and lemons.",
+        "Step 3: In a skillet, melt Land O'Lakes butter and add honey, citrus zest and juice, and creamy Dijon mustard.",
+        "Step 4: Simmer until slightly thickened, then toss cooked spaghetti with the glaze.",
+        "Step 5: Roughly chop almonds and garnish the pasta along with parsley.",
+        "Step 6: Serve with additional parsley and enjoy warm."
+      ],
+      "cooking_time": "25 minutes",
+      "difficulty": "Medium"
+    },
+    {
+      "name": "Crispy Rice Cracker and Pickled Veggie Tapas",
+      "total_ingredients": [
+        "jar of rice crackers",
+        "jar of pickles",
+        "jar of olives",
+        "Philadelphia cream cheese",
+        "parsley",
+        "Capers"
+      ],
+      "available_ingredients": [
+        "jar of rice crackers",
+        "jar of pickles",
+        "jar of olives",
+        "Philadelphia cream cheese",
+        "parsley",
+        "Capers"
+      ],
+      "missing_ingredients": [],
+      "completeness_score": 100,
+      "instructions": [
+        "Step 1: Spread a small amount of Philadelphia cream cheese on each rice cracker.",
+        "Step 2: Thinly slice pickles and arrange on top of the cream cheese.",
+        "Step 3: Halve the olives and place a slice on each cracker.",
+        "Step 4: Sprinkle capers and freshly chopped parsley over the top.",
+        "Step 5: Serve as a light snack or appetizer."
+      ],
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    }
+  ],
+  "analysis": [
+    {
+      "recipe_name": "Bell Pepper and Creamy Herb Savory Omelette",
+      "completeness": 80,
+      "available_count": 8,
+      "missing_count": 2,
+      "total_ingredients": 10,
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "recipe_name": "Cheesy Spice Roasted Carrot and Cabbage Rolls",
+      "completeness": 86,
+      "available_count": 6,
+      "missing_count": 1,
+      "total_ingredients": 7,
+      "cooking_time": "40 minutes",
+      "difficulty": "Medium"
+    },
+    {
+      "recipe_name": "Minted Arugula and Apple Fresh Salad",
+      "completeness": 100,
+      "available_count": 7,
+      "missing_count": 0,
+      "total_ingredients": 7,
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "recipe_name": "Sweet and Savory Citrus Glazed Spaghetti",
+      "completeness": 100,
+      "available_count": 8,
+      "missing_count": 0,
+      "total_ingredients": 8,
+      "cooking_time": "25 minutes",
+      "difficulty": "Medium"
+    },
+    {
+      "recipe_name": "Crispy Rice Cracker and Pickled Veggie Tapas",
+      "completeness": 100,
+      "available_count": 6,
+      "missing_count": 0,
+      "total_ingredients": 6,
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    }
+  ],
+  "ingredient_count": 41
+}
