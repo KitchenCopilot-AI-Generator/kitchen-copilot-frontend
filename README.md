@@ -12,7 +12,6 @@ An application that analyses your refrigerator contents through images and sugge
 
 ## Requirements
 - Python 3.8+
-- Node.js 18+ and npm
 - Azure OpenAI API access with a deployed GPT-4 Vision model
 
 ## Setup
@@ -25,20 +24,6 @@ An application that analyses your refrigerator contents through images and sugge
    pip install -r requirements.txt
    ```
 4. Copy the `.env.example` file to `.env` and add your Azure OpenAI API keys and settings
-
-### Frontend Setup
-1. Navigate to the frontend directory:
-   ```bash
-   cd frontend
-   ```
-2. Install npm dependencies:
-   ```bash
-   npm install
-   ```
-3. Run the development server:
-   ```bash
-   npm run dev
-   ```
 
 ## Usage
 
@@ -81,11 +66,7 @@ fridge-recipes/
 ├── data/                    # Data and prompts
 │   ├── prompts/             # System prompts
 │   └── results/             # Output directory
-├── api/                     # API endpoints
-└── frontend/                # React frontend
-    ├── src/                 # Source files
-    ├── public/              # Public assets
-    └── package.json         # Frontend dependencies and scripts
+└── api/                     # API endpoints
 ```
 
 ## Example API Responses
