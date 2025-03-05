@@ -1,0 +1,993 @@
+Directory Structure:
+===================
+
+README.md
+api
+└── routes.py
+config.py
+input
+└── fridge.jpg
+main.py
+models
+├── ingredients.py
+└── recipes.py
+requirements.txt
+services
+├── azure_client.py
+└── recipe_service.py
+└── vision_service.py
+utils
+└── image_utils.py
+
+File Contents:
+=============
+
+--- README.md ---
+# AI Recipe Generator
+
+<img src="./assets/demo.png" alt="Frontend Screenshot" width="600" />
+
+An application that analyses your refrigerator contents through images and suggests recipes based on available ingredients.
+
+## Features
+- **Image Analysis**: Upload a photo of your fridge or food items to identify ingredients
+- **Recipe Generation**: Get customized recipe suggestions based on identified ingredients
+- **Dual Operation Modes**: Run as a CLI tool or as an API backend
+- **Modern Frontend**: Interactive web interface for easy ingredient analysis and recipe browsing
+
+## Requirements
+- Python 3.8+
+- Azure OpenAI API access with a deployed GPT-4 Vision model
+
+## Setup
+
+### Backend Setup
+1. Clone the repository
+2. Navigate to the project root
+3. Install Python dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. Copy the `.env.example` file to `.env` and add your Azure OpenAI API keys and settings
+
+## Usage
+
+### CLI Mode
+Analyze an image and generate recipes:
+```bash
+python main.py --mode cli --action both --image fridge.jpg --recipes 5
+```
+
+Just analyze an image:
+```bash
+python main.py --mode cli --action analyze --image fridge.jpg
+```
+
+Just generate recipes from previous analysis:
+```bash
+python main.py --mode cli --action recipes --recipes 7
+```
+
+### API Mode
+Start the API server:
+```bash
+python main.py --mode api --host 0.0.0.0 --port 8000
+```
+
+#### API Endpoints
+- `POST /analyze-image`: Upload and analyze a fridge image
+- `GET /ingredients`: Get ingredients from the most recent analysis
+- `POST /generate-recipes`: Generate recipe suggestions based on available ingredients
+
+## Project Structure
+```
+fridge-recipes/
+├── .env                     # Environment variables
+├── main.py                  # Main entry point
+├── config.py                # Configuration and environment loading
+├── utils/                   # Utility functions
+├── services/                # Core services
+├── models/                  # Data models
+├── data/                    # Data and prompts
+│   ├── prompts/             # System prompts
+│   └── results/             # Output directory
+└── api/                     # API endpoints
+```
+
+## Example API Responses
+
+### Image Analysis Endpoint (`/analyze-image`)
+```json
+{
+  "status": "complete",
+  "result": {
+    "ingredients": {
+      "Dairy": ["milk", "cheddar cheese", "yogurt"],
+      "Produce": ["carrots", "lettuce", "tomatoes", "onions"],
+      "Proteins": ["chicken breast", "eggs"],
+      "Condiments": ["ketchup", "mayonnaise", "mustard"]
+    }
+  },
+  "summary": {
+    "total_ingredients": 10,
+    "ingredient_categories": 4
+  },
+  "image_filename": "fridge_randomhex.jpg"
+}
+```
+
+### Ingredients Endpoint (`/ingredients`)
+```json
+{
+  "Dairy": ["milk", "cheddar cheese", "yogurt"],
+  "Produce": ["carrots", "lettuce", "tomatoes", "onions"],
+  "Proteins": ["chicken breast", "eggs"],
+  "Condiments": ["ketchup", "mayonnaise", "mustard"]
+}
+```
+
+### Recipes Generation Endpoint (`/generate-recipes`)
+```json
+{
+  "recipes": [
+    {
+      "name": "Quick Chicken Salad",
+      "total_ingredients": ["chicken breast", "lettuce", "tomatoes", "onions", "mayonnaise", "salt", "pepper"],
+      "available_ingredients": ["chicken breast", "lettuce", "tomatoes", "onions", "mayonnaise"],
+      "missing_ingredients": ["salt", "pepper"],
+      "completeness_score": 71,
+      "instructions": ["Step 1...", "Step 2..."],
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    }
+  ],
+  "analysis": [
+    {
+      "recipe_name": "Quick Chicken Salad",
+      "ingredient_match_percentage": 71,
+      "difficulty_rating": 2
+    }
+  ],
+  "ingredient_count": 10
+}
+```
+
+
+--- api/routes.py ---
+"""
+API Routes - FastAPI routes for the application
+"""
+
+import os
+import json
+import shutil
+from fastapi import FastAPI, UploadFile, File, HTTPException, BackgroundTasks
+from fastapi.responses import JSONResponse
+from typing import Optional
+from pydantic import BaseModel
+
+# This will be initialized by main.py
+app = FastAPI()
+
+# Store references to services initialized in main.py
+vision_service = None
+recipe_service = None
+config = None
+
+class RecipeRequest(BaseModel):
+    """Model for recipe generation request"""
+    num_recipes: Optional[int] = 5
+    ingredients_file: Optional[str] = None  # If not provided, use latest analysis
+
+async def process_image_async(image_path, output_path):
+    """Process image asynchronously"""
+    try:
+        result = vision_service.analyze_image(image_path)
+        vision_service.save_analysis(result, output_path)
+        return result
+    except Exception as e:
+        raise e
+
+@app.post("/analyze-image")
+async def analyze_image(
+    background_tasks: BackgroundTasks,
+    file: UploadFile = File(...),
+    async_processing: bool = False
+):
+    """
+    Analyze a fridge/food image and identify ingredients
+    
+    Args:
+        file: Uploaded image file
+        async_processing: Whether to process the image asynchronously
+        
+    Returns:
+        Analysis result or processing status
+    """
+    try:
+        # Create a unique filename using timestamp
+        file_ext = os.path.splitext(file.filename)[1]
+        image_filename = f"fridge_{os.urandom(8).hex()}{file_ext}"
+        
+        # Get file paths
+        paths = config.get_file_paths(image_filename)
+        
+        # Save the uploaded file
+        with open(paths["input_image"], "wb") as image_file:
+            shutil.copyfileobj(file.file, image_file)
+        
+        if async_processing:
+            # Process in background
+            background_tasks.add_task(
+                process_image_async, 
+                paths["input_image"], 
+                paths["vision_output"]
+            )
+            return {
+                "status": "processing",
+                "message": "Image analysis started in background",
+                "image_filename": image_filename
+            }
+        else:
+            # Process synchronously
+            result = vision_service.analyze_image(paths["input_image"])
+            vision_service.save_analysis(result, paths["vision_output"])
+            
+            # Get a summary
+            summary = vision_service.get_ingredients_summary(result)
+            
+            return {
+                "status": "complete",
+                "result": result,
+                "summary": summary,
+                "image_filename": image_filename
+            }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/ingredients")
+async def get_ingredients(filename: Optional[str] = None):
+    """
+    Get ingredients from the most recent analysis or specified file
+    
+    Args:
+        filename: Optional filename to load specific analysis
+        
+    Returns:
+        Ingredients data
+    """
+    try:
+        # Get path to the ingredients file
+        if filename:
+            ingredients_file = os.path.join(config.results_dir, filename)
+        else:
+            paths = config.get_file_paths()
+            ingredients_file = paths["vision_output"]
+        
+        # Check if file exists
+        if not os.path.exists(ingredients_file):
+            raise HTTPException(
+                status_code=404, 
+                detail="No ingredients analysis found. Please analyze an image first."
+            )
+        
+        # Load and return the ingredients
+        with open(ingredients_file, "r") as f:
+            return JSONResponse(content=json.load(f))
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/generate-recipes")
+async def generate_recipes(request: RecipeRequest):
+    """
+    Generate recipe suggestions based on available ingredients
+    
+    Args:
+        request: Recipe generation request parameters
+        
+    Returns:
+        Generated recipes
+    """
+    try:
+        # Determine ingredients file path
+        if request.ingredients_file:
+            ingredients_file = os.path.join(config.results_dir, request.ingredients_file)
+        else:
+            paths = config.get_file_paths()
+            ingredients_file = paths["vision_output"]
+        
+        # Check if file exists
+        if not os.path.exists(ingredients_file):
+            raise HTTPException(
+                status_code=404, 
+                detail="No ingredients analysis found. Please analyze an image first."
+            )
+        
+        # Load ingredients
+        ingredients = recipe_service.load_ingredients(ingredients_file)
+        
+        # Generate recipes
+        recipes_data = recipe_service.generate_recipes(
+            ingredients, 
+            num_recipes=request.num_recipes
+        )
+        
+        # Save recipes
+        paths = config.get_file_paths()
+        recipe_service.save_recipes(recipes_data, paths["recipes_output"])
+        
+        # Get analysis
+        analysis = recipe_service.get_recipes_analysis(recipes_data)
+        analysis_dict = analysis.to_dict('records') if analysis is not None else []
+        
+        return {
+            "recipes": recipes_data,
+            "analysis": analysis_dict,
+            "ingredient_count": len(ingredients)
+        }
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+--- config.py ---
+"""
+Configuration module - Handles environment variables and configuration
+"""
+
+import os
+from dotenv import load_dotenv
+
+class Config:
+    """Configuration class that loads and provides access to environment variables"""
+    
+    def __init__(self):
+        """Initialize configuration by loading environment variables"""
+        load_dotenv()
+        self.azure_openai_api_key = os.getenv("AZURE_OPENAI_API_KEY")
+        self.azure_openai_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
+        self.api_version = os.getenv("API_VERSION")
+        self.model_name = os.getenv("MODEL_NAME")
+        
+        # Default paths
+        self.input_dir = os.getenv("INPUT_DIR", "./input")
+        self.results_dir = os.getenv("RESULTS_DIR", "./data/results")
+        
+        # Ensure directories exist
+        os.makedirs(self.input_dir, exist_ok=True)
+        os.makedirs(self.results_dir, exist_ok=True)
+    
+    def get_azure_config(self):
+        """Get Azure OpenAI configuration as a dictionary"""
+        return {
+            "api_key": self.azure_openai_api_key,
+            "api_version": self.api_version,
+            "endpoint": self.azure_openai_endpoint,
+            "model_name": self.model_name
+        }
+    
+    def get_file_paths(self, image_filename=None):
+        """Get file paths for input and output files"""
+        paths = {
+            "vision_output": os.path.join(self.results_dir, "ingredients.json"),
+            "recipes_output": os.path.join(self.results_dir, "recipes.json")
+        }
+        
+        if image_filename:
+            paths["input_image"] = os.path.join(self.input_dir, image_filename)
+            
+        return paths
+
+--- input/fridge.jpg ---
+[Binary file]
+
+--- main.py ---
+"""
+Fridge Recipe Generator - Main entry point for the application
+
+This application:
+1. Analyzes fridge/food images to identify ingredients
+2. Generates recipe suggestions based on available ingredients
+
+The application can be run in:
+- CLI mode for direct command line use
+- API mode for integration with other applications or frontends
+"""
+
+import argparse
+import os
+import uvicorn
+from typing import Optional
+
+# Import services and config
+from config import Config
+from services.azure_client import AzureClientService
+from services.vision_service import VisionService
+from services.recipe_service import RecipeService
+from api.routes import app as api_app
+
+class CLIProcessor:
+    """Command-line interface processor for the application"""
+    
+    def __init__(self, config, vision_service, recipe_service):
+        """
+        Initialize CLI processor
+        
+        Args:
+            config: Configuration object
+            vision_service: Vision analysis service
+            recipe_service: Recipe generation service
+        """
+        self.config = config
+        self.vision_service = vision_service
+        self.recipe_service = recipe_service
+    
+    def analyze_image(self, image_filename: str) -> dict:
+        """
+        Analyze a fridge/food image and identify ingredients
+        
+        Args:
+            image_filename: Filename of the image to analyze
+            
+        Returns:
+            Analysis result
+        """
+        paths = self.config.get_file_paths(image_filename)
+        print(f"Analyzing image: {paths['input_image']}")
+        
+        # Run analysis
+        result = self.vision_service.analyze_image(paths["input_image"])
+        
+        # Save result
+        output_path = self.vision_service.save_analysis(result, paths["vision_output"])
+        print(f"Analysis saved to {output_path}")
+        
+        # Get summary
+        summary = self.vision_service.get_ingredients_summary(result)
+        print(f"\nFound {summary['total_count']} ingredients in {summary['categories']} categories:")
+        for category, count in summary["by_category"].items():
+            print(f"- {category}: {count} items")
+        
+        return result
+    
+    def generate_recipes(self, image_filename: Optional[str] = None, num_recipes: int = 5) -> dict:
+        """
+        Generate recipe suggestions based on available ingredients
+        
+        Args:
+            image_filename: Optional filename of previously analyzed image
+            num_recipes: Number of recipes to generate
+            
+        Returns:
+            Generated recipes
+        """
+        paths = self.config.get_file_paths(image_filename)
+        
+        # Check if ingredients file exists
+        if not os.path.exists(paths["vision_output"]):
+            print("No ingredients analysis found. Please analyze an image first.")
+            return {}
+        
+        # Load ingredients
+        ingredients = self.recipe_service.load_ingredients(paths["vision_output"])
+        print(f"Loaded {len(ingredients)} ingredients from analysis")
+        
+        # Generate recipes
+        print(f"Generating {num_recipes} recipe suggestions...")
+        recipes_data = self.recipe_service.generate_recipes(ingredients, num_recipes=num_recipes)
+        
+        # Save recipes
+        output_path = self.recipe_service.save_recipes(recipes_data, paths["recipes_output"])
+        print(f"Recipes saved to {output_path}")
+        
+        # Print recipe analysis
+        df = self.recipe_service.get_recipes_analysis(recipes_data)
+        if df is not None:
+            print("\n==== RECIPE ANALYSIS ====")
+            print(df)
+        else:
+            print("No recipes were generated.")
+        
+        return recipes_data
+
+def setup_api_mode():
+    """
+    Set up the application in API mode
+    
+    Returns:
+        FastAPI application instance
+    """
+    # Initialize configuration
+    app_config = Config()
+    
+    # Initialize services
+    azure_client = AzureClientService(app_config)
+    app_vision_service = VisionService(azure_client)
+    app_recipe_service = RecipeService(azure_client)
+    
+    # Set up API services
+    import api.routes as routes
+    routes.config = app_config
+    routes.vision_service = app_vision_service
+    routes.recipe_service = app_recipe_service
+    
+    return api_app
+
+def main():
+    """Main entry point for the application"""
+    parser = argparse.ArgumentParser(description="Fridge Recipe Generator")
+    parser.add_argument("--mode", choices=["cli", "api"], default="cli", help="Run mode (cli or api)")
+    parser.add_argument("--action", choices=["analyze", "recipes", "both"], default="both", help="Action to perform in CLI mode")
+    parser.add_argument("--image", help="Image filename for analysis (in input directory)")
+    parser.add_argument("--recipes", type=int, default=5, help="Number of recipes to generate")
+    parser.add_argument("--host", default="127.0.0.1", help="Host for API server")
+    parser.add_argument("--port", type=int, default=8000, help="Port for API server")
+    
+    args = parser.parse_args()
+    
+    if args.mode == "api":
+        # API mode
+        api_app = setup_api_mode()
+        print(f"Starting API server on {args.host}:{args.port}")
+        uvicorn.run(api_app, host=args.host, port=args.port)
+    else:
+        # CLI mode
+        config = Config()
+        azure_client = AzureClientService(config)
+        vision_service = VisionService(azure_client)
+        recipe_service = RecipeService(azure_client)
+        
+        cli = CLIProcessor(config, vision_service, recipe_service)
+        
+        if args.action in ["analyze", "both"]:
+            if not args.image:
+                print("Error: Image filename required for analysis")
+                return
+            cli.analyze_image(args.image)
+        
+        if args.action in ["recipes", "both"]:
+            cli.generate_recipes(args.image, args.recipes)
+
+if __name__ == "__main__":
+    main()
+
+--- models/ingredients.py ---
+"""
+Ingredients Models - Data models for ingredients
+"""
+
+from dataclasses import dataclass
+from typing import Dict, List
+
+@dataclass
+class IngredientsResult:
+    """Data class representing ingredients analysis result"""
+    ingredients: Dict[str, List[str]]
+    
+    @classmethod
+    def from_dict(cls, data):
+        """
+        Create an IngredientsResult instance from a dictionary
+        
+        Args:
+            data: Dictionary with ingredients by category
+            
+        Returns:
+            IngredientsResult instance
+        """
+        if "ingredients" not in data:
+            raise ValueError("Invalid ingredients data: 'ingredients' key not found")
+        return cls(ingredients=data["ingredients"])
+    
+    def to_dict(self):
+        """
+        Convert to dictionary representation
+        
+        Returns:
+            Dictionary with ingredients data
+        """
+        return {
+            "ingredients": self.ingredients
+        }
+    
+    def get_all_ingredients(self):
+        """
+        Get a flattened list of all ingredients
+        
+        Returns:
+            List of all ingredients across categories
+        """
+        result = []
+        for category_items in self.ingredients.values():
+            result.extend(category_items)
+        return result
+
+--- models/recipes.py ---
+"""
+Recipe Models - Data models for recipes
+"""
+
+from dataclasses import dataclass
+from typing import List
+
+@dataclass
+class Recipe:
+    """Data class representing a single recipe"""
+    name: str
+    total_ingredients: List[str]
+    available_ingredients: List[str]
+    missing_ingredients: List[str]
+    completeness_score: float
+    instructions: List[str]
+    cooking_time: str
+    difficulty: str
+    
+    @classmethod
+    def from_dict(cls, data):
+        """
+        Create a Recipe instance from a dictionary
+        
+        Args:
+            data: Dictionary with recipe data
+            
+        Returns:
+            Recipe instance
+        """
+        return cls(
+            name=data["name"],
+            total_ingredients=data["total_ingredients"],
+            available_ingredients=data["available_ingredients"],
+            missing_ingredients=data["missing_ingredients"],
+            completeness_score=data["completeness_score"],
+            instructions=data["instructions"],
+            cooking_time=data["cooking_time"],
+            difficulty=data["difficulty"]
+        )
+    
+    def to_dict(self):
+        """
+        Convert to dictionary representation
+        
+        Returns:
+            Dictionary with recipe data
+        """
+        return {
+            "name": self.name,
+            "total_ingredients": self.total_ingredients,
+            "available_ingredients": self.available_ingredients,
+            "missing_ingredients": self.missing_ingredients,
+            "completeness_score": self.completeness_score,
+            "instructions": self.instructions,
+            "cooking_time": self.cooking_time,
+            "difficulty": self.difficulty
+        }
+
+@dataclass
+class RecipeCollection:
+    """Data class representing a collection of recipes"""
+    recipes: List[Recipe]
+    
+    @classmethod
+    def from_dict(cls, data):
+        """
+        Create a RecipeCollection instance from a dictionary
+        
+        Args:
+            data: Dictionary with recipes data
+            
+        Returns:
+            RecipeCollection instance
+        """
+        if "recipes" not in data:
+            raise ValueError("Invalid recipes data: 'recipes' key not found")
+            
+        recipes = [Recipe.from_dict(r) for r in data["recipes"]]
+        return cls(recipes=recipes)
+    
+    def to_dict(self):
+        """
+        Convert to dictionary representation
+        
+        Returns:
+            Dictionary with recipes data
+        """
+        return {
+            "recipes": [r.to_dict() for r in self.recipes]
+        }
+
+--- requirements.txt ---
+numpy==1.26.3
+torch 
+ultralytics 
+opencv-python 
+pillow
+openai
+python-dotenv
+uvicorn
+fastapi
+pydantic
+pandas
+python-multipart
+
+--- services/azure_client.py ---
+"""
+Azure Client Service - Handles Azure OpenAI API client initialization
+"""
+
+from openai import AzureOpenAI
+
+class AzureClientService:
+    """Service for interacting with Azure OpenAI API"""
+    
+    def __init__(self, config):
+        """
+        Initialize the Azure OpenAI client
+        
+        Args:
+            config: Configuration object containing Azure OpenAI credentials
+        """
+        azure_config = config.get_azure_config()
+        self.client = AzureOpenAI(
+            api_key=azure_config["api_key"],
+            api_version=azure_config["api_version"],
+            azure_endpoint=azure_config["endpoint"]
+        )
+        self.model_name = azure_config["model_name"]
+        
+    def get_client(self):
+        """Get the initialized Azure OpenAI client"""
+        return self.client
+        
+    def get_model_name(self):
+        """Get the model name to use for API calls"""
+        return self.model_name
+
+--- services/recipe_service.py ---
+"""
+Recipe Service - Service for generating recipe suggestions based on ingredients
+"""
+
+import json
+import os
+import pandas as pd
+from data.prompts.recipe_prompt import get_recipe_system_prompt
+
+class RecipeService:
+    """Service for generating recipes based on available ingredients"""
+    
+    def __init__(self, azure_client):
+        """
+        Initialize the Recipe Service
+        
+        Args:
+            azure_client: An initialized AzureClientService object
+        """
+        self.client = azure_client.get_client()
+        self.model_name = azure_client.get_model_name()
+    
+    def load_ingredients(self, json_path):
+        """
+        Load and flatten ingredients from JSON file
+        
+        Args:
+            json_path: Path to the JSON file with ingredients
+            
+        Returns:
+            List of ingredient strings
+        """
+        try:
+            with open(json_path, 'r') as f:
+                data = json.load(f)
+            
+            # Flatten the ingredients list
+            all_ingredients = []
+            for category, items in data['ingredients'].items():
+                all_ingredients.extend(items)
+            
+            return all_ingredients
+        except Exception as e:
+            raise Exception(f"Error loading ingredients: {str(e)}")
+    
+    def generate_recipes(self, ingredients, num_recipes=5):
+        """
+        Generate recipe suggestions using Azure OpenAI API
+        
+        Args:
+            ingredients: List of available ingredients
+            num_recipes: Number of recipes to generate
+            
+        Returns:
+            Dictionary containing recipe suggestions
+        """
+        ingredients_str = ", ".join(ingredients)
+        user_prompt = f"""Here are the ingredients I have available: {ingredients_str}. 
+Please suggest {num_recipes} diverse recipes that I could make with these ingredients. 
+Include some recipes that use most of what I have, and some creative options that might 
+require a few additional ingredients. Focus on wholesome, flavorful dishes."""
+
+        try:
+            response = self.client.chat.completions.create(
+                model=self.model_name,
+                messages=[
+                    {"role": "system", "content": get_recipe_system_prompt()},
+                    {"role": "user", "content": user_prompt}
+                ],
+                max_tokens=4000,
+                response_format={"type": "json_object"}
+            )
+            
+            return json.loads(response.choices[0].message.content)
+        except Exception as e:
+            raise Exception(f"Error generating recipes: {str(e)}")
+    
+    def save_recipes(self, recipes_data, output_path):
+        """
+        Save recipes to a JSON file
+        
+        Args:
+            recipes_data: Recipe data from generate_recipes
+            output_path: Path to save the output file
+            
+        Returns:
+            Path to the saved file
+        """
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        with open(output_path, "w") as f:
+            json.dump(recipes_data, f, indent=2)
+        return output_path
+    
+    def get_recipes_analysis(self, recipes_data):
+        """
+        Create a DataFrame with recipe analysis
+        
+        Args:
+            recipes_data: Recipe data from generate_recipes
+            
+        Returns:
+            DataFrame with recipe analysis or None if no recipes
+        """
+        if not recipes_data.get("recipes", []):
+            return None
+        
+        return pd.DataFrame([{
+            "recipe_name": r["name"],
+            "completeness": r["completeness_score"],
+            "available_count": len(r["available_ingredients"]),
+            "missing_count": len(r["missing_ingredients"]),
+            "total_ingredients": len(r["total_ingredients"]),
+            "cooking_time": r["cooking_time"],
+            "difficulty": r["difficulty"]
+        } for r in recipes_data["recipes"]])
+
+--- services/vision_service.py ---
+"""
+Vision Service - Service for analyzing fridge/food images
+"""
+
+import json
+import os
+from utils.image_utils import encode_image
+from data.prompts.vision_prompt import get_vision_system_prompt
+
+class VisionService:
+    """Service for analyzing food/fridge images using Azure OpenAI Vision API"""
+    
+    def __init__(self, azure_client):
+        """
+        Initialize the Vision Service
+        
+        Args:
+            azure_client: An initialized AzureClientService object
+        """
+        self.client = azure_client.get_client()
+        self.model_name = azure_client.get_model_name()
+    
+    def analyze_image(self, image_path):
+        """
+        Analyze the image using Azure OpenAI Vision API
+        
+        Args:
+            image_path: Path to the input image
+            
+        Returns:
+            Dictionary containing the analysis results
+            
+        Raises:
+            Exception: If the API call fails or parsing fails
+        """
+        try:
+            base64_image = encode_image(image_path)
+            
+            response = self.client.chat.completions.create(
+                model=self.model_name,
+                messages=[
+                    {"role": "system", "content": get_vision_system_prompt()},
+                    {
+                        "role": "user",
+                        "content": [
+                            {"type": "text", "text": "Please identify all the food ingredients and items in this refrigerator image. List as many as you can see and be specific about each item."},
+                            {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}}
+                        ]
+                    }
+                ],
+                max_tokens=2000,
+                response_format={"type": "json_object"}
+            )
+            
+            return json.loads(response.choices[0].message.content)
+        except Exception as e:
+            raise Exception(f"Error analyzing image: {str(e)}")
+    
+    def save_analysis(self, analysis_result, output_path):
+        """
+        Save the analysis result to a JSON file
+        
+        Args:
+            analysis_result: The analysis result from analyze_image
+            output_path: Path to save the JSON output
+            
+        Returns:
+            Path to the saved file
+        """
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        with open(output_path, "w") as json_file:
+            json.dump(analysis_result, json_file, indent=2)
+        
+        return output_path
+    
+    def get_ingredients_summary(self, analysis_result):
+        """
+        Generate a summary of the ingredients from the analysis
+        
+        Args:
+            analysis_result: The analysis result from analyze_image
+            
+        Returns:
+            Dictionary with summary statistics
+        """
+        if "ingredients" not in analysis_result:
+            return {
+                "total_count": 0,
+                "categories": 0,
+                "by_category": {}
+            }
+        
+        categories = analysis_result["ingredients"]
+        by_category = {category: len(items) for category, items in categories.items()}
+        total_count = sum(by_category.values())
+        
+        return {
+            "total_count": total_count,
+            "categories": len(categories),
+            "by_category": by_category
+        }
+
+--- utils/image_utils.py ---
+"""
+Image Utilities - Functions for handling images
+"""
+
+import base64
+import os
+
+def encode_image(image_path):
+    """
+    Encode an image to base64 string
+    
+    Args:
+        image_path: Path to the image file
+        
+    Returns:
+        Base64 encoded string of the image
+    
+    Raises:
+        FileNotFoundError: If the image file doesn't exist
+    """
+    if not os.path.exists(image_path):
+        raise FileNotFoundError(f"Image not found at path: {image_path}")
+        
+    with open(image_path, "rb") as image_file:
+        return base64.b64encode(image_file.read()).decode('utf-8')
+

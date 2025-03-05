@@ -1,6 +1,4 @@
-# AI Recipe Generator
-
-<img src="./assets/demo.png" alt="Frontend Screenshot" width="600" />
+# Kitchen Copilot API
 
 An application that analyses your refrigerator contents through images and suggests recipes based on available ingredients.
 
@@ -46,13 +44,157 @@ python main.py --mode cli --action recipes --recipes 7
 ### API Mode
 Start the API server:
 ```bash
-python main.py --mode api --host 0.0.0.0 --port 8000
+python main.py --mode api --host 0.0.0.0 --port 5000
 ```
 
 #### API Endpoints
 - `POST /analyze-image`: Upload and analyze a fridge image
 - `GET /ingredients`: Get ingredients from the most recent analysis
 - `POST /generate-recipes`: Generate recipe suggestions based on available ingredients
+- `GET /recipes`: Get previously generated recipes
+
+## Using Postman with the API
+
+You can easily test the API endpoints using Postman. Here's how to make requests to each endpoint:
+
+### 1. Analyze Image Endpoint (POST /analyze-image)
+
+1. Open Postman and create a new POST request to `http://localhost:5000/analyze-image`
+2. In the request builder, select the "Body" tab
+3. Select "form-data"
+4. Add a key named "file" and change the type from "Text" to "File"
+5. Click "Select Files" and choose an image of your refrigerator
+6. Click "Send" to submit the request
+
+Example response:
+```json
+{
+  "status": "complete",
+  "result": {
+    "ingredients": {
+      "Dairy": ["milk", "cheddar cheese", "yogurt"],
+      "Produce": ["carrots", "lettuce", "tomatoes", "onions"],
+      "Proteins": ["chicken breast", "eggs"],
+      "Condiments": ["ketchup", "mayonnaise", "mustard"]
+    }
+  },
+  "summary": {
+    "total_count": 10,
+    "categories": 4,
+    "by_category": {
+      "Dairy": 3,
+      "Produce": 4,
+      "Proteins": 2,
+      "Condiments": 3
+    }
+  },
+  "image_filename": "fridge_a1b2c3d4.jpg",
+  "request_id": "fridge_a1b2c3d4"
+}
+```
+
+### 2. Get Ingredients Endpoint (GET /ingredients)
+
+1. Create a new GET request to `http://localhost:5000/ingredients`
+2. Optionally, you can add a query parameter named "request_id" if you want to get ingredients from a specific analysis
+   - The request_id is returned in the analyze-image response (e.g., "fridge_630cee49")
+3. Click "Send" to submit the request
+
+Example response:
+```json
+{
+  "ingredients": {
+    "Dairy": ["milk", "cheddar cheese", "yogurt"],
+    "Produce": ["carrots", "lettuce", "tomatoes", "onions"],
+    "Proteins": ["chicken breast", "eggs"],
+    "Condiments": ["ketchup", "mayonnaise", "mustard"]
+  }
+}
+```
+
+### 3. Get Recipes Endpoint (GET /recipes)
+
+1. Create a new GET request to `http://localhost:5000/recipes`
+2. Optionally, you can add a query parameter named "request_id" if you want to get recipes from a specific analysis
+   - The request_id is returned in the analyze-image response (e.g., "fridge_630cee49")
+3. Click "Send" to submit the request
+
+Example response:
+```json
+{
+  "items": [
+    {
+      "name": "Quick Chicken Salad",
+      "total_ingredients": ["chicken breast", "lettuce", "tomatoes", "onions", "mayonnaise", "salt", "pepper"],
+      "available_ingredients": ["chicken breast", "lettuce", "tomatoes", "onions", "mayonnaise"],
+      "missing_ingredients": ["salt", "pepper"],
+      "completeness_score": 71,
+      "instructions": ["Step 1...", "Step 2..."],
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    }
+  ],
+  "analysis": [
+    {
+      "recipe_name": "Quick Chicken Salad",
+      "completeness": 71,
+      "available_count": 5,
+      "missing_count": 2,
+      "total_ingredients": 7,
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    }
+  ],
+  "ingredient_count": 10
+}
+```
+
+### 4. Generate Recipes Endpoint (POST /generate-recipes)
+
+1. Create a new POST request to `http://localhost:5000/generate-recipes`
+2. In the request builder, select the "Body" tab
+3. Select "raw" and choose "JSON" from the dropdown
+4. Enter the request body:
+   ```json
+   {
+     "num_recipes": 5,
+     "request_id": "fridge_630cee49"
+   }
+   ```
+   - Replace "fridge_630cee49" with the actual request_id from your analyze-image response
+   - You can omit the request_id to use the most recent analysis
+5. Click "Send" to submit the request
+
+Example response:
+Example response:
+```json
+{
+  "items": [
+    {
+      "name": "Quick Chicken Salad",
+      "total_ingredients": ["chicken breast", "lettuce", "tomatoes", "onions", "mayonnaise", "salt", "pepper"],
+      "available_ingredients": ["chicken breast", "lettuce", "tomatoes", "onions", "mayonnaise"],
+      "missing_ingredients": ["salt", "pepper"],
+      "completeness_score": 71,
+      "instructions": ["Step 1...", "Step 2..."],
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    }
+  ],
+  "analysis": [
+    {
+      "recipe_name": "Quick Chicken Salad",
+      "completeness": 71,
+      "available_count": 5,
+      "missing_count": 2,
+      "total_ingredients": 7,
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    }
+  ],
+  "ingredient_count": 10
+}
+```
 
 ## Project Structure
 ```
@@ -71,58 +213,4 @@ fridge-recipes/
 
 ## Example API Responses
 
-### Image Analysis Endpoint (`/analyze-image`)
-```json
-{
-  "status": "complete",
-  "result": {
-    "ingredients": {
-      "Dairy": ["milk", "cheddar cheese", "yogurt"],
-      "Produce": ["carrots", "lettuce", "tomatoes", "onions"],
-      "Proteins": ["chicken breast", "eggs"],
-      "Condiments": ["ketchup", "mayonnaise", "mustard"]
-    }
-  },
-  "summary": {
-    "total_ingredients": 10,
-    "ingredient_categories": 4
-  },
-  "image_filename": "fridge_randomhex.jpg"
-}
-```
-
-### Ingredients Endpoint (`/ingredients`)
-```json
-{
-  "Dairy": ["milk", "cheddar cheese", "yogurt"],
-  "Produce": ["carrots", "lettuce", "tomatoes", "onions"],
-  "Proteins": ["chicken breast", "eggs"],
-  "Condiments": ["ketchup", "mayonnaise", "mustard"]
-}
-```
-
-### Recipes Generation Endpoint (`/generate-recipes`)
-```json
-{
-  "recipes": [
-    {
-      "name": "Quick Chicken Salad",
-      "total_ingredients": ["chicken breast", "lettuce", "tomatoes", "onions", "mayonnaise", "salt", "pepper"],
-      "available_ingredients": ["chicken breast", "lettuce", "tomatoes", "onions", "mayonnaise"],
-      "missing_ingredients": ["salt", "pepper"],
-      "completeness_score": 71,
-      "instructions": ["Step 1...", "Step 2..."],
-      "cooking_time": "15 minutes",
-      "difficulty": "Easy"
-    }
-  ],
-  "analysis": [
-    {
-      "recipe_name": "Quick Chicken Salad",
-      "ingredient_match_percentage": 71,
-      "difficulty_rating": 2
-    }
-  ],
-  "ingredient_count": 10
-}
-```
+See the Postman section above for example responses from each endpoint.

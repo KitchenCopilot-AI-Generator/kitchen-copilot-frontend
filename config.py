@@ -3,6 +3,7 @@ Configuration module - Handles environment variables and configuration
 """
 
 import os
+import time
 from dotenv import load_dotenv
 
 class Config:
@@ -34,13 +35,53 @@ class Config:
         }
     
     def get_file_paths(self, image_filename=None):
-        """Get file paths for input and output files"""
-        paths = {
-            "vision_output": os.path.join(self.results_dir, "ingredients.json"),
-            "recipes_output": os.path.join(self.results_dir, "recipes.json")
-        }
+        """
+        Get file paths for input and output files
         
+        Args:
+            image_filename: Optional image filename to create request-specific paths
+            
+        Returns:
+            Dictionary with paths for input and output files
+        """
         if image_filename:
-            paths["input_image"] = os.path.join(self.input_dir, image_filename)
+            # Extract the base name without extension for folder naming
+            base_name = os.path.splitext(image_filename)[0]
+            
+            # Create request-specific result directory
+            request_dir = os.path.join(self.results_dir, base_name)
+            os.makedirs(request_dir, exist_ok=True)
+            
+            paths = {
+                "request_dir": request_dir,
+                "vision_output": os.path.join(request_dir, "ingredients.json"),
+                "recipes_output": os.path.join(request_dir, "recipes.json"),
+                "input_image": os.path.join(self.input_dir, image_filename)
+            }
+        else:
+            # If no filename is provided, use the most recent request
+            # by finding the most recently modified directory in results_dir
+            try:
+                subdirs = [os.path.join(self.results_dir, d) for d in os.listdir(self.results_dir) 
+                          if os.path.isdir(os.path.join(self.results_dir, d))]
+                if subdirs:
+                    latest_dir = max(subdirs, key=os.path.getmtime)
+                    paths = {
+                        "request_dir": latest_dir,
+                        "vision_output": os.path.join(latest_dir, "ingredients.json"),
+                        "recipes_output": os.path.join(latest_dir, "recipes.json")
+                    }
+                else:
+                    # Fallback to default paths if no subdirectories exist
+                    paths = {
+                        "vision_output": os.path.join(self.results_dir, "ingredients.json"),
+                        "recipes_output": os.path.join(self.results_dir, "recipes.json")
+                    }
+            except (FileNotFoundError, ValueError):
+                # Fallback to default paths if error occurs
+                paths = {
+                    "vision_output": os.path.join(self.results_dir, "ingredients.json"),
+                    "recipes_output": os.path.join(self.results_dir, "recipes.json")
+                }
             
         return paths
