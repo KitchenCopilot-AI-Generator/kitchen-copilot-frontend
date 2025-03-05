@@ -6,7 +6,8 @@ api
 └── routes.py
 config.py
 input
-└── fridge.jpg
+├── fridge.jpg
+└── fridge_1f005d06.jpg
 main.py
 models
 ├── ingredients.py
@@ -23,9 +24,7 @@ File Contents:
 =============
 
 --- README.md ---
-# AI Recipe Generator
-
-<img src="./assets/demo.png" alt="Frontend Screenshot" width="600" />
+# Kitchen Copilot API
 
 An application that analyses your refrigerator contents through images and suggests recipes based on available ingredients.
 
@@ -71,13 +70,157 @@ python main.py --mode cli --action recipes --recipes 7
 ### API Mode
 Start the API server:
 ```bash
-python main.py --mode api --host 0.0.0.0 --port 8000
+python main.py --mode api --host 0.0.0.0 --port 5000
 ```
 
 #### API Endpoints
 - `POST /analyze-image`: Upload and analyze a fridge image
 - `GET /ingredients`: Get ingredients from the most recent analysis
 - `POST /generate-recipes`: Generate recipe suggestions based on available ingredients
+- `GET /recipes`: Get previously generated recipes
+
+## Using Postman with the API
+
+You can easily test the API endpoints using Postman. Here's how to make requests to each endpoint:
+
+### 1. Analyze Image Endpoint (POST /analyze-image)
+
+1. Open Postman and create a new POST request to `http://localhost:5000/analyze-image`
+2. In the request builder, select the "Body" tab
+3. Select "form-data"
+4. Add a key named "file" and change the type from "Text" to "File"
+5. Click "Select Files" and choose an image of your refrigerator
+6. Click "Send" to submit the request
+
+Example response:
+```json
+{
+  "status": "complete",
+  "result": {
+    "ingredients": {
+      "Dairy": ["milk", "cheddar cheese", "yogurt"],
+      "Produce": ["carrots", "lettuce", "tomatoes", "onions"],
+      "Proteins": ["chicken breast", "eggs"],
+      "Condiments": ["ketchup", "mayonnaise", "mustard"]
+    }
+  },
+  "summary": {
+    "total_count": 10,
+    "categories": 4,
+    "by_category": {
+      "Dairy": 3,
+      "Produce": 4,
+      "Proteins": 2,
+      "Condiments": 3
+    }
+  },
+  "image_filename": "fridge_a1b2c3d4.jpg",
+  "request_id": "fridge_a1b2c3d4"
+}
+```
+
+### 2. Get Ingredients Endpoint (GET /ingredients)
+
+1. Create a new GET request to `http://localhost:5000/ingredients`
+2. Optionally, you can add a query parameter named "request_id" if you want to get ingredients from a specific analysis
+   - The request_id is returned in the analyze-image response (e.g., "fridge_630cee49")
+3. Click "Send" to submit the request
+
+Example response:
+```json
+{
+  "ingredients": {
+    "Dairy": ["milk", "cheddar cheese", "yogurt"],
+    "Produce": ["carrots", "lettuce", "tomatoes", "onions"],
+    "Proteins": ["chicken breast", "eggs"],
+    "Condiments": ["ketchup", "mayonnaise", "mustard"]
+  }
+}
+```
+
+### 3. Get Recipes Endpoint (GET /recipes)
+
+1. Create a new GET request to `http://localhost:5000/recipes`
+2. Optionally, you can add a query parameter named "request_id" if you want to get recipes from a specific analysis
+   - The request_id is returned in the analyze-image response (e.g., "fridge_630cee49")
+3. Click "Send" to submit the request
+
+Example response:
+```json
+{
+  "items": [
+    {
+      "name": "Quick Chicken Salad",
+      "total_ingredients": ["chicken breast", "lettuce", "tomatoes", "onions", "mayonnaise", "salt", "pepper"],
+      "available_ingredients": ["chicken breast", "lettuce", "tomatoes", "onions", "mayonnaise"],
+      "missing_ingredients": ["salt", "pepper"],
+      "completeness_score": 71,
+      "instructions": ["Step 1...", "Step 2..."],
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    }
+  ],
+  "analysis": [
+    {
+      "recipe_name": "Quick Chicken Salad",
+      "completeness": 71,
+      "available_count": 5,
+      "missing_count": 2,
+      "total_ingredients": 7,
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    }
+  ],
+  "ingredient_count": 10
+}
+```
+
+### 4. Generate Recipes Endpoint (POST /generate-recipes)
+
+1. Create a new POST request to `http://localhost:5000/generate-recipes`
+2. In the request builder, select the "Body" tab
+3. Select "raw" and choose "JSON" from the dropdown
+4. Enter the request body:
+   ```json
+   {
+     "num_recipes": 5,
+     "request_id": "fridge_630cee49"
+   }
+   ```
+   - Replace "fridge_630cee49" with the actual request_id from your analyze-image response
+   - You can omit the request_id to use the most recent analysis
+5. Click "Send" to submit the request
+
+Example response:
+Example response:
+```json
+{
+  "items": [
+    {
+      "name": "Quick Chicken Salad",
+      "total_ingredients": ["chicken breast", "lettuce", "tomatoes", "onions", "mayonnaise", "salt", "pepper"],
+      "available_ingredients": ["chicken breast", "lettuce", "tomatoes", "onions", "mayonnaise"],
+      "missing_ingredients": ["salt", "pepper"],
+      "completeness_score": 71,
+      "instructions": ["Step 1...", "Step 2..."],
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    }
+  ],
+  "analysis": [
+    {
+      "recipe_name": "Quick Chicken Salad",
+      "completeness": 71,
+      "available_count": 5,
+      "missing_count": 2,
+      "total_ingredients": 7,
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    }
+  ],
+  "ingredient_count": 10
+}
+```
 
 ## Project Structure
 ```
@@ -96,61 +239,7 @@ fridge-recipes/
 
 ## Example API Responses
 
-### Image Analysis Endpoint (`/analyze-image`)
-```json
-{
-  "status": "complete",
-  "result": {
-    "ingredients": {
-      "Dairy": ["milk", "cheddar cheese", "yogurt"],
-      "Produce": ["carrots", "lettuce", "tomatoes", "onions"],
-      "Proteins": ["chicken breast", "eggs"],
-      "Condiments": ["ketchup", "mayonnaise", "mustard"]
-    }
-  },
-  "summary": {
-    "total_ingredients": 10,
-    "ingredient_categories": 4
-  },
-  "image_filename": "fridge_randomhex.jpg"
-}
-```
-
-### Ingredients Endpoint (`/ingredients`)
-```json
-{
-  "Dairy": ["milk", "cheddar cheese", "yogurt"],
-  "Produce": ["carrots", "lettuce", "tomatoes", "onions"],
-  "Proteins": ["chicken breast", "eggs"],
-  "Condiments": ["ketchup", "mayonnaise", "mustard"]
-}
-```
-
-### Recipes Generation Endpoint (`/generate-recipes`)
-```json
-{
-  "recipes": [
-    {
-      "name": "Quick Chicken Salad",
-      "total_ingredients": ["chicken breast", "lettuce", "tomatoes", "onions", "mayonnaise", "salt", "pepper"],
-      "available_ingredients": ["chicken breast", "lettuce", "tomatoes", "onions", "mayonnaise"],
-      "missing_ingredients": ["salt", "pepper"],
-      "completeness_score": 71,
-      "instructions": ["Step 1...", "Step 2..."],
-      "cooking_time": "15 minutes",
-      "difficulty": "Easy"
-    }
-  ],
-  "analysis": [
-    {
-      "recipe_name": "Quick Chicken Salad",
-      "ingredient_match_percentage": 71,
-      "difficulty_rating": 2
-    }
-  ],
-  "ingredient_count": 10
-}
-```
+See the Postman section above for example responses from each endpoint.
 
 
 --- api/routes.py ---
@@ -338,6 +427,7 @@ Configuration module - Handles environment variables and configuration
 """
 
 import os
+import time
 from dotenv import load_dotenv
 
 class Config:
@@ -369,18 +459,61 @@ class Config:
         }
     
     def get_file_paths(self, image_filename=None):
-        """Get file paths for input and output files"""
-        paths = {
-            "vision_output": os.path.join(self.results_dir, "ingredients.json"),
-            "recipes_output": os.path.join(self.results_dir, "recipes.json")
-        }
+        """
+        Get file paths for input and output files
         
+        Args:
+            image_filename: Optional image filename to create request-specific paths
+            
+        Returns:
+            Dictionary with paths for input and output files
+        """
         if image_filename:
-            paths["input_image"] = os.path.join(self.input_dir, image_filename)
+            # Extract the base name without extension for folder naming
+            base_name = os.path.splitext(image_filename)[0]
+            
+            # Create request-specific result directory
+            request_dir = os.path.join(self.results_dir, base_name)
+            os.makedirs(request_dir, exist_ok=True)
+            
+            paths = {
+                "request_dir": request_dir,
+                "vision_output": os.path.join(request_dir, "ingredients.json"),
+                "recipes_output": os.path.join(request_dir, "recipes.json"),
+                "input_image": os.path.join(self.input_dir, image_filename)
+            }
+        else:
+            # If no filename is provided, use the most recent request
+            # by finding the most recently modified directory in results_dir
+            try:
+                subdirs = [os.path.join(self.results_dir, d) for d in os.listdir(self.results_dir) 
+                          if os.path.isdir(os.path.join(self.results_dir, d))]
+                if subdirs:
+                    latest_dir = max(subdirs, key=os.path.getmtime)
+                    paths = {
+                        "request_dir": latest_dir,
+                        "vision_output": os.path.join(latest_dir, "ingredients.json"),
+                        "recipes_output": os.path.join(latest_dir, "recipes.json")
+                    }
+                else:
+                    # Fallback to default paths if no subdirectories exist
+                    paths = {
+                        "vision_output": os.path.join(self.results_dir, "ingredients.json"),
+                        "recipes_output": os.path.join(self.results_dir, "recipes.json")
+                    }
+            except (FileNotFoundError, ValueError):
+                # Fallback to default paths if error occurs
+                paths = {
+                    "vision_output": os.path.join(self.results_dir, "ingredients.json"),
+                    "recipes_output": os.path.join(self.results_dir, "recipes.json")
+                }
             
         return paths
 
 --- input/fridge.jpg ---
+[Binary file]
+
+--- input/fridge_1f005d06.jpg ---
 [Binary file]
 
 --- main.py ---
@@ -398,7 +531,12 @@ The application can be run in:
 
 import argparse
 import os
-import uvicorn
+from flask import Flask, request, jsonify, send_from_directory
+from werkzeug.utils import secure_filename
+import uuid
+import glob
+import time
+import json
 from typing import Optional
 
 # Import services and config
@@ -406,7 +544,14 @@ from config import Config
 from services.azure_client import AzureClientService
 from services.vision_service import VisionService
 from services.recipe_service import RecipeService
-from api.routes import app as api_app
+
+# Initialize Flask app
+app = Flask(__name__)
+
+# Global services - will be initialized in setup_api_mode
+config = None
+vision_service = None
+recipe_service = None
 
 class CLIProcessor:
     """Command-line interface processor for the application"""
@@ -440,8 +585,15 @@ class CLIProcessor:
         # Run analysis
         result = self.vision_service.analyze_image(paths["input_image"])
         
-        # Save result
-        output_path = self.vision_service.save_analysis(result, paths["vision_output"])
+        # Save full result including summary
+        summary = self.vision_service.get_ingredients_summary(result)
+        full_result = {
+            "status": "complete",
+            "result": result,
+            "summary": summary,
+            "image_filename": image_filename
+        }
+        output_path = self.vision_service.save_analysis(full_result, paths["vision_output"])
         print(f"Analysis saved to {output_path}")
         
         # Get summary
@@ -492,28 +644,208 @@ class CLIProcessor:
         
         return recipes_data
 
+# Flask route handlers
+@app.route('/analyze-image', methods=['POST'])
+def analyze_image():
+    """
+    Analyze a fridge/food image and identify ingredients
+    
+    Returns:
+        Analysis result or processing status
+    """
+    try:
+        # Check if file was uploaded
+        if 'file' not in request.files:
+            return jsonify({"error": "No file part in the request"}), 400
+            
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({"error": "No file selected"}), 400
+            
+        # Create a unique filename
+        file_ext = os.path.splitext(file.filename)[1]
+        image_filename = f"fridge_{uuid.uuid4().hex[:8]}{file_ext}"
+        
+        # Get file paths
+        paths = config.get_file_paths(image_filename)
+        
+        # Save the uploaded file
+        file.save(paths["input_image"])
+        
+        # Process image
+        result = vision_service.analyze_image(paths["input_image"])
+        
+        # Get a summary
+        summary = vision_service.get_ingredients_summary(result)
+        
+        # Create full response
+        full_response = {
+            "status": "complete",
+            "result": result,
+            "summary": summary,
+            "image_filename": image_filename
+        }
+        
+        # Save the full response
+        vision_service.save_analysis(full_response, paths["vision_output"])
+        
+        # Include request_id (which is the base name of the image)
+        request_id = os.path.splitext(image_filename)[0]
+        
+        return jsonify({
+            "status": "complete",
+            "result": result,
+            "summary": summary,
+            "image_filename": image_filename,
+            "request_id": request_id
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/ingredients', methods=['GET'])
+def get_ingredients():
+    """
+    Get ingredients from the most recent analysis or specified request ID
+    
+    Returns:
+        Ingredients data
+    """
+    try:
+        # Get request ID (folder name) from query parameter
+        request_id = request.args.get('request_id')
+        
+        if request_id:
+            # Look for the request folder
+            request_dir = os.path.join(config.results_dir, request_id)
+            ingredients_file = os.path.join(request_dir, "ingredients.json")
+        else:
+            # Use most recent analysis
+            paths = config.get_file_paths()
+            ingredients_file = paths["vision_output"]
+        
+        # Check if file exists
+        if not os.path.exists(ingredients_file):
+            return jsonify({
+                "error": "No ingredients analysis found. Please analyze an image first."
+            }), 404
+        
+        # Load and return the ingredients
+        with open(ingredients_file, "r") as f:
+            return jsonify(json.load(f))
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/recipes', methods=['GET'])
+def get_recipes():
+    """
+    Get recipes from the most recent generation or specified request ID
+    
+    Returns:
+        Recipes data
+    """
+    try:
+        # Get request ID (folder name) from query parameter
+        request_id = request.args.get('request_id')
+        
+        if request_id:
+            # Look for the request folder
+            request_dir = os.path.join(config.results_dir, request_id)
+            recipes_file = os.path.join(request_dir, "recipes.json")
+        else:
+            # Use most recent analysis
+            paths = config.get_file_paths()
+            recipes_file = paths["recipes_output"]
+        
+        # Check if file exists
+        if not os.path.exists(recipes_file):
+            return jsonify({
+                "error": "No recipes found. Please generate recipes first."
+            }), 404
+        
+        # Load and return the recipes
+        with open(recipes_file, "r") as f:
+            return jsonify(json.load(f))
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/generate-recipes', methods=['POST'])
+def generate_recipes():
+    """
+    Generate recipe suggestions based on available ingredients
+    
+    Returns:
+        Generated recipes
+    """
+    try:
+        # Parse request data
+        data = request.get_json() or {}
+        num_recipes = data.get('num_recipes', 5)
+        request_id = data.get('request_id')
+        
+        # Determine ingredients file path
+        if request_id:
+            request_dir = os.path.join(config.results_dir, request_id)
+            ingredients_file = os.path.join(request_dir, "ingredients.json")
+        else:
+            paths = config.get_file_paths()
+            ingredients_file = paths["vision_output"]
+        
+        # Check if file exists
+        if not os.path.exists(ingredients_file):
+            return jsonify({
+                "error": "No ingredients analysis found. Please analyze an image first."
+            }), 404
+        
+        # Load ingredients
+        ingredients = recipe_service.load_ingredients(ingredients_file)
+        
+        # Generate recipes
+        recipes_data = recipe_service.generate_recipes(
+            ingredients, 
+            num_recipes=num_recipes
+        )
+        
+        # Get analysis
+        analysis = recipe_service.get_recipes_analysis(recipes_data)
+        analysis_dict = analysis.to_dict('records') if analysis is not None else []
+        
+        # Create full response
+        full_response = {
+            "items": recipes_data["recipes"],
+            "analysis": analysis_dict,
+            "ingredient_count": len(ingredients)
+        }
+        
+        # Determine the recipes output path - use the same request_id if provided
+        if request_id:
+            request_dir = os.path.join(config.results_dir, request_id)
+            recipes_output = os.path.join(request_dir, "recipes.json")
+        else:
+            paths = config.get_file_paths()
+            recipes_output = paths["recipes_output"]
+        
+        # Save the full response
+        os.makedirs(os.path.dirname(recipes_output), exist_ok=True)
+        with open(recipes_output, "w") as f:
+            json.dump(full_response, f, indent=2)
+        
+        return jsonify(full_response)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 def setup_api_mode():
     """
     Set up the application in API mode
-    
-    Returns:
-        FastAPI application instance
     """
+    global config, vision_service, recipe_service
+    
     # Initialize configuration
-    app_config = Config()
+    config = Config()
     
     # Initialize services
-    azure_client = AzureClientService(app_config)
-    app_vision_service = VisionService(azure_client)
-    app_recipe_service = RecipeService(azure_client)
-    
-    # Set up API services
-    import api.routes as routes
-    routes.config = app_config
-    routes.vision_service = app_vision_service
-    routes.recipe_service = app_recipe_service
-    
-    return api_app
+    azure_client = AzureClientService(config)
+    vision_service = VisionService(azure_client)
+    recipe_service = RecipeService(azure_client)
 
 def main():
     """Main entry point for the application"""
@@ -523,15 +855,15 @@ def main():
     parser.add_argument("--image", help="Image filename for analysis (in input directory)")
     parser.add_argument("--recipes", type=int, default=5, help="Number of recipes to generate")
     parser.add_argument("--host", default="127.0.0.1", help="Host for API server")
-    parser.add_argument("--port", type=int, default=8000, help="Port for API server")
+    parser.add_argument("--port", type=int, default=5000, help="Port for API server")
     
     args = parser.parse_args()
     
     if args.mode == "api":
         # API mode
-        api_app = setup_api_mode()
-        print(f"Starting API server on {args.host}:{args.port}")
-        uvicorn.run(api_app, host=args.host, port=args.port)
+        setup_api_mode()
+        print(f"Starting Flask API server on {args.host}:{args.port}")
+        app.run(host=args.host, port=args.port, debug=False)
     else:
         # CLI mode
         config = Config()
@@ -710,6 +1042,8 @@ fastapi
 pydantic
 pandas
 python-multipart
+flask
+werkzeug
 
 --- services/azure_client.py ---
 """
@@ -781,9 +1115,18 @@ class RecipeService:
             with open(json_path, 'r') as f:
                 data = json.load(f)
             
+            # Extract ingredients from the full response
+            # Check if it's a full API response or just the ingredients
+            if 'result' in data and 'ingredients' in data['result']:
+                ingredients_data = data['result']['ingredients']
+            elif 'ingredients' in data:
+                ingredients_data = data['ingredients']
+            else:
+                raise ValueError("Could not find ingredients in the JSON file")
+            
             # Flatten the ingredients list
             all_ingredients = []
-            for category, items in data['ingredients'].items():
+            for category, items in ingredients_data.items():
                 all_ingredients.extend(items)
             
             return all_ingredients
@@ -827,7 +1170,7 @@ require a few additional ingredients. Focus on wholesome, flavorful dishes."""
         Save recipes to a JSON file
         
         Args:
-            recipes_data: Recipe data from generate_recipes
+            recipes_data: Recipe data (complete response)
             output_path: Path to save the output file
             
         Returns:
@@ -848,7 +1191,15 @@ require a few additional ingredients. Focus on wholesome, flavorful dishes."""
         Returns:
             DataFrame with recipe analysis or None if no recipes
         """
-        if not recipes_data.get("recipes", []):
+        # Check if recipes_data is already the full response or just the recipes
+        if isinstance(recipes_data, dict) and "recipes" in recipes_data:
+            recipes_list = recipes_data["recipes"]
+        elif isinstance(recipes_data, dict) and "items" in recipes_data:
+            recipes_list = recipes_data["items"]
+        else:
+            recipes_list = []
+        
+        if not recipes_list:
             return None
         
         return pd.DataFrame([{
@@ -859,7 +1210,7 @@ require a few additional ingredients. Focus on wholesome, flavorful dishes."""
             "total_ingredients": len(r["total_ingredients"]),
             "cooking_time": r["cooking_time"],
             "difficulty": r["difficulty"]
-        } for r in recipes_data["recipes"]])
+        } for r in recipes_list])
 
 --- services/vision_service.py ---
 """
@@ -920,12 +1271,12 @@ class VisionService:
         except Exception as e:
             raise Exception(f"Error analyzing image: {str(e)}")
     
-    def save_analysis(self, analysis_result, output_path):
+    def save_analysis(self, analysis_data, output_path):
         """
         Save the analysis result to a JSON file
         
         Args:
-            analysis_result: The analysis result from analyze_image
+            analysis_data: The complete analysis data to save
             output_path: Path to save the JSON output
             
         Returns:
@@ -933,7 +1284,7 @@ class VisionService:
         """
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
         with open(output_path, "w") as json_file:
-            json.dump(analysis_result, json_file, indent=2)
+            json.dump(analysis_data, json_file, indent=2)
         
         return output_path
     
