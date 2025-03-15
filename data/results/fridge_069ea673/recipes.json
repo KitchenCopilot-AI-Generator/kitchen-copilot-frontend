@@ -1,0 +1,227 @@
+{
+  "items": [
+    {
+      "name": "Mediterranean Veggie Tortilla Wrap",
+      "total_ingredients": [
+        "Tortillas",
+        "Mixed bell peppers",
+        "Red cabbage",
+        "Carrots",
+        "Zucchini",
+        "Fresh basil",
+        "Hellmann's mayonnaise",
+        "Philadelphia cream cheese",
+        "Annies mustard",
+        "Lemons",
+        "Cilantro"
+      ],
+      "available_ingredients": [
+        "Tortillas",
+        "Mixed bell peppers",
+        "Red cabbage",
+        "Carrots",
+        "Zucchini",
+        "Fresh basil",
+        "Hellmann's mayonnaise",
+        "Philadelphia cream cheese",
+        "Annies mustard",
+        "Lemons",
+        "Cilantro"
+      ],
+      "missing_ingredients": [],
+      "completeness_score": 100,
+      "instructions": [
+        "Step 1: Thinly slice the mixed bell peppers, red cabbage, carrots, and zucchini.",
+        "Step 2: In a bowl, mix Hellmann's mayonnaise, Philadelphia cream cheese, a squeeze of lemon juice, and a teaspoon of Annies mustard.",
+        "Step 3: Spread the mixture on tortillas. Layer with sliced vegetables and sprinkle fresh basil and cilantro before rolling the wrap.",
+        "Step 4: Roll tightly and serve immediately."
+      ],
+      "cooking_time": "20 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Creamy Lemon Cilantro Pasta",
+      "total_ingredients": [
+        "Pasta",
+        "Philadelphia cream cheese",
+        "Cilantro",
+        "Lemons",
+        "White wine",
+        "Red bell peppers",
+        "Land O Lakes butter",
+        "Salt",
+        "Pepper"
+      ],
+      "available_ingredients": [
+        "Philadelphia cream cheese",
+        "Cilantro",
+        "Lemons",
+        "White wine",
+        "Land O Lakes butter"
+      ],
+      "missing_ingredients": [
+        "Pasta",
+        "Red bell peppers",
+        "Salt",
+        "Pepper"
+      ],
+      "completeness_score": 62,
+      "instructions": [
+        "Step 1: Cook pasta according to package instructions, drain and set aside.",
+        "Step 2: In a pan, melt butter and saut\u00e9 diced red bell peppers until soft.",
+        "Step 3: Add Philadelphia cream cheese, a splash of white wine, and juice of a lemon, stir to combine.",
+        "Step 4: Toss the pasta in the sauce, season with salt and pepper, and sprinkle with chopped cilantro before serving."
+      ],
+      "cooking_time": "25 minutes",
+      "difficulty": "Medium"
+    },
+    {
+      "name": "Zucchini and Bell Pepper Stir Fry",
+      "total_ingredients": [
+        "Zucchini",
+        "Mixed bell peppers",
+        "Soy sauce",
+        "Garlic",
+        "Limes",
+        "Cilantro",
+        "Sunflower seeds"
+      ],
+      "available_ingredients": [
+        "Zucchini",
+        "Mixed bell peppers",
+        "Soy sauce",
+        "Limes",
+        "Cilantro",
+        "Sunflower seeds"
+      ],
+      "missing_ingredients": [
+        "Garlic"
+      ],
+      "completeness_score": 87,
+      "instructions": [
+        "Step 1: Slice zucchini and bell peppers into strips.",
+        "Step 2: Heat a pan and toast sunflower seeds lightly, then set aside.",
+        "Step 3: In the same pan, add soy sauce and lime juice, then stir-fry zucchini and bell peppers for 5 minutes.",
+        "Step 4: Add minced garlic, continue stirring for 2 more minutes.",
+        "Step 5: Garnish with cilantro and toasted sunflower seeds before serving."
+      ],
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Banana Maple Breakfast Delight",
+      "total_ingredients": [
+        "Bananas",
+        "Organic maple syrup",
+        "Philadelphia cream cheese",
+        "Tortillas",
+        "Almonds"
+      ],
+      "available_ingredients": [
+        "Bananas",
+        "Organic maple syrup",
+        "Philadelphia cream cheese",
+        "Tortillas",
+        "Almonds"
+      ],
+      "missing_ingredients": [],
+      "completeness_score": 100,
+      "instructions": [
+        "Step 1: Mash bananas in a bowl.",
+        "Step 2: Mix the banana mash with Philadelphia cream cheese.",
+        "Step 3: Spread the mixture on tortillas and roll them up.",
+        "Step 4: Drizzle organic maple syrup on top and garnish with crushed almonds before serving."
+      ],
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Pear and Arugula Salad with Citrus Vinaigrette",
+      "total_ingredients": [
+        "Pears",
+        "Arugula",
+        "Lemons",
+        "Oranges",
+        "Limes",
+        "Almonds",
+        "Organic maple syrup",
+        "Annies mustard",
+        "Salt",
+        "Pepper"
+      ],
+      "available_ingredients": [
+        "Pears",
+        "Arugula",
+        "Lemons",
+        "Oranges",
+        "Limes",
+        "Almonds",
+        "Organic maple syrup",
+        "Annies mustard"
+      ],
+      "missing_ingredients": [
+        "Salt",
+        "Pepper"
+      ],
+      "completeness_score": 80,
+      "instructions": [
+        "Step 1: Slice pears thinly and set aside.",
+        "Step 2: In a bowl, whisk together juice of lemon, orange, and lime with organic maple syrup and Annies mustard.",
+        "Step 3: Season with salt and pepper.",
+        "Step 4: In a large bowl, combine arugula and pear slices.",
+        "Step 5: Toss with the citrus vinaigrette.",
+        "Step 6: Garnish the salad with sliced almonds before serving."
+      ],
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    }
+  ],
+  "analysis": [
+    {
+      "recipe_name": "Mediterranean Veggie Tortilla Wrap",
+      "completeness": 100,
+      "available_count": 11,
+      "missing_count": 0,
+      "total_ingredients": 11,
+      "cooking_time": "20 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "recipe_name": "Creamy Lemon Cilantro Pasta",
+      "completeness": 62,
+      "available_count": 5,
+      "missing_count": 4,
+      "total_ingredients": 9,
+      "cooking_time": "25 minutes",
+      "difficulty": "Medium"
+    },
+    {
+      "recipe_name": "Zucchini and Bell Pepper Stir Fry",
+      "completeness": 87,
+      "available_count": 6,
+      "missing_count": 1,
+      "total_ingredients": 7,
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "recipe_name": "Banana Maple Breakfast Delight",
+      "completeness": 100,
+      "available_count": 5,
+      "missing_count": 0,
+      "total_ingredients": 5,
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "recipe_name": "Pear and Arugula Salad with Citrus Vinaigrette",
+      "completeness": 80,
+      "available_count": 8,
+      "missing_count": 2,
+      "total_ingredients": 10,
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    }
+  ],
+  "ingredient_count": 31
+}
