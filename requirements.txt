@@ -12,3 +12,4 @@ pandas
 python-multipart
 flask
 werkzeug
+flask-cors
