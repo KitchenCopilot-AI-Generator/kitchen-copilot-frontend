@@ -141,7 +141,7 @@ Example response:
    - The request_id is returned in the analyze-image response (e.g., "fridge_630cee49")
 3. Click "Send" to submit the request
 
-![Ingredients Analysis Display](assets/Ingredient.png)
+![Ingredients Analysis Display](assets/Ingredients.png)
 
 Example response:
 ```json
