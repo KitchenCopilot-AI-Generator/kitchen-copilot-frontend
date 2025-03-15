@@ -56,7 +56,7 @@ An application that analyses your refrigerator contents through images and sugge
 
 2. In a separate terminal, start the frontend development server:
    ```bash
-   cd frontend
+   cd kitchen-copilot-frontend
    npm run dev
    ```
 
