@@ -26,8 +26,12 @@ from services.azure_client import AzureClientService
 from services.vision_service import VisionService
 from services.recipe_service import RecipeService
 
+from flask_cors import CORS
+
 # Initialize Flask app
 app = Flask(__name__)
+
+CORS(app)  # This enables CORS for all routes
 
 # Global services - will be initialized in setup_api_mode
 config = None

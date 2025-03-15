@@ -1,0 +1,69 @@
+{
+  "status": "complete",
+  "result": {
+    "ingredients": {
+      "Dairy": [
+        "Philadelphia cream cheese",
+        "Land O Lakes butter"
+      ],
+      "Produce": [
+        "Bananas",
+        "Pears",
+        "Apples",
+        "Fresh spinach leaves",
+        "Fresh cilantro",
+        "Fresh mint",
+        "Red cabbage",
+        "Carrots",
+        "Yellow bell pepper",
+        "Orange bell pepper",
+        "Green bell pepper",
+        "Tomatoes"
+      ],
+      "Proteins": [],
+      "Grains": [
+        "Flour tortillas"
+      ],
+      "Condiments": [
+        "Heinz tomato ketchup",
+        "Hellmann's mayonnaise",
+        "Maple syrup",
+        "Annie's mustard"
+      ],
+      "Beverages": [
+        "Strawberry syrup"
+      ],
+      "Snacks": [
+        "Dates",
+        "Almonds"
+      ],
+      "Frozen": [],
+      "Canned": [
+        "Yoki corn paste",
+        "Durkee French onions"
+      ],
+      "Other": [
+        "Jar of pickles",
+        "Eggs",
+        "Sunflower seeds"
+      ]
+    }
+  },
+  "summary": {
+    "total_count": 27,
+    "categories": 10,
+    "by_category": {
+      "Dairy": 2,
+      "Produce": 12,
+      "Proteins": 0,
+      "Grains": 1,
+      "Condiments": 4,
+      "Beverages": 1,
+      "Snacks": 2,
+      "Frozen": 0,
+      "Canned": 2,
+      "Other": 3
+    }
+  },
+  "image_filename": "fridge_203a37c8.jpg"
+}

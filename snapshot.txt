@@ -5,8 +5,21 @@ README.md
 api
 └── routes.py
 config.py
+data
+├── prompts
+    └── recipe_prompt.py
+    └── vision_prompt.py
+└── results
+    ├── fridge_069ea673
+        ├── ingredients.json
+        └── recipes.json
+    └── fridge_1f005d06
+        ├── ingredients.json
+        └── recipes.json
 input
-└── fridge.jpg
+├── fridge.jpg
+├── fridge_069ea673.jpg
+└── fridge_1f005d06.jpg
 main.py
 models
 ├── ingredients.py
@@ -23,9 +36,7 @@ File Contents:
 =============
 
 --- README.md ---
-# AI Recipe Generator
-
-<img src="./assets/demo.png" alt="Frontend Screenshot" width="600" />
+# Kitchen Copilot API
 
 An application that analyses your refrigerator contents through images and suggests recipes based on available ingredients.
 
@@ -71,13 +82,157 @@ python main.py --mode cli --action recipes --recipes 7
 ### API Mode
 Start the API server:
 ```bash
-python main.py --mode api --host 0.0.0.0 --port 8000
+python main.py --mode api --host 0.0.0.0 --port 5000
 ```
 
 #### API Endpoints
 - `POST /analyze-image`: Upload and analyze a fridge image
 - `GET /ingredients`: Get ingredients from the most recent analysis
 - `POST /generate-recipes`: Generate recipe suggestions based on available ingredients
+- `GET /recipes`: Get previously generated recipes
+
+## Using Postman with the API
+
+You can easily test the API endpoints using Postman. Here's how to make requests to each endpoint:
+
+### 1. Analyze Image Endpoint (POST /analyze-image)
+
+1. Open Postman and create a new POST request to `http://localhost:5000/analyze-image`
+2. In the request builder, select the "Body" tab
+3. Select "form-data"
+4. Add a key named "file" and change the type from "Text" to "File"
+5. Click "Select Files" and choose an image of your refrigerator
+6. Click "Send" to submit the request
+
+Example response:
+```json
+{
+  "status": "complete",
+  "result": {
+    "ingredients": {
+      "Dairy": ["milk", "cheddar cheese", "yogurt"],
+      "Produce": ["carrots", "lettuce", "tomatoes", "onions"],
+      "Proteins": ["chicken breast", "eggs"],
+      "Condiments": ["ketchup", "mayonnaise", "mustard"]
+    }
+  },
+  "summary": {
+    "total_count": 10,
+    "categories": 4,
+    "by_category": {
+      "Dairy": 3,
+      "Produce": 4,
+      "Proteins": 2,
+      "Condiments": 3
+    }
+  },
+  "image_filename": "fridge_a1b2c3d4.jpg",
+  "request_id": "fridge_a1b2c3d4"
+}
+```
+
+### 2. Get Ingredients Endpoint (GET /ingredients)
+
+1. Create a new GET request to `http://localhost:5000/ingredients`
+2. Optionally, you can add a query parameter named "request_id" if you want to get ingredients from a specific analysis
+   - The request_id is returned in the analyze-image response (e.g., "fridge_630cee49")
+3. Click "Send" to submit the request
+
+Example response:
+```json
+{
+  "ingredients": {
+    "Dairy": ["milk", "cheddar cheese", "yogurt"],
+    "Produce": ["carrots", "lettuce", "tomatoes", "onions"],
+    "Proteins": ["chicken breast", "eggs"],
+    "Condiments": ["ketchup", "mayonnaise", "mustard"]
+  }
+}
+```
+
+### 3. Get Recipes Endpoint (GET /recipes)
+
+1. Create a new GET request to `http://localhost:5000/recipes`
+2. Optionally, you can add a query parameter named "request_id" if you want to get recipes from a specific analysis
+   - The request_id is returned in the analyze-image response (e.g., "fridge_630cee49")
+3. Click "Send" to submit the request
+
+Example response:
+```json
+{
+  "items": [
+    {
+      "name": "Quick Chicken Salad",
+      "total_ingredients": ["chicken breast", "lettuce", "tomatoes", "onions", "mayonnaise", "salt", "pepper"],
+      "available_ingredients": ["chicken breast", "lettuce", "tomatoes", "onions", "mayonnaise"],
+      "missing_ingredients": ["salt", "pepper"],
+      "completeness_score": 71,
+      "instructions": ["Step 1...", "Step 2..."],
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    }
+  ],
+  "analysis": [
+    {
+      "recipe_name": "Quick Chicken Salad",
+      "completeness": 71,
+      "available_count": 5,
+      "missing_count": 2,
+      "total_ingredients": 7,
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    }
+  ],
+  "ingredient_count": 10
+}
+```
+
+### 4. Generate Recipes Endpoint (POST /generate-recipes)
+
+1. Create a new POST request to `http://localhost:5000/generate-recipes`
+2. In the request builder, select the "Body" tab
+3. Select "raw" and choose "JSON" from the dropdown
+4. Enter the request body:
+   ```json
+   {
+     "num_recipes": 5,
+     "request_id": "fridge_630cee49"
+   }
+   ```
+   - Replace "fridge_630cee49" with the actual request_id from your analyze-image response
+   - You can omit the request_id to use the most recent analysis
+5. Click "Send" to submit the request
+
+Example response:
+Example response:
+```json
+{
+  "items": [
+    {
+      "name": "Quick Chicken Salad",
+      "total_ingredients": ["chicken breast", "lettuce", "tomatoes", "onions", "mayonnaise", "salt", "pepper"],
+      "available_ingredients": ["chicken breast", "lettuce", "tomatoes", "onions", "mayonnaise"],
+      "missing_ingredients": ["salt", "pepper"],
+      "completeness_score": 71,
+      "instructions": ["Step 1...", "Step 2..."],
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    }
+  ],
+  "analysis": [
+    {
+      "recipe_name": "Quick Chicken Salad",
+      "completeness": 71,
+      "available_count": 5,
+      "missing_count": 2,
+      "total_ingredients": 7,
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    }
+  ],
+  "ingredient_count": 10
+}
+```
 
 ## Project Structure
 ```
@@ -96,61 +251,7 @@ fridge-recipes/
 
 ## Example API Responses
 
-### Image Analysis Endpoint (`/analyze-image`)
-```json
-{
-  "status": "complete",
-  "result": {
-    "ingredients": {
-      "Dairy": ["milk", "cheddar cheese", "yogurt"],
-      "Produce": ["carrots", "lettuce", "tomatoes", "onions"],
-      "Proteins": ["chicken breast", "eggs"],
-      "Condiments": ["ketchup", "mayonnaise", "mustard"]
-    }
-  },
-  "summary": {
-    "total_ingredients": 10,
-    "ingredient_categories": 4
-  },
-  "image_filename": "fridge_randomhex.jpg"
-}
-```
-
-### Ingredients Endpoint (`/ingredients`)
-```json
-{
-  "Dairy": ["milk", "cheddar cheese", "yogurt"],
-  "Produce": ["carrots", "lettuce", "tomatoes", "onions"],
-  "Proteins": ["chicken breast", "eggs"],
-  "Condiments": ["ketchup", "mayonnaise", "mustard"]
-}
-```
-
-### Recipes Generation Endpoint (`/generate-recipes`)
-```json
-{
-  "recipes": [
-    {
-      "name": "Quick Chicken Salad",
-      "total_ingredients": ["chicken breast", "lettuce", "tomatoes", "onions", "mayonnaise", "salt", "pepper"],
-      "available_ingredients": ["chicken breast", "lettuce", "tomatoes", "onions", "mayonnaise"],
-      "missing_ingredients": ["salt", "pepper"],
-      "completeness_score": 71,
-      "instructions": ["Step 1...", "Step 2..."],
-      "cooking_time": "15 minutes",
-      "difficulty": "Easy"
-    }
-  ],
-  "analysis": [
-    {
-      "recipe_name": "Quick Chicken Salad",
-      "ingredient_match_percentage": 71,
-      "difficulty_rating": 2
-    }
-  ],
-  "ingredient_count": 10
-}
-```
+See the Postman section above for example responses from each endpoint.
 
 
 --- api/routes.py ---
@@ -338,6 +439,7 @@ Configuration module - Handles environment variables and configuration
 """
 
 import os
+import time
 from dotenv import load_dotenv
 
 class Config:
@@ -369,18 +471,752 @@ class Config:
         }
     
     def get_file_paths(self, image_filename=None):
-        """Get file paths for input and output files"""
-        paths = {
-            "vision_output": os.path.join(self.results_dir, "ingredients.json"),
-            "recipes_output": os.path.join(self.results_dir, "recipes.json")
-        }
+        """
+        Get file paths for input and output files
         
+        Args:
+            image_filename: Optional image filename to create request-specific paths
+            
+        Returns:
+            Dictionary with paths for input and output files
+        """
         if image_filename:
-            paths["input_image"] = os.path.join(self.input_dir, image_filename)
+            # Extract the base name without extension for folder naming
+            base_name = os.path.splitext(image_filename)[0]
+            
+            # Create request-specific result directory
+            request_dir = os.path.join(self.results_dir, base_name)
+            os.makedirs(request_dir, exist_ok=True)
+            
+            paths = {
+                "request_dir": request_dir,
+                "vision_output": os.path.join(request_dir, "ingredients.json"),
+                "recipes_output": os.path.join(request_dir, "recipes.json"),
+                "input_image": os.path.join(self.input_dir, image_filename)
+            }
+        else:
+            # If no filename is provided, use the most recent request
+            # by finding the most recently modified directory in results_dir
+            try:
+                subdirs = [os.path.join(self.results_dir, d) for d in os.listdir(self.results_dir) 
+                          if os.path.isdir(os.path.join(self.results_dir, d))]
+                if subdirs:
+                    latest_dir = max(subdirs, key=os.path.getmtime)
+                    paths = {
+                        "request_dir": latest_dir,
+                        "vision_output": os.path.join(latest_dir, "ingredients.json"),
+                        "recipes_output": os.path.join(latest_dir, "recipes.json")
+                    }
+                else:
+                    # Fallback to default paths if no subdirectories exist
+                    paths = {
+                        "vision_output": os.path.join(self.results_dir, "ingredients.json"),
+                        "recipes_output": os.path.join(self.results_dir, "recipes.json")
+                    }
+            except (FileNotFoundError, ValueError):
+                # Fallback to default paths if error occurs
+                paths = {
+                    "vision_output": os.path.join(self.results_dir, "ingredients.json"),
+                    "recipes_output": os.path.join(self.results_dir, "recipes.json")
+                }
             
         return paths
 
+--- data/prompts/recipe_prompt.py ---
+"""
+Recipe Generation Prompt - System prompt for the recipe generation service
+"""
+
+def get_recipe_system_prompt():
+    """
+    Return the system prompt for recipe generation
+    
+    Returns:
+        String containing the system prompt
+    """
+    return """You are a creative chef who specializes in creating recipes based on available ingredients.
+Your task is to suggest recipes that can be made with the provided ingredients.
+For each recipe, you will:
+1. Generate the recipe name
+2. List all required ingredients (both those provided and those missing)
+3. Provide detailed cooking instructions
+4. Rate what percentage of necessary ingredients are available
+
+Return your suggestions as a JSON object with the following structure:
+{
+  "recipes": [
+    {
+      "name": "Recipe Name",
+      "total_ingredients": [list of all ingredients needed],
+      "available_ingredients": [list of ingredients from user's inventory],
+      "missing_ingredients": [list of ingredients not in user's inventory],
+      "completeness_score": 85,  // percentage of available ingredients
+      "instructions": ["Step 1...", "Step 2...", ...],
+      "cooking_time": "30 minutes",
+      "difficulty": "Easy/Medium/Hard"
+    },
+    ...
+  ]
+}
+"""
+
+--- data/prompts/vision_prompt.py ---
+"""
+Vision Analysis Prompt - System prompt for the vision analysis service
+"""
+
+def get_vision_system_prompt():
+    """
+    Return the system prompt for fridge image analysis
+    
+    Returns:
+        String containing the system prompt
+    """
+    return """You are a helpful kitchen assistant with excellent vision capabilities.
+Your task is to:
+1. Identify ALL food ingredients and items visible in this refrigerator/kitchen image
+2. List as many ingredients as you can possibly identify
+3. Be specific about each item (e.g., "fresh spinach leaves" instead of just "vegetables")
+4. Organize ingredients into ONLY the following categories:
+   - Dairy (milk, cheese, yogurt, butter, etc.)
+   - Produce (fruits, vegetables, herbs, etc.)
+   - Proteins (meat, poultry, fish, tofu, etc.)
+   - Grains (bread, rice, pasta, cereals, etc.)
+   - Condiments (sauces, dressings, spreads, etc.)
+   - Beverages (drinks, juices, etc.)
+   - Snacks (chips, cookies, nuts, etc.)
+   - Frozen (ice cream, frozen meals, etc.)
+   - Canned (canned vegetables, beans, soups, etc.)
+   - Other (any items that don't fit the above categories)
+5. Return your analysis as a JSON object with:
+   - A key "ingredients" containing an object with these specific category names as keys
+   - Each category should contain an array of specific ingredients
+   - If a category has no items, include it with an empty array
+6. Be thorough and try to identify even partially visible items
+7. IMPORTANT: Use ONLY the specified categories above, do not create your own categories"""
+
+--- data/results/fridge_069ea673/ingredients.json ---
+{
+  "status": "complete",
+  "result": {
+    "ingredients": {
+      "Dairy": [
+        "Hellmann's mayonnaise",
+        "Philadelphia cream cheese",
+        "Land O Lakes butter"
+      ],
+      "Produce": [
+        "Bananas",
+        "Pears",
+        "Apples",
+        "Mixed bell peppers (red, yellow, green)",
+        "Oranges",
+        "Lemons",
+        "Limes",
+        "Cilantro",
+        "Fresh basil",
+        "Arugula",
+        "Red cabbage",
+        "Carrots",
+        "Zucchini"
+      ],
+      "Proteins": [
+        "Eggs"
+      ],
+      "Grains": [
+        "Tortillas"
+      ],
+      "Condiments": [
+        "Heinz tomato ketchup",
+        "Hellmann's mayonnaise",
+        "Organic maple syrup",
+        "Annies mustard",
+        "Soy sauce",
+        "Horseradish",
+        "Pickled onions"
+      ],
+      "Beverages": [
+        "White wine (visible on the door)"
+      ],
+      "Snacks": [],
+      "Frozen": [],
+      "Canned": [],
+      "Other": [
+        "Pasta sauce",
+        "Almonds",
+        "Sunflower seeds",
+        "Dates",
+        "Pickles"
+      ]
+    }
+  },
+  "summary": {
+    "total_count": 31,
+    "categories": 10,
+    "by_category": {
+      "Dairy": 3,
+      "Produce": 13,
+      "Proteins": 1,
+      "Grains": 1,
+      "Condiments": 7,
+      "Beverages": 1,
+      "Snacks": 0,
+      "Frozen": 0,
+      "Canned": 0,
+      "Other": 5
+    }
+  },
+  "image_filename": "fridge_069ea673.jpg"
+}
+
+--- data/results/fridge_069ea673/recipes.json ---
+{
+  "items": [
+    {
+      "name": "Mediterranean Veggie Tortilla Wrap",
+      "total_ingredients": [
+        "Tortillas",
+        "Mixed bell peppers",
+        "Red cabbage",
+        "Carrots",
+        "Zucchini",
+        "Fresh basil",
+        "Hellmann's mayonnaise",
+        "Philadelphia cream cheese",
+        "Annies mustard",
+        "Lemons",
+        "Cilantro"
+      ],
+      "available_ingredients": [
+        "Tortillas",
+        "Mixed bell peppers",
+        "Red cabbage",
+        "Carrots",
+        "Zucchini",
+        "Fresh basil",
+        "Hellmann's mayonnaise",
+        "Philadelphia cream cheese",
+        "Annies mustard",
+        "Lemons",
+        "Cilantro"
+      ],
+      "missing_ingredients": [],
+      "completeness_score": 100,
+      "instructions": [
+        "Step 1: Thinly slice the mixed bell peppers, red cabbage, carrots, and zucchini.",
+        "Step 2: In a bowl, mix Hellmann's mayonnaise, Philadelphia cream cheese, a squeeze of lemon juice, and a teaspoon of Annies mustard.",
+        "Step 3: Spread the mixture on tortillas. Layer with sliced vegetables and sprinkle fresh basil and cilantro before rolling the wrap.",
+        "Step 4: Roll tightly and serve immediately."
+      ],
+      "cooking_time": "20 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Creamy Lemon Cilantro Pasta",
+      "total_ingredients": [
+        "Pasta",
+        "Philadelphia cream cheese",
+        "Cilantro",
+        "Lemons",
+        "White wine",
+        "Red bell peppers",
+        "Land O Lakes butter",
+        "Salt",
+        "Pepper"
+      ],
+      "available_ingredients": [
+        "Philadelphia cream cheese",
+        "Cilantro",
+        "Lemons",
+        "White wine",
+        "Land O Lakes butter"
+      ],
+      "missing_ingredients": [
+        "Pasta",
+        "Red bell peppers",
+        "Salt",
+        "Pepper"
+      ],
+      "completeness_score": 62,
+      "instructions": [
+        "Step 1: Cook pasta according to package instructions, drain and set aside.",
+        "Step 2: In a pan, melt butter and saut\u00e9 diced red bell peppers until soft.",
+        "Step 3: Add Philadelphia cream cheese, a splash of white wine, and juice of a lemon, stir to combine.",
+        "Step 4: Toss the pasta in the sauce, season with salt and pepper, and sprinkle with chopped cilantro before serving."
+      ],
+      "cooking_time": "25 minutes",
+      "difficulty": "Medium"
+    },
+    {
+      "name": "Zucchini and Bell Pepper Stir Fry",
+      "total_ingredients": [
+        "Zucchini",
+        "Mixed bell peppers",
+        "Soy sauce",
+        "Garlic",
+        "Limes",
+        "Cilantro",
+        "Sunflower seeds"
+      ],
+      "available_ingredients": [
+        "Zucchini",
+        "Mixed bell peppers",
+        "Soy sauce",
+        "Limes",
+        "Cilantro",
+        "Sunflower seeds"
+      ],
+      "missing_ingredients": [
+        "Garlic"
+      ],
+      "completeness_score": 87,
+      "instructions": [
+        "Step 1: Slice zucchini and bell peppers into strips.",
+        "Step 2: Heat a pan and toast sunflower seeds lightly, then set aside.",
+        "Step 3: In the same pan, add soy sauce and lime juice, then stir-fry zucchini and bell peppers for 5 minutes.",
+        "Step 4: Add minced garlic, continue stirring for 2 more minutes.",
+        "Step 5: Garnish with cilantro and toasted sunflower seeds before serving."
+      ],
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Banana Maple Breakfast Delight",
+      "total_ingredients": [
+        "Bananas",
+        "Organic maple syrup",
+        "Philadelphia cream cheese",
+        "Tortillas",
+        "Almonds"
+      ],
+      "available_ingredients": [
+        "Bananas",
+        "Organic maple syrup",
+        "Philadelphia cream cheese",
+        "Tortillas",
+        "Almonds"
+      ],
+      "missing_ingredients": [],
+      "completeness_score": 100,
+      "instructions": [
+        "Step 1: Mash bananas in a bowl.",
+        "Step 2: Mix the banana mash with Philadelphia cream cheese.",
+        "Step 3: Spread the mixture on tortillas and roll them up.",
+        "Step 4: Drizzle organic maple syrup on top and garnish with crushed almonds before serving."
+      ],
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Pear and Arugula Salad with Citrus Vinaigrette",
+      "total_ingredients": [
+        "Pears",
+        "Arugula",
+        "Lemons",
+        "Oranges",
+        "Limes",
+        "Almonds",
+        "Organic maple syrup",
+        "Annies mustard",
+        "Salt",
+        "Pepper"
+      ],
+      "available_ingredients": [
+        "Pears",
+        "Arugula",
+        "Lemons",
+        "Oranges",
+        "Limes",
+        "Almonds",
+        "Organic maple syrup",
+        "Annies mustard"
+      ],
+      "missing_ingredients": [
+        "Salt",
+        "Pepper"
+      ],
+      "completeness_score": 80,
+      "instructions": [
+        "Step 1: Slice pears thinly and set aside.",
+        "Step 2: In a bowl, whisk together juice of lemon, orange, and lime with organic maple syrup and Annies mustard.",
+        "Step 3: Season with salt and pepper.",
+        "Step 4: In a large bowl, combine arugula and pear slices.",
+        "Step 5: Toss with the citrus vinaigrette.",
+        "Step 6: Garnish the salad with sliced almonds before serving."
+      ],
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    }
+  ],
+  "analysis": [
+    {
+      "recipe_name": "Mediterranean Veggie Tortilla Wrap",
+      "completeness": 100,
+      "available_count": 11,
+      "missing_count": 0,
+      "total_ingredients": 11,
+      "cooking_time": "20 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "recipe_name": "Creamy Lemon Cilantro Pasta",
+      "completeness": 62,
+      "available_count": 5,
+      "missing_count": 4,
+      "total_ingredients": 9,
+      "cooking_time": "25 minutes",
+      "difficulty": "Medium"
+    },
+    {
+      "recipe_name": "Zucchini and Bell Pepper Stir Fry",
+      "completeness": 87,
+      "available_count": 6,
+      "missing_count": 1,
+      "total_ingredients": 7,
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "recipe_name": "Banana Maple Breakfast Delight",
+      "completeness": 100,
+      "available_count": 5,
+      "missing_count": 0,
+      "total_ingredients": 5,
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "recipe_name": "Pear and Arugula Salad with Citrus Vinaigrette",
+      "completeness": 80,
+      "available_count": 8,
+      "missing_count": 2,
+      "total_ingredients": 10,
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    }
+  ],
+  "ingredient_count": 31
+}
+
+--- data/results/fridge_1f005d06/ingredients.json ---
+{
+  "status": "complete",
+  "result": {
+    "ingredients": {
+      "Dairy": [
+        "eggs",
+        "Philadelphia cream cheese",
+        "Land O'Lakes butter",
+        "block of cheese"
+      ],
+      "Produce": [
+        "cilantro",
+        "mint",
+        "red cabbage",
+        "carrots",
+        "yellow bell pepper",
+        "red bell pepper",
+        "green bell pepper",
+        "lime",
+        "parsley",
+        "arugula",
+        "bananas",
+        "oranges",
+        "lemons",
+        "red apples",
+        "green apples",
+        "pears",
+        "grape tomatoes"
+      ],
+      "Proteins": [],
+      "Grains": [
+        "tortillas"
+      ],
+      "Condiments": [
+        "Hellmann's mayonnaise",
+        "Heinz tomato ketchup",
+        "maple syrup",
+        "Annie's salad dressing",
+        "Yokki sesame paste",
+        "jar of pickles",
+        "Horseradish sauce",
+        "creamy Dijon mustard",
+        "honey",
+        "Capers"
+      ],
+      "Beverages": [
+        "bottle of white wine"
+      ],
+      "Snacks": [
+        "almonds",
+        "dates",
+        "jar of olives"
+      ],
+      "Frozen": [],
+      "Canned": [],
+      "Other": [
+        "jar of sunflower seeds",
+        "jar of oats",
+        "jar of spaghetti",
+        "jar of rice crackers",
+        "jar of preserved lemons"
+      ]
+    }
+  },
+  "summary": {
+    "total_count": 41,
+    "categories": 10,
+    "by_category": {
+      "Dairy": 4,
+      "Produce": 17,
+      "Proteins": 0,
+      "Grains": 1,
+      "Condiments": 10,
+      "Beverages": 1,
+      "Snacks": 3,
+      "Frozen": 0,
+      "Canned": 0,
+      "Other": 5
+    }
+  },
+  "image_filename": "fridge_1f005d06.jpg"
+}
+
+--- data/results/fridge_1f005d06/recipes.json ---
+{
+  "items": [
+    {
+      "name": "Bell Pepper and Creamy Herb Savory Omelette",
+      "total_ingredients": [
+        "eggs",
+        "Philadelphia cream cheese",
+        "Land O'Lakes butter",
+        "cilantro",
+        "mint",
+        "red bell pepper",
+        "green bell pepper",
+        "yellow bell pepper",
+        "salt",
+        "pepper"
+      ],
+      "available_ingredients": [
+        "eggs",
+        "Philadelphia cream cheese",
+        "Land O'Lakes butter",
+        "cilantro",
+        "mint",
+        "red bell pepper",
+        "green bell pepper",
+        "yellow bell pepper"
+      ],
+      "missing_ingredients": [
+        "salt",
+        "pepper"
+      ],
+      "completeness_score": 80,
+      "instructions": [
+        "Step 1: Beat 4 eggs in a bowl and season with salt and pepper.",
+        "Step 2: Chop the bell peppers, cilantro, and mint finely.",
+        "Step 3: Heat a pan and add a tablespoon of Land O'Lakes butter.",
+        "Step 4: Saut\u00e9 the bell peppers until soft, then add them to the beaten eggs.",
+        "Step 5: Pour the egg mixture into the pan and cook on low heat.",
+        "Step 6: Add small dollops of cream cheese and fold the omelette when the edges are set.",
+        "Step 7: Cook until the omelette is fully cooked and serve with a garnish of cilantro and mint."
+      ],
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Cheesy Spice Roasted Carrot and Cabbage Rolls",
+      "total_ingredients": [
+        "red cabbage",
+        "carrots",
+        "block of cheese",
+        "cilantro",
+        "Hellmann's mayonnaise",
+        "cream cheese",
+        "spices"
+      ],
+      "available_ingredients": [
+        "red cabbage",
+        "carrots",
+        "block of cheese",
+        "cilantro",
+        "Hellmann's mayonnaise",
+        "Philadelphia cream cheese"
+      ],
+      "missing_ingredients": [
+        "spices"
+      ],
+      "completeness_score": 86,
+      "instructions": [
+        "Step 1: Preheat oven to 375\u00b0F (190\u00b0C).",
+        "Step 2: Peel and slice carrots lengthwise. Steam them until tender.",
+        "Step 3: Remove outer leaves of red cabbage and blanch them in hot water for 1 minute.",
+        "Step 4: Grate the block of cheese and mix with cream cheese, chopped cilantro, and spices.",
+        "Step 5: Spread mayonnaise on cabbage leaves, place a carrot slice and cheese mixture, and roll it up.",
+        "Step 6: Place rolls in a baking dish and bake for 20 minutes until the cheese is melted and bubbly.",
+        "Step 7: Serve warm garnished with more cilantro."
+      ],
+      "cooking_time": "40 minutes",
+      "difficulty": "Medium"
+    },
+    {
+      "name": "Minted Arugula and Apple Fresh Salad",
+      "total_ingredients": [
+        "arugula",
+        "red apples",
+        "green apples",
+        "mint",
+        "lime",
+        "Annie's salad dressing",
+        "almonds"
+      ],
+      "available_ingredients": [
+        "arugula",
+        "red apples",
+        "green apples",
+        "mint",
+        "lime",
+        "Annie's salad dressing",
+        "almonds"
+      ],
+      "missing_ingredients": [],
+      "completeness_score": 100,
+      "instructions": [
+        "Step 1: Core and thinly slice red and green apples.",
+        "Step 2: In a salad bowl, combine arugula, sliced apples, and chopped mint.",
+        "Step 3: Squeeze lime juice over the salad.",
+        "Step 4: Roughly chop almonds and sprinkle over the salad.",
+        "Step 5: Drizzle with Annie's salad dressing and toss gently.",
+        "Step 6: Serve immediately as a refreshing side."
+      ],
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Sweet and Savory Citrus Glazed Spaghetti",
+      "total_ingredients": [
+        "jar of spaghetti",
+        "Land O'Lakes butter",
+        "oranges",
+        "lemons",
+        "honey",
+        "creamy Dijon mustard",
+        "almonds",
+        "parsley"
+      ],
+      "available_ingredients": [
+        "jar of spaghetti",
+        "Land O'Lakes butter",
+        "oranges",
+        "lemons",
+        "honey",
+        "creamy Dijon mustard",
+        "almonds",
+        "parsley"
+      ],
+      "missing_ingredients": [],
+      "completeness_score": 100,
+      "instructions": [
+        "Step 1: Cook the jar of spaghetti according to package directions and drain.",
+        "Step 2: Zest and juice the oranges and lemons.",
+        "Step 3: In a skillet, melt Land O'Lakes butter and add honey, citrus zest and juice, and creamy Dijon mustard.",
+        "Step 4: Simmer until slightly thickened, then toss cooked spaghetti with the glaze.",
+        "Step 5: Roughly chop almonds and garnish the pasta along with parsley.",
+        "Step 6: Serve with additional parsley and enjoy warm."
+      ],
+      "cooking_time": "25 minutes",
+      "difficulty": "Medium"
+    },
+    {
+      "name": "Crispy Rice Cracker and Pickled Veggie Tapas",
+      "total_ingredients": [
+        "jar of rice crackers",
+        "jar of pickles",
+        "jar of olives",
+        "Philadelphia cream cheese",
+        "parsley",
+        "Capers"
+      ],
+      "available_ingredients": [
+        "jar of rice crackers",
+        "jar of pickles",
+        "jar of olives",
+        "Philadelphia cream cheese",
+        "parsley",
+        "Capers"
+      ],
+      "missing_ingredients": [],
+      "completeness_score": 100,
+      "instructions": [
+        "Step 1: Spread a small amount of Philadelphia cream cheese on each rice cracker.",
+        "Step 2: Thinly slice pickles and arrange on top of the cream cheese.",
+        "Step 3: Halve the olives and place a slice on each cracker.",
+        "Step 4: Sprinkle capers and freshly chopped parsley over the top.",
+        "Step 5: Serve as a light snack or appetizer."
+      ],
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    }
+  ],
+  "analysis": [
+    {
+      "recipe_name": "Bell Pepper and Creamy Herb Savory Omelette",
+      "completeness": 80,
+      "available_count": 8,
+      "missing_count": 2,
+      "total_ingredients": 10,
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "recipe_name": "Cheesy Spice Roasted Carrot and Cabbage Rolls",
+      "completeness": 86,
+      "available_count": 6,
+      "missing_count": 1,
+      "total_ingredients": 7,
+      "cooking_time": "40 minutes",
+      "difficulty": "Medium"
+    },
+    {
+      "recipe_name": "Minted Arugula and Apple Fresh Salad",
+      "completeness": 100,
+      "available_count": 7,
+      "missing_count": 0,
+      "total_ingredients": 7,
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "recipe_name": "Sweet and Savory Citrus Glazed Spaghetti",
+      "completeness": 100,
+      "available_count": 8,
+      "missing_count": 0,
+      "total_ingredients": 8,
+      "cooking_time": "25 minutes",
+      "difficulty": "Medium"
+    },
+    {
+      "recipe_name": "Crispy Rice Cracker and Pickled Veggie Tapas",
+      "completeness": 100,
+      "available_count": 6,
+      "missing_count": 0,
+      "total_ingredients": 6,
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    }
+  ],
+  "ingredient_count": 41
+}
+
 --- input/fridge.jpg ---
+[Binary file]
+
+--- input/fridge_069ea673.jpg ---
+[Binary file]
+
+--- input/fridge_1f005d06.jpg ---
 [Binary file]
 
 --- main.py ---
@@ -398,7 +1234,12 @@ The application can be run in:
 
 import argparse
 import os
-import uvicorn
+from flask import Flask, request, jsonify, send_from_directory
+from werkzeug.utils import secure_filename
+import uuid
+import glob
+import time
+import json
 from typing import Optional
 
 # Import services and config
@@ -406,7 +1247,14 @@ from config import Config
 from services.azure_client import AzureClientService
 from services.vision_service import VisionService
 from services.recipe_service import RecipeService
-from api.routes import app as api_app
+
+# Initialize Flask app
+app = Flask(__name__)
+
+# Global services - will be initialized in setup_api_mode
+config = None
+vision_service = None
+recipe_service = None
 
 class CLIProcessor:
     """Command-line interface processor for the application"""
@@ -440,8 +1288,15 @@ class CLIProcessor:
         # Run analysis
         result = self.vision_service.analyze_image(paths["input_image"])
         
-        # Save result
-        output_path = self.vision_service.save_analysis(result, paths["vision_output"])
+        # Save full result including summary
+        summary = self.vision_service.get_ingredients_summary(result)
+        full_result = {
+            "status": "complete",
+            "result": result,
+            "summary": summary,
+            "image_filename": image_filename
+        }
+        output_path = self.vision_service.save_analysis(full_result, paths["vision_output"])
         print(f"Analysis saved to {output_path}")
         
         # Get summary
@@ -492,28 +1347,208 @@ class CLIProcessor:
         
         return recipes_data
 
+# Flask route handlers
+@app.route('/analyze-image', methods=['POST'])
+def analyze_image():
+    """
+    Analyze a fridge/food image and identify ingredients
+    
+    Returns:
+        Analysis result or processing status
+    """
+    try:
+        # Check if file was uploaded
+        if 'file' not in request.files:
+            return jsonify({"error": "No file part in the request"}), 400
+            
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({"error": "No file selected"}), 400
+            
+        # Create a unique filename
+        file_ext = os.path.splitext(file.filename)[1]
+        image_filename = f"fridge_{uuid.uuid4().hex[:8]}{file_ext}"
+        
+        # Get file paths
+        paths = config.get_file_paths(image_filename)
+        
+        # Save the uploaded file
+        file.save(paths["input_image"])
+        
+        # Process image
+        result = vision_service.analyze_image(paths["input_image"])
+        
+        # Get a summary
+        summary = vision_service.get_ingredients_summary(result)
+        
+        # Create full response
+        full_response = {
+            "status": "complete",
+            "result": result,
+            "summary": summary,
+            "image_filename": image_filename
+        }
+        
+        # Save the full response
+        vision_service.save_analysis(full_response, paths["vision_output"])
+        
+        # Include request_id (which is the base name of the image)
+        request_id = os.path.splitext(image_filename)[0]
+        
+        return jsonify({
+            "status": "complete",
+            "result": result,
+            "summary": summary,
+            "image_filename": image_filename,
+            "request_id": request_id
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/ingredients', methods=['GET'])
+def get_ingredients():
+    """
+    Get ingredients from the most recent analysis or specified request ID
+    
+    Returns:
+        Ingredients data
+    """
+    try:
+        # Get request ID (folder name) from query parameter
+        request_id = request.args.get('request_id')
+        
+        if request_id:
+            # Look for the request folder
+            request_dir = os.path.join(config.results_dir, request_id)
+            ingredients_file = os.path.join(request_dir, "ingredients.json")
+        else:
+            # Use most recent analysis
+            paths = config.get_file_paths()
+            ingredients_file = paths["vision_output"]
+        
+        # Check if file exists
+        if not os.path.exists(ingredients_file):
+            return jsonify({
+                "error": "No ingredients analysis found. Please analyze an image first."
+            }), 404
+        
+        # Load and return the ingredients
+        with open(ingredients_file, "r") as f:
+            return jsonify(json.load(f))
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/recipes', methods=['GET'])
+def get_recipes():
+    """
+    Get recipes from the most recent generation or specified request ID
+    
+    Returns:
+        Recipes data
+    """
+    try:
+        # Get request ID (folder name) from query parameter
+        request_id = request.args.get('request_id')
+        
+        if request_id:
+            # Look for the request folder
+            request_dir = os.path.join(config.results_dir, request_id)
+            recipes_file = os.path.join(request_dir, "recipes.json")
+        else:
+            # Use most recent analysis
+            paths = config.get_file_paths()
+            recipes_file = paths["recipes_output"]
+        
+        # Check if file exists
+        if not os.path.exists(recipes_file):
+            return jsonify({
+                "error": "No recipes found. Please generate recipes first."
+            }), 404
+        
+        # Load and return the recipes
+        with open(recipes_file, "r") as f:
+            return jsonify(json.load(f))
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/generate-recipes', methods=['POST'])
+def generate_recipes():
+    """
+    Generate recipe suggestions based on available ingredients
+    
+    Returns:
+        Generated recipes
+    """
+    try:
+        # Parse request data
+        data = request.get_json() or {}
+        num_recipes = data.get('num_recipes', 5)
+        request_id = data.get('request_id')
+        
+        # Determine ingredients file path
+        if request_id:
+            request_dir = os.path.join(config.results_dir, request_id)
+            ingredients_file = os.path.join(request_dir, "ingredients.json")
+        else:
+            paths = config.get_file_paths()
+            ingredients_file = paths["vision_output"]
+        
+        # Check if file exists
+        if not os.path.exists(ingredients_file):
+            return jsonify({
+                "error": "No ingredients analysis found. Please analyze an image first."
+            }), 404
+        
+        # Load ingredients
+        ingredients = recipe_service.load_ingredients(ingredients_file)
+        
+        # Generate recipes
+        recipes_data = recipe_service.generate_recipes(
+            ingredients, 
+            num_recipes=num_recipes
+        )
+        
+        # Get analysis
+        analysis = recipe_service.get_recipes_analysis(recipes_data)
+        analysis_dict = analysis.to_dict('records') if analysis is not None else []
+        
+        # Create full response
+        full_response = {
+            "items": recipes_data["recipes"],
+            "analysis": analysis_dict,
+            "ingredient_count": len(ingredients)
+        }
+        
+        # Determine the recipes output path - use the same request_id if provided
+        if request_id:
+            request_dir = os.path.join(config.results_dir, request_id)
+            recipes_output = os.path.join(request_dir, "recipes.json")
+        else:
+            paths = config.get_file_paths()
+            recipes_output = paths["recipes_output"]
+        
+        # Save the full response
+        os.makedirs(os.path.dirname(recipes_output), exist_ok=True)
+        with open(recipes_output, "w") as f:
+            json.dump(full_response, f, indent=2)
+        
+        return jsonify(full_response)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 def setup_api_mode():
     """
     Set up the application in API mode
-    
-    Returns:
-        FastAPI application instance
     """
+    global config, vision_service, recipe_service
+    
     # Initialize configuration
-    app_config = Config()
+    config = Config()
     
     # Initialize services
-    azure_client = AzureClientService(app_config)
-    app_vision_service = VisionService(azure_client)
-    app_recipe_service = RecipeService(azure_client)
-    
-    # Set up API services
-    import api.routes as routes
-    routes.config = app_config
-    routes.vision_service = app_vision_service
-    routes.recipe_service = app_recipe_service
-    
-    return api_app
+    azure_client = AzureClientService(config)
+    vision_service = VisionService(azure_client)
+    recipe_service = RecipeService(azure_client)
 
 def main():
     """Main entry point for the application"""
@@ -523,15 +1558,15 @@ def main():
     parser.add_argument("--image", help="Image filename for analysis (in input directory)")
     parser.add_argument("--recipes", type=int, default=5, help="Number of recipes to generate")
     parser.add_argument("--host", default="127.0.0.1", help="Host for API server")
-    parser.add_argument("--port", type=int, default=8000, help="Port for API server")
+    parser.add_argument("--port", type=int, default=5000, help="Port for API server")
     
     args = parser.parse_args()
     
     if args.mode == "api":
         # API mode
-        api_app = setup_api_mode()
-        print(f"Starting API server on {args.host}:{args.port}")
-        uvicorn.run(api_app, host=args.host, port=args.port)
+        setup_api_mode()
+        print(f"Starting Flask API server on {args.host}:{args.port}")
+        app.run(host=args.host, port=args.port, debug=False)
     else:
         # CLI mode
         config = Config()
@@ -710,6 +1745,8 @@ fastapi
 pydantic
 pandas
 python-multipart
+flask
+werkzeug
 
 --- services/azure_client.py ---
 """
@@ -781,9 +1818,18 @@ class RecipeService:
             with open(json_path, 'r') as f:
                 data = json.load(f)
             
+            # Extract ingredients from the full response
+            # Check if it's a full API response or just the ingredients
+            if 'result' in data and 'ingredients' in data['result']:
+                ingredients_data = data['result']['ingredients']
+            elif 'ingredients' in data:
+                ingredients_data = data['ingredients']
+            else:
+                raise ValueError("Could not find ingredients in the JSON file")
+            
             # Flatten the ingredients list
             all_ingredients = []
-            for category, items in data['ingredients'].items():
+            for category, items in ingredients_data.items():
                 all_ingredients.extend(items)
             
             return all_ingredients
@@ -827,7 +1873,7 @@ require a few additional ingredients. Focus on wholesome, flavorful dishes."""
         Save recipes to a JSON file
         
         Args:
-            recipes_data: Recipe data from generate_recipes
+            recipes_data: Recipe data (complete response)
             output_path: Path to save the output file
             
         Returns:
@@ -848,7 +1894,15 @@ require a few additional ingredients. Focus on wholesome, flavorful dishes."""
         Returns:
             DataFrame with recipe analysis or None if no recipes
         """
-        if not recipes_data.get("recipes", []):
+        # Check if recipes_data is already the full response or just the recipes
+        if isinstance(recipes_data, dict) and "recipes" in recipes_data:
+            recipes_list = recipes_data["recipes"]
+        elif isinstance(recipes_data, dict) and "items" in recipes_data:
+            recipes_list = recipes_data["items"]
+        else:
+            recipes_list = []
+        
+        if not recipes_list:
             return None
         
         return pd.DataFrame([{
@@ -859,7 +1913,7 @@ require a few additional ingredients. Focus on wholesome, flavorful dishes."""
             "total_ingredients": len(r["total_ingredients"]),
             "cooking_time": r["cooking_time"],
             "difficulty": r["difficulty"]
-        } for r in recipes_data["recipes"]])
+        } for r in recipes_list])
 
 --- services/vision_service.py ---
 """
@@ -920,12 +1974,12 @@ class VisionService:
         except Exception as e:
             raise Exception(f"Error analyzing image: {str(e)}")
     
-    def save_analysis(self, analysis_result, output_path):
+    def save_analysis(self, analysis_data, output_path):
         """
         Save the analysis result to a JSON file
         
         Args:
-            analysis_result: The analysis result from analyze_image
+            analysis_data: The complete analysis data to save
             output_path: Path to save the JSON output
             
         Returns:
@@ -933,7 +1987,7 @@ class VisionService:
         """
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
         with open(output_path, "w") as json_file:
-            json.dump(analysis_result, json_file, indent=2)
+            json.dump(analysis_data, json_file, indent=2)
         
         return output_path
     

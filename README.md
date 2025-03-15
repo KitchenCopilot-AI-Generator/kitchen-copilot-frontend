@@ -1,6 +1,9 @@
-# Kitchen Copilot API
+# Kitchen Copilot
 
 An application that analyses your refrigerator contents through images and suggests recipes based on available ingredients.
+
+![Kitchen Copilot Image Upload Interface](assets/ImageUpload.png)
+
 
 ## Features
 - **Image Analysis**: Upload a photo of your fridge or food items to identify ingredients
@@ -11,6 +14,7 @@ An application that analyses your refrigerator contents through images and sugge
 ## Requirements
 - Python 3.8+
 - Azure OpenAI API access with a deployed GPT-4 Vision model
+- Node.js 18+ (for frontend)
 
 ## Setup
 
@@ -22,10 +26,43 @@ An application that analyses your refrigerator contents through images and sugge
    pip install -r requirements.txt
    ```
 4. Copy the `.env.example` file to `.env` and add your Azure OpenAI API keys and settings
+5. Install CORS support for the API:
+   ```bash
+   pip install flask-cors
+   ```
+
+### Frontend Setup
+1. Navigate to the frontend directory:
+   ```bash
+   cd kitchen-copilot-frontend
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Create a `.env.local` file with:
+   ```
+   NEXT_PUBLIC_API_URL=http://localhost:5000
+   ```
 
 ## Usage
 
-### CLI Mode
+### Running the Full Application
+
+1. Start the backend API server:
+   ```bash
+   python main.py --mode api --host 0.0.0.0 --port 5000
+   ```
+
+2. In a separate terminal, start the frontend development server:
+   ```bash
+   cd frontend
+   npm run dev
+   ```
+
+3. Open [http://localhost:3000](http://localhost:3000) in your browser to access the application
+
+### Backend CLI Mode
 Analyze an image and generate recipes:
 ```bash
 python main.py --mode cli --action both --image fridge.jpg --recipes 5
@@ -41,8 +78,8 @@ Just generate recipes from previous analysis:
 python main.py --mode cli --action recipes --recipes 7
 ```
 
-### API Mode
-Start the API server:
+### Backend API Mode
+Start the API server alone:
 ```bash
 python main.py --mode api --host 0.0.0.0 --port 5000
 ```
@@ -52,6 +89,10 @@ python main.py --mode api --host 0.0.0.0 --port 5000
 - `GET /ingredients`: Get ingredients from the most recent analysis
 - `POST /generate-recipes`: Generate recipe suggestions based on available ingredients
 - `GET /recipes`: Get previously generated recipes
+
+## Demo Mode
+
+For development and testing purposes, you can visit [http://localhost:3000/demo](http://localhost:3000/demo) to see the frontend with pre-filled sample data, without needing to connect to the backend API.
 
 ## Using Postman with the API
 
@@ -100,6 +141,8 @@ Example response:
    - The request_id is returned in the analyze-image response (e.g., "fridge_630cee49")
 3. Click "Send" to submit the request
 
+![Ingredients Analysis Display](assets/Ingredients.png)
+
 Example response:
 ```json
 {
@@ -118,6 +161,8 @@ Example response:
 2. Optionally, you can add a query parameter named "request_id" if you want to get recipes from a specific analysis
    - The request_id is returned in the analyze-image response (e.g., "fridge_630cee49")
 3. Click "Send" to submit the request
+
+![Recipe Suggestions Display](assets/Recipes.png)
 
 Example response:
 ```json
@@ -166,7 +211,6 @@ Example response:
 5. Click "Send" to submit the request
 
 Example response:
-Example response:
 ```json
 {
   "items": [
@@ -198,7 +242,7 @@ Example response:
 
 ## Project Structure
 ```
-fridge-recipes/
+kitchen-copilot/
 ├── .env                     # Environment variables
 ├── main.py                  # Main entry point
 ├── config.py                # Configuration and environment loading
@@ -208,9 +252,37 @@ fridge-recipes/
 ├── data/                    # Data and prompts
 │   ├── prompts/             # System prompts
 │   └── results/             # Output directory
-└── api/                     # API endpoints
+├── api/                     # API endpoints
+└── kitchen-copilot-frontend/                # Next.js frontend application
+    ├── src/                 # Frontend source code
+    │   ├── app/             # Next.js app router pages
+    │   ├── components/      # React components
+    │   ├── lib/             # Utility functions and API client
+    │   └── types/           # TypeScript type definitions
+    ├── public/              # Static assets
+    └── package.json         # Frontend dependencies
 ```
 
-## Example API Responses
+## Troubleshooting
 
-See the Postman section above for example responses from each endpoint.
+### CORS Issues
+If you encounter CORS errors when the frontend tries to communicate with the backend:
+
+1. Make sure you've installed flask-cors:
+   ```bash
+   pip install flask-cors
+   ```
+
+2. Ensure your main.py includes:
+   ```python
+   from flask import Flask
+   from flask_cors import CORS
+
+   app = Flask(__name__)
+   CORS(app)
+   ```
+
+### API Connection Issues
+- Verify that the backend API is running on the correct host and port
+- Check that `NEXT_PUBLIC_API_URL` in the frontend's `.env.local` matches the backend URL
+- Try accessing the API directly in the browser (e.g., http://localhost:5000/ingredients)

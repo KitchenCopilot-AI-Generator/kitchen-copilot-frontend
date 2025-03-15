@@ -19,7 +19,6 @@ DEFAULT_IGNORE_PATTERNS = {
     '.gitignore'
     'venv/',
     '.venv/',
-    'data/',
     'pretrained_models/',
     'snapshot/',
     'snapshot.txt',
