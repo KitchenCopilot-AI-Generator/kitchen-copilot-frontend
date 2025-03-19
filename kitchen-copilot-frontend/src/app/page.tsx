@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-50 to-indigo-50 py-20">
+      <section className="bg-gradient-to-r py-20">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
@@ -31,7 +31,7 @@ export default function Home() {
             <div className="relative h-96 overflow-hidden rounded-xl shadow-xl">
               <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-indigo-500/30 z-10 rounded-xl"></div>
               <img 
-                src="/api/placeholder/800/600" 
+                src="https://picsum.photos/600/600" 
                 alt="Kitchen Copilot" 
                 className="w-full h-full object-cover rounded-xl"
               />
@@ -92,7 +92,7 @@ export default function Home() {
       </section>
 
       {/* Features */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 light:bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold mb-4">Why Choose Kitchen Copilot</h2>
@@ -170,7 +170,7 @@ export default function Home() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="bg-white">
+            <Card className="light:bg-white">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-2 mb-4">
                   {[1, 2, 3, 4, 5].map((star) => (
@@ -179,14 +179,14 @@ export default function Home() {
                     </svg>
                   ))}
                 </div>
-                <p className="text-gray-700 mb-4">
+                <p className=" mb-4">
                   "Kitchen Copilot has revolutionized our weeknight dinners. Instead of ordering takeout, we now use what we have to make creative meals. It's saved us money and reduced our food waste dramatically."
                 </p>
                 <div className="font-medium">- Sarah T., New York</div>
               </CardContent>
             </Card>
 
-            <Card className="bg-white">
+            <Card className="light:bg-white">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-2 mb-4">
                   {[1, 2, 3, 4, 5].map((star) => (
@@ -195,14 +195,14 @@ export default function Home() {
                     </svg>
                   ))}
                 </div>
-                <p className="text-gray-700 mb-4">
+                <p className=" mb-4">
                   "As a busy parent, meal planning was always stressful. With Kitchen Copilot, I snap a pic of the fridge and have dinner ideas in seconds. The kids love the variety of meals we're making now!"
                 </p>
                 <div className="font-medium">- Michael R., Chicago</div>
               </CardContent>
             </Card>
 
-            <Card className="bg-white">
+            <Card className="light:bg-white">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-2 mb-4">
                   {[1, 2, 3, 4, 5].map((star) => (
@@ -211,7 +211,7 @@ export default function Home() {
                     </svg>
                   ))}
                 </div>
-                <p className="text-gray-700 mb-4">
+                <p className=" mb-4">
                   "The accuracy of ingredient recognition is impressive! Even with a messy fridge, it identifies almost everything correctly. The recipe quality is excellent - restaurant worthy meals from what I already had."
                 </p>
                 <div className="font-medium">- Jamie L., San Francisco</div>

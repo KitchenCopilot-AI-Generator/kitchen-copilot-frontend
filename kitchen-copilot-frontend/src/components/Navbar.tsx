@@ -13,12 +13,13 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { MobileNav } from './MobileNav';
+import { ThemeToggle } from './ui/theme-toggle';
 
 export function Navbar() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 px-4">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-8 w-8 text-primary"
@@ -110,6 +111,7 @@ export function Navbar() {
             <Link href="/fridge-app" passHref>
               <Button>Try Now</Button>
             </Link>
+            <ThemeToggle />
           </div>
           <div className="md:hidden">
             <MobileNav />
