@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Toaster } from 'sonner';
 import { IngredientsResponse, RecipesResponse } from '@/types';
+import { motion } from 'framer-motion';
 
 // Sample data for demo purposes
 const sampleIngredientsData: IngredientsResponse = {
@@ -226,6 +227,31 @@ const sampleRecipesData: RecipesResponse = {
   ingredient_count: 31
 };
 
+// Animation variants
+const fadeInUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.5 }
+  },
+  exit: { 
+    opacity: 0, 
+    y: -20,
+    transition: { duration: 0.3 }
+  }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
 export default function DemoPage() {
   const [activeTab, setActiveTab] = useState('ingredients');
   const [loading, setLoading] = useState(false);
@@ -241,46 +267,55 @@ export default function DemoPage() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col light:bg-gray-50">
-
+    <motion.main 
+      className="flex min-h-screen flex-col light:bg-gray-50"
+      initial="hidden"
+      animate="visible"
+      variants={staggerContainer}
+    >
       <div className="container mx-auto px-4 py-8">
-        <div className="bg-amber-50 border border-amber-200 dark:bg-gray-800 dark:border-amber-400 rounded-md p-4 mb-6">
+        <motion.div 
+          className="bg-amber-50 border border-amber-200 dark:bg-gray-800 dark:border-amber-400 rounded-md p-4 mb-6"
+          variants={fadeInUp}
+        >
           <p className="light:text-amber-800">
             <strong>Demo Mode:</strong> This page shows sample data for development and testing purposes.
           </p>
-        </div>
+        </motion.div>
         
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger 
-              value="ingredients" 
-              disabled={loading}
-            >
-              Sample Ingredients
-            </TabsTrigger>
-            <TabsTrigger 
-              value="recipes" 
-              disabled={loading}
-            >
-              Sample Recipes
-            </TabsTrigger>
-          </TabsList>
+        <motion.div variants={fadeInUp}>
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger 
+                value="ingredients" 
+                disabled={loading}
+              >
+                Sample Ingredients
+              </TabsTrigger>
+              <TabsTrigger 
+                value="recipes" 
+                disabled={loading}
+              >
+                Sample Recipes
+              </TabsTrigger>
+            </TabsList>
 
-          <TabsContent value="ingredients" className="space-y-8">
-            <IngredientsDisplay 
-              ingredientsData={sampleIngredientsData} 
-              onGenerateRecipes={handleGenerateRecipes}
-              loading={loading}
-            />
-          </TabsContent>
+            <TabsContent value="ingredients" className="space-y-8">
+              <IngredientsDisplay 
+                ingredientsData={sampleIngredientsData} 
+                onGenerateRecipes={handleGenerateRecipes}
+                loading={loading}
+              />
+            </TabsContent>
 
-          <TabsContent value="recipes" className="space-y-8">
-            <RecipesDisplay recipesData={sampleRecipesData} />
-          </TabsContent>
-        </Tabs>
+            <TabsContent value="recipes" className="space-y-8">
+              <RecipesDisplay recipesData={sampleRecipesData} />
+            </TabsContent>
+          </Tabs>
+        </motion.div>
       </div>
 
       <Toaster position="top-center" />
-    </main>
+    </motion.main>
   );
 }
