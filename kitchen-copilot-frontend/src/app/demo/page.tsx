@@ -241,37 +241,11 @@ export default function DemoPage() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col bg-gray-50">
-      <header className="bg-white border-b shadow-sm py-6">
-        <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-8 w-8 text-primary"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
-                />
-              </svg>
-              <h1 className="text-2xl font-bold">Kitchen Copilot (Demo)</h1>
-            </div>
-            <Button variant="ghost" onClick={() => window.location.href = '/'}>
-              Return to Main App
-            </Button>
-          </div>
-        </div>
-      </header>
+    <main className="flex min-h-screen flex-col light:bg-gray-50">
 
       <div className="container mx-auto px-4 py-8">
-        <div className="bg-amber-50 border border-amber-200 rounded-md p-4 mb-6">
-          <p className="text-amber-800">
+        <div className="bg-amber-50 border border-amber-200 dark:bg-gray-800 dark:border-amber-400 rounded-md p-4 mb-6">
+          <p className="light:text-amber-800">
             <strong>Demo Mode:</strong> This page shows sample data for development and testing purposes.
           </p>
         </div>
