@@ -17,11 +17,9 @@ class Config:
         self.model_name = os.getenv("MODEL_NAME")
         
         # Default paths
-        self.input_dir = os.getenv("INPUT_DIR", "./input")
         self.results_dir = os.getenv("RESULTS_DIR", "./data/results")
         
         # Ensure directories exist
-        os.makedirs(self.input_dir, exist_ok=True)
         os.makedirs(self.results_dir, exist_ok=True)
     
     def get_azure_config(self):

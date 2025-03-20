@@ -1,0 +1,221 @@
+{
+  "items": [
+    {
+      "name": "Spinach and Cream Cheese Stuffed Tortillas",
+      "total_ingredients": [
+        "Philadelphia cream cheese",
+        "Land O'Lakes butter",
+        "Fresh spinach leaves",
+        "Flour tortillas",
+        "Salt",
+        "Pepper",
+        "Olive oil"
+      ],
+      "available_ingredients": [
+        "Philadelphia cream cheese",
+        "Land O'Lakes butter",
+        "Fresh spinach leaves",
+        "Flour tortillas"
+      ],
+      "missing_ingredients": [
+        "Salt",
+        "Pepper",
+        "Olive oil"
+      ],
+      "completeness_score": 66,
+      "instructions": [
+        "Step 1: Preheat oven to 350\u00b0F (175\u00b0C).",
+        "Step 2: In a skillet, melt butter over medium heat. Add spinach and saut\u00e9 until wilted.",
+        "Step 3: Mix cream cheese, salt, and pepper in a bowl. Add saut\u00e9ed spinach and stir well.",
+        "Step 4: Lay a tortilla flat and spread the mixture evenly. Roll it up.",
+        "Step 5: Place rolled tortillas in a baking dish, brush with olive oil.",
+        "Step 6: Bake for 15 minutes or until golden brown."
+      ],
+      "cooking_time": "30 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Colorful Bell Pepper Stir Fry",
+      "total_ingredients": [
+        "Red bell pepper",
+        "Yellow bell pepper",
+        "Green bell pepper",
+        "Lime",
+        "Honey",
+        "Roland Thai Sriracha sauce",
+        "Yokki soy sauce",
+        "Almonds",
+        "Olive oil"
+      ],
+      "available_ingredients": [
+        "Red bell pepper",
+        "Yellow bell pepper",
+        "Green bell pepper",
+        "Lime",
+        "Roland Thai Sriracha sauce",
+        "Yokki soy sauce",
+        "Almonds"
+      ],
+      "missing_ingredients": [
+        "Honey",
+        "Olive oil"
+      ],
+      "completeness_score": 78,
+      "instructions": [
+        "Step 1: Slice bell peppers into strips.",
+        "Step 2: Heat olive oil in a large pan over medium heat.",
+        "Step 3: Add bell peppers, stirring occasionally until tender.",
+        "Step 4: Mix lime juice, honey, Sriracha, and soy sauce in a bowl.",
+        "Step 5: Add sauce to the pan and stir until bell peppers are coated.",
+        "Step 6: Garnish with almonds before serving."
+      ],
+      "cooking_time": "20 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Red Cabbage Slaw",
+      "total_ingredients": [
+        "Red cabbage",
+        "Carrots",
+        "Fresh parsley",
+        "Fresh mint",
+        "Lemon",
+        "Annie's dressing",
+        "Sunflower seeds"
+      ],
+      "available_ingredients": [
+        "Red cabbage",
+        "Carrots",
+        "Fresh parsley",
+        "Fresh mint",
+        "Lemon",
+        "Annie's dressing",
+        "Sunflower seeds"
+      ],
+      "missing_ingredients": [],
+      "completeness_score": 100,
+      "instructions": [
+        "Step 1: Shred red cabbage and carrots finely.",
+        "Step 2: Chop parsley and mint.",
+        "Step 3: In a large bowl, combine cabbage, carrots, parsley, and mint.",
+        "Step 4: Drizzle lemon juice and Annie's dressing over salad.",
+        "Step 5: Toss all ingredients together until well mixed.",
+        "Step 6: Sprinkle sunflower seeds on top before serving."
+      ],
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Apple and Almond Breakfast Wrap",
+      "total_ingredients": [
+        "Apples",
+        "Land O'Lakes butter",
+        "Almonds",
+        "Maple syrup",
+        "Cinnamon",
+        "Flour tortillas"
+      ],
+      "available_ingredients": [
+        "Apples",
+        "Land O'Lakes butter",
+        "Almonds",
+        "Maple syrup",
+        "Flour tortillas"
+      ],
+      "missing_ingredients": [
+        "Cinnamon"
+      ],
+      "completeness_score": 85,
+      "instructions": [
+        "Step 1: Slice apples thinly.",
+        "Step 2: Heat butter in a skillet, add apple slices.",
+        "Step 3: Cook apples until tender.",
+        "Step 4: Add maple syrup and almonds, stir well.",
+        "Step 5: Sprinkle cinnamon over apples.",
+        "Step 6: Place mixture in flour tortillas, wrap, and serve warm."
+      ],
+      "cooking_time": "20 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Fruit and Mint Salad",
+      "total_ingredients": [
+        "Pears",
+        "Bananas",
+        "Orange",
+        "Fresh mint",
+        "Lime",
+        "Honey"
+      ],
+      "available_ingredients": [
+        "Pears",
+        "Bananas",
+        "Orange",
+        "Fresh mint",
+        "Lime"
+      ],
+      "missing_ingredients": [
+        "Honey"
+      ],
+      "completeness_score": 83,
+      "instructions": [
+        "Step 1: Peel and slice pears and bananas.",
+        "Step 2: Peel and segment the orange.",
+        "Step 3: Chop fresh mint.",
+        "Step 4: Mix all fruits in a large bowl.",
+        "Step 5: Drizzle lime juice and honey over fruit mix.",
+        "Step 6: Toss gently to combine."
+      ],
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    }
+  ],
+  "analysis": [
+    {
+      "recipe_name": "Spinach and Cream Cheese Stuffed Tortillas",
+      "completeness": 66,
+      "available_count": 4,
+      "missing_count": 3,
+      "total_ingredients": 7,
+      "cooking_time": "30 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "recipe_name": "Colorful Bell Pepper Stir Fry",
+      "completeness": 78,
+      "available_count": 7,
+      "missing_count": 2,
+      "total_ingredients": 9,
+      "cooking_time": "20 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "recipe_name": "Red Cabbage Slaw",
+      "completeness": 100,
+      "available_count": 7,
+      "missing_count": 0,
+      "total_ingredients": 7,
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "recipe_name": "Apple and Almond Breakfast Wrap",
+      "completeness": 85,
+      "available_count": 5,
+      "missing_count": 1,
+      "total_ingredients": 6,
+      "cooking_time": "20 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "recipe_name": "Fruit and Mint Salad",
+      "completeness": 83,
+      "available_count": 5,
+      "missing_count": 1,
+      "total_ingredients": 6,
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    }
+  ],
+  "ingredient_count": 30
+}

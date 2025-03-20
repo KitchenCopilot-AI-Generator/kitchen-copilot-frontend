@@ -9,14 +9,14 @@ assets
 ├── Ingredients.png
 └── Recipes.png
 config.py
+container
+└── fridge_b36ace0a
+    ├── fridge_b36ace0a.jpg
+    ├── ingredients.json
+    └── recipes.json
 data
-└── results
-    └── fridge_2ad8d647
-        ├── ingredients.json
-        └── recipes.json
 input
-├── fridge.jpg
-└── fridge_2ad8d647.jpg
+└── fridge.jpg
 main.py
 models
 ├── ingredients.py
@@ -385,15 +385,15 @@ async def analyze_image(
         # Get file paths
         paths = config.get_file_paths(image_filename)
         
-        # Save the uploaded file
-        with open(paths["input_image"], "wb") as image_file:
+        # Save the uploaded file directly to the results directory
+        with open(paths["request_image"], "wb") as image_file:
             shutil.copyfileobj(file.file, image_file)
         
         if async_processing:
             # Process in background
             background_tasks.add_task(
                 process_image_async, 
-                paths["input_image"], 
+                paths["request_image"], 
                 paths["vision_output"]
             )
             return {
@@ -403,7 +403,7 @@ async def analyze_image(
             }
         else:
             # Process synchronously
-            result = vision_service.analyze_image(paths["input_image"])
+            result = vision_service.analyze_image(paths["request_image"])
             vision_service.save_analysis(result, paths["vision_output"])
             
             # Get a summary
@@ -520,7 +520,6 @@ Configuration module - Handles environment variables and configuration
 """
 
 import os
-import time
 from dotenv import load_dotenv
 
 class Config:
@@ -573,20 +572,22 @@ class Config:
                 "request_dir": request_dir,
                 "vision_output": os.path.join(request_dir, "ingredients.json"),
                 "recipes_output": os.path.join(request_dir, "recipes.json"),
-                "input_image": os.path.join(self.input_dir, image_filename)
+                "request_image": os.path.join(request_dir, image_filename)  # Store image in results directory
             }
         else:
             # If no filename is provided, use the most recent request
             # by finding the most recently modified directory in results_dir
             try:
                 subdirs = [os.path.join(self.results_dir, d) for d in os.listdir(self.results_dir) 
-                          if os.path.isdir(os.path.join(self.results_dir, d))]
+                        if os.path.isdir(os.path.join(self.results_dir, d))]
                 if subdirs:
                     latest_dir = max(subdirs, key=os.path.getmtime)
+                    base_image_name = os.path.basename(latest_dir) + ".jpg"  # Assuming jpg extension
                     paths = {
                         "request_dir": latest_dir,
                         "vision_output": os.path.join(latest_dir, "ingredients.json"),
-                        "recipes_output": os.path.join(latest_dir, "recipes.json")
+                        "recipes_output": os.path.join(latest_dir, "recipes.json"),
+                        "request_image": os.path.join(latest_dir, base_image_name)
                     }
                 else:
                     # Fallback to default paths if no subdirectories exist
@@ -600,64 +601,66 @@ class Config:
                     "vision_output": os.path.join(self.results_dir, "ingredients.json"),
                     "recipes_output": os.path.join(self.results_dir, "recipes.json")
                 }
-            
+                
         return paths
 
---- data/results/fridge_2ad8d647/ingredients.json ---
+--- container/fridge_b36ace0a/fridge_b36ace0a.jpg ---
+[Binary file]
+
+--- container/fridge_b36ace0a/ingredients.json ---
 {
   "status": "complete",
   "result": {
     "ingredients": {
       "Dairy": [
-        "eggs",
-        "Philadelphia cream cheese",
-        "shredded cheese",
-        "cheese wheel"
+        "Hello fresh mayonnaise",
+        "Land O'Lakes butter",
+        "Philadelphia cream cheese"
       ],
       "Produce": [
-        "red apples",
-        "green pears",
-        "bananas",
-        "fresh cilantro",
-        "fresh mint",
-        "mixed bell peppers (orange, yellow, green)",
-        "red cabbage",
-        "fresh spinach",
-        "carrots",
-        "lemons",
-        "limes",
-        "fresh arugula"
+        "Red cabbage",
+        "Carrots",
+        "Yellow bell pepper",
+        "Tomatoes",
+        "Cilantro",
+        "Mint leaves",
+        "Pears",
+        "Apples",
+        "Bananas",
+        "Arugula",
+        "Mixed bell peppers",
+        "Lemon",
+        "Lime",
+        "Orange"
       ],
-      "Proteins": [],
+      "Proteins": [
+        "Eggs"
+      ],
       "Grains": [
-        "whole wheat tortillas"
+        "Mission flour tortillas"
       ],
       "Condiments": [
         "Heinz tomato ketchup",
-        "Hellmann's mayonnaise",
-        "Annie's honey mustard",
-        "maple syrup",
-        "soy sauce",
-        "Thousand Island dressing",
-        "Caesar dressing"
+        "Maple Grove Farms maple syrup",
+        "Annie's mustard",
+        "Roland plum paste",
+        "Olive oil",
+        "Pastene sesame oil",
+        "Mason barbecue sauce"
       ],
       "Beverages": [
-        "apple cider vinegar"
+        "Wine bottle",
+        "Sparkling water"
       ],
-      "Snacks": [
-        "almonds",
-        "dates"
-      ],
+      "Snacks": [],
       "Frozen": [],
-      "Canned": [
-        "marinated roasted peppers",
-        "sliced beets",
-        "tomato paste"
-      ],
+      "Canned": [],
       "Other": [
-        "jar of pickles",
-        "sunflower seeds",
-        "quinoa"
+        "Pickled onions jar",
+        "Pickled vegetables jar",
+        "Almonds jar",
+        "Sunflower seeds jar",
+        "Dates jar"
       ]
     }
   },
@@ -665,222 +668,244 @@ class Config:
     "total_count": 33,
     "categories": 10,
     "by_category": {
-      "Dairy": 4,
-      "Produce": 12,
-      "Proteins": 0,
+      "Dairy": 3,
+      "Produce": 14,
+      "Proteins": 1,
       "Grains": 1,
       "Condiments": 7,
-      "Beverages": 1,
-      "Snacks": 2,
+      "Beverages": 2,
+      "Snacks": 0,
       "Frozen": 0,
-      "Canned": 3,
-      "Other": 3
+      "Canned": 0,
+      "Other": 5
     }
   },
-  "image_filename": "fridge_2ad8d647.jpg"
+  "image_filename": "fridge_b36ace0a.jpg"
 }
 
---- data/results/fridge_2ad8d647/recipes.json ---
+--- container/fridge_b36ace0a/recipes.json ---
 {
   "items": [
     {
-      "name": "Cheesy Spinach Quinoa Wrap",
+      "name": "Apple-Cilantro Tacos with Creamy Plum Sauce",
       "total_ingredients": [
-        "whole wheat tortillas",
-        "eggs",
-        "shredded cheese",
+        "Mission flour tortillas",
         "Philadelphia cream cheese",
-        "fresh spinach",
-        "mixed bell peppers",
-        "quinoa",
-        "almonds"
+        "Roland plum paste",
+        "Red cabbage",
+        "Apple",
+        "Cilantro",
+        "Lime",
+        "Salt",
+        "Olive oil",
+        "Ground pepper"
       ],
       "available_ingredients": [
-        "whole wheat tortillas",
-        "eggs",
-        "shredded cheese",
+        "Mission flour tortillas",
         "Philadelphia cream cheese",
-        "fresh spinach",
-        "mixed bell peppers",
-        "quinoa",
-        "almonds"
+        "Roland plum paste",
+        "Red cabbage",
+        "Apple",
+        "Cilantro",
+        "Lime",
+        "Olive oil"
       ],
-      "missing_ingredients": [],
-      "completeness_score": 100,
+      "missing_ingredients": [
+        "Salt",
+        "Ground pepper"
+      ],
+      "completeness_score": 80,
       "instructions": [
-        "Cook the quinoa according to package instructions and set aside to cool.",
-        "Beat eggs in a bowl, then scramble them in a pan until cooked through.",
-        "Mix Philadelphia cream cheese and shredded cheese with the scrambled eggs.",
-        "Chop fresh spinach and mixed bell peppers; saut\u00e9 them lightly in olive oil.",
-        "Warm whole wheat tortillas in a pan.",
-        "Place a spoonful of quinoa, spinach, bell pepper mix, and cheese mixture on each tortilla.",
-        "Sprinkle chopped almonds for a crunchy texture.",
-        "Wrap and serve warm."
+        "Step 1: Thinly slice the apples and chop cilantro.",
+        "Step 2: In a bowl, mix Philadelphia cream cheese with Roland plum paste until smooth. Season with lime juice.",
+        "Step 3: Heat Mission flour tortillas in a dry pan until warmed.",
+        "Step 4: Spread creamy plum sauce onto tortillas. Top with red cabbage, sliced apples, and chopped cilantro.",
+        "Step 5: Drizzle olive oil over tacos and season with a pinch of salt and ground pepper."
       ],
       "cooking_time": "20 minutes",
       "difficulty": "Easy"
     },
     {
-      "name": "Zesty Apple Cabbage Slaw",
+      "name": "Red Cabbage and Apple Slaw with Maple Dressing",
       "total_ingredients": [
-        "red cabbage",
-        "red apples",
-        "Hellmann's mayonnaise",
-        "apple cider vinegar",
-        "fresh mint"
+        "Red cabbage",
+        "Apple",
+        "Lemon",
+        "Maple Grove Farms maple syrup",
+        "Olive oil",
+        "Salt",
+        "Ground pepper"
       ],
       "available_ingredients": [
-        "red cabbage",
-        "red apples",
-        "Hellmann's mayonnaise",
-        "apple cider vinegar",
-        "fresh mint"
+        "Red cabbage",
+        "Apple",
+        "Lemon",
+        "Maple Grove Farms maple syrup",
+        "Olive oil"
       ],
-      "missing_ingredients": [],
-      "completeness_score": 100,
+      "missing_ingredients": [
+        "Salt",
+        "Ground pepper"
+      ],
+      "completeness_score": 83,
       "instructions": [
-        "Thinly slice the red cabbage and red apples.",
-        "Chop fresh mint leaves finely.",
-        "Prepare dressing by mixing Hellmann's mayonnaise with apple cider vinegar.",
-        "Toss red cabbage, red apples, and mint with the dressing.",
-        "Chill in refrigerator for 15 minutes before serving."
+        "Step 1: Thinly slice red cabbage and apple.",
+        "Step 2: In a small bowl, whisk together olive oil, lemon juice, and maple syrup.",
+        "Step 3: Toss red cabbage and apple with dressing, seasoning with a pinch of salt and ground pepper.",
+        "Step 4: Let sit for 10 minutes before serving to meld flavors."
       ],
       "cooking_time": "15 minutes",
       "difficulty": "Easy"
     },
     {
-      "name": "Citrus Cilantro Fruit Salad",
+      "name": "Minty Citrus Salad with Spiced Seeds",
       "total_ingredients": [
-        "green pears",
-        "bananas",
-        "mixed bell peppers",
-        "fresh cilantro",
-        "lemons"
+        "Arugula",
+        "Mint leaves",
+        "Orange",
+        "Lime",
+        "Almonds jar",
+        "Sunflower seeds jar",
+        "Olive oil",
+        "Salt",
+        "Ground pepper"
       ],
       "available_ingredients": [
-        "green pears",
-        "bananas",
-        "mixed bell peppers",
-        "fresh cilantro",
-        "lemons"
+        "Arugula",
+        "Mint leaves",
+        "Orange",
+        "Lime",
+        "Almonds jar",
+        "Sunflower seeds jar",
+        "Olive oil"
       ],
-      "missing_ingredients": [],
-      "completeness_score": 100,
+      "missing_ingredients": [
+        "Salt",
+        "Ground pepper"
+      ],
+      "completeness_score": 77,
       "instructions": [
-        "Dice green pears and bananas into bite-sized pieces.",
-        "Chop mixed bell peppers.",
-        "Mince fresh cilantro.",
-        "In a small bowl, combine juice of lemons, mixed with honey mustard for dressing.",
-        "Toss fruits and peppers with cilantro and citrus dressing.",
-        "Serve chilled."
+        "Step 1: Toss arugula and mint leaves in a large salad bowl.",
+        "Step 2: Segment the orange and squeeze lime juice over the salad.",
+        "Step 3: Toast almonds and sunflower seeds in olive oil until fragrant.",
+        "Step 4: Sprinkle toasted seeds over the salad.",
+        "Step 5: Add a pinch of salt and ground pepper before serving."
       ],
       "cooking_time": "10 minutes",
       "difficulty": "Easy"
     },
     {
-      "name": "Honey Mustard Roasted Vegetable Tart",
+      "name": "Bell Pepper Stir-Fry with Pickled Twist",
       "total_ingredients": [
-        "cheese wheel",
-        "mixed bell peppers",
-        "carrots",
-        "marinated roasted peppers",
-        "Annie's honey mustard",
-        "whole wheat tortillas"
+        "Mixed bell peppers",
+        "Pickled vegetables jar",
+        "Olive oil",
+        "Pastene sesame oil",
+        "Salt",
+        "Ground pepper",
+        "Eggs",
+        "Cilantro"
       ],
       "available_ingredients": [
-        "cheese wheel",
-        "mixed bell peppers",
-        "carrots",
-        "marinated roasted peppers",
-        "Annie's honey mustard",
-        "whole wheat tortillas"
+        "Mixed bell peppers",
+        "Pickled vegetables jar",
+        "Olive oil",
+        "Pastene sesame oil",
+        "Eggs",
+        "Cilantro"
       ],
-      "missing_ingredients": [],
-      "completeness_score": 100,
+      "missing_ingredients": [
+        "Salt",
+        "Ground pepper"
+      ],
+      "completeness_score": 75,
       "instructions": [
-        "Slice carrots and bell peppers into thin strips.",
-        "Spread Whole Wheat Tortillas flat on a baking tray.",
-        "Grate cheese wheel and sprinkle over tortillas.",
-        "Drizzle Annie's honey mustard over the top.",
-        "Add a layer of marinated roasted peppers.",
-        "Add carrot and bell pepper slices.",
-        "Bake at 375\u00b0F (190\u00b0C) for 15 minutes or until cheese is bubbling.",
-        "Cut into wedges and serve."
+        "Step 1: Slice mixed bell peppers.",
+        "Step 2: Heat olive oil and sesame oil in a pan over medium heat.",
+        "Step 3: Add bell peppers to the pan, stir-fry until softened.",
+        "Step 4: Add pickled vegetables and stir well.",
+        "Step 5: Beat eggs and add to the pan, scramble with vegetables.",
+        "Step 6: Garnish with fresh cilantro and season with a pinch of salt and ground pepper."
       ],
-      "cooking_time": "30 minutes",
+      "cooking_time": "20 minutes",
       "difficulty": "Medium"
     },
     {
-      "name": "Almond Date Energy Bites",
+      "name": "Fruity Citrus Smoothie",
       "total_ingredients": [
-        "almonds",
-        "dates",
-        "maple syrup",
-        "sunflower seeds"
+        "Banana",
+        "Pear",
+        "Orange",
+        "Sparkling water",
+        "Lime",
+        "Honey"
       ],
       "available_ingredients": [
-        "almonds",
-        "dates",
-        "maple syrup",
-        "sunflower seeds"
+        "Banana",
+        "Pear",
+        "Orange",
+        "Sparkling water",
+        "Lime"
       ],
-      "missing_ingredients": [],
-      "completeness_score": 100,
+      "missing_ingredients": [
+        "Honey"
+      ],
+      "completeness_score": 83,
       "instructions": [
-        "In a food processor, pulse almonds and sunflower seeds until finely chopped.",
-        "Add dates and maple syrup, blending until mixture starts to come together.",
-        "Form mixture into small balls using hands.",
-        "Place energy bites on a tray in the refrigerator for at least 30 minutes to set.",
-        "Serve with a hot beverage or just as snack."
+        "Step 1: Peel and slice banana and pear.",
+        "Step 2: Juice the orange and lime.",
+        "Step 3: Blend banana, pear, and citrus juices until smooth.",
+        "Step 4: Add a splash of sparkling water for fizz.",
+        "Step 5: Sweeten with honey if desired."
       ],
-      "cooking_time": "40 minutes",
+      "cooking_time": "5 minutes",
       "difficulty": "Easy"
     }
   ],
   "analysis": [
     {
-      "recipe_name": "Cheesy Spinach Quinoa Wrap",
-      "completeness": 100,
+      "recipe_name": "Apple-Cilantro Tacos with Creamy Plum Sauce",
+      "completeness": 80,
       "available_count": 8,
-      "missing_count": 0,
-      "total_ingredients": 8,
+      "missing_count": 2,
+      "total_ingredients": 10,
       "cooking_time": "20 minutes",
       "difficulty": "Easy"
     },
     {
-      "recipe_name": "Zesty Apple Cabbage Slaw",
-      "completeness": 100,
+      "recipe_name": "Red Cabbage and Apple Slaw with Maple Dressing",
+      "completeness": 83,
       "available_count": 5,
-      "missing_count": 0,
-      "total_ingredients": 5,
+      "missing_count": 2,
+      "total_ingredients": 7,
       "cooking_time": "15 minutes",
       "difficulty": "Easy"
     },
     {
-      "recipe_name": "Citrus Cilantro Fruit Salad",
-      "completeness": 100,
-      "available_count": 5,
-      "missing_count": 0,
-      "total_ingredients": 5,
+      "recipe_name": "Minty Citrus Salad with Spiced Seeds",
+      "completeness": 77,
+      "available_count": 7,
+      "missing_count": 2,
+      "total_ingredients": 9,
       "cooking_time": "10 minutes",
       "difficulty": "Easy"
     },
     {
-      "recipe_name": "Honey Mustard Roasted Vegetable Tart",
-      "completeness": 100,
+      "recipe_name": "Bell Pepper Stir-Fry with Pickled Twist",
+      "completeness": 75,
       "available_count": 6,
-      "missing_count": 0,
-      "total_ingredients": 6,
-      "cooking_time": "30 minutes",
+      "missing_count": 2,
+      "total_ingredients": 8,
+      "cooking_time": "20 minutes",
       "difficulty": "Medium"
     },
     {
-      "recipe_name": "Almond Date Energy Bites",
-      "completeness": 100,
-      "available_count": 4,
-      "missing_count": 0,
-      "total_ingredients": 4,
-      "cooking_time": "40 minutes",
+      "recipe_name": "Fruity Citrus Smoothie",
+      "completeness": 83,
+      "available_count": 5,
+      "missing_count": 1,
+      "total_ingredients": 6,
+      "cooking_time": "5 minutes",
       "difficulty": "Easy"
     }
   ],
@@ -888,9 +913,6 @@ class Config:
 }
 
 --- input/fridge.jpg ---
-[Binary file]
-
---- input/fridge_2ad8d647.jpg ---
 [Binary file]
 
 --- main.py ---
@@ -908,11 +930,9 @@ The application can be run in:
 
 import argparse
 import os
-from flask import Flask, request, jsonify, send_from_directory
-from werkzeug.utils import secure_filename
+from flask import Flask, request, jsonify
 import uuid
-import glob
-import time
+import shutil
 import json
 from typing import Optional
 
@@ -960,11 +980,29 @@ class CLIProcessor:
         Returns:
             Analysis result
         """
-        paths = self.config.get_file_paths(image_filename)
-        print(f"Analyzing image: {paths['input_image']}")
+        # First, check if the image is in the input directory (for backward compatibility)
+        input_image_path = os.path.join(self.config.input_dir, image_filename)
         
-        # Run analysis
-        result = self.vision_service.analyze_image(paths["input_image"])
+        if os.path.exists(input_image_path):
+            # Get file paths for the results directory
+            paths = self.config.get_file_paths(image_filename)
+            
+            # Copy the file from input to results directory
+            os.makedirs(os.path.dirname(paths["request_image"]), exist_ok=True)
+            shutil.copy(input_image_path, paths["request_image"])
+            print(f"Copied image from {input_image_path} to {paths['request_image']}")
+            
+            # Run analysis on the copied file
+            print(f"Analyzing image: {paths['request_image']}")
+            result = self.vision_service.analyze_image(paths["request_image"])
+        else:
+            # Check if image already exists in the results directory
+            paths = self.config.get_file_paths(image_filename)
+            if os.path.exists(paths.get("request_image", "")):
+                print(f"Analyzing image: {paths['request_image']}")
+                result = self.vision_service.analyze_image(paths["request_image"])
+            else:
+                raise FileNotFoundError(f"Image file {image_filename} not found in input or results directory")
         
         # Save full result including summary
         summary = self.vision_service.get_ingredients_summary(result)
@@ -1050,11 +1088,11 @@ def analyze_image():
         # Get file paths
         paths = config.get_file_paths(image_filename)
         
-        # Save the uploaded file
-        file.save(paths["input_image"])
+        # Save the uploaded file directly to the results directory
+        file.save(paths["request_image"])
         
         # Process image
-        result = vision_service.analyze_image(paths["input_image"])
+        result = vision_service.analyze_image(paths["request_image"])
         
         # Get a summary
         summary = vision_service.get_ingredients_summary(result)

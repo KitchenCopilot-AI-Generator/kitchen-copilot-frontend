@@ -62,29 +62,13 @@ class CLIProcessor:
         Returns:
             Analysis result
         """
-        # First, check if the image is in the input directory (for backward compatibility)
-        input_image_path = os.path.join(self.config.input_dir, image_filename)
-        
-        if os.path.exists(input_image_path):
-            # Get file paths for the results directory
-            paths = self.config.get_file_paths(image_filename)
-            
-            # Copy the file from input to results directory
-            os.makedirs(os.path.dirname(paths["request_image"]), exist_ok=True)
-            shutil.copy(input_image_path, paths["request_image"])
-            print(f"Copied image from {input_image_path} to {paths['request_image']}")
-            
-            # Run analysis on the copied file
+        # Check if image already exists in the results directory
+        paths = self.config.get_file_paths(image_filename)
+        if os.path.exists(paths.get("request_image", "")):
             print(f"Analyzing image: {paths['request_image']}")
             result = self.vision_service.analyze_image(paths["request_image"])
         else:
-            # Check if image already exists in the results directory
-            paths = self.config.get_file_paths(image_filename)
-            if os.path.exists(paths.get("request_image", "")):
-                print(f"Analyzing image: {paths['request_image']}")
-                result = self.vision_service.analyze_image(paths["request_image"])
-            else:
-                raise FileNotFoundError(f"Image file {image_filename} not found in input or results directory")
+            raise FileNotFoundError(f"Image file {image_filename} not found in input or results directory")
         
         # Save full result including summary
         summary = self.vision_service.get_ingredients_summary(result)
