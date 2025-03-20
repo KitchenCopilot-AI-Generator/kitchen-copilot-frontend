@@ -10,13 +10,10 @@ assets
 └── Recipes.png
 config.py
 container
-└── fridge_b36ace0a
-    ├── fridge_b36ace0a.jpg
+└── fridge_1a0dbaaf
+    ├── fridge_1a0dbaaf.jpg
     ├── ingredients.json
     └── recipes.json
-data
-input
-└── fridge.jpg
 main.py
 models
 ├── ingredients.py
@@ -25,6 +22,8 @@ prompts
 └── recipe_prompt.py
 └── vision_prompt.py
 requirements.txt
+sample-images
+└── fridge.jpg
 services
 ├── azure_client.py
 └── recipe_service.py
@@ -534,11 +533,9 @@ class Config:
         self.model_name = os.getenv("MODEL_NAME")
         
         # Default paths
-        self.input_dir = os.getenv("INPUT_DIR", "./input")
         self.results_dir = os.getenv("RESULTS_DIR", "./data/results")
         
         # Ensure directories exist
-        os.makedirs(self.input_dir, exist_ok=True)
         os.makedirs(self.results_dir, exist_ok=True)
     
     def get_azure_config(self):
@@ -604,247 +601,237 @@ class Config:
                 
         return paths
 
---- container/fridge_b36ace0a/fridge_b36ace0a.jpg ---
+--- container/fridge_1a0dbaaf/fridge_1a0dbaaf.jpg ---
 [Binary file]
 
---- container/fridge_b36ace0a/ingredients.json ---
+--- container/fridge_1a0dbaaf/ingredients.json ---
 {
   "status": "complete",
   "result": {
     "ingredients": {
       "Dairy": [
-        "Hello fresh mayonnaise",
-        "Land O'Lakes butter",
-        "Philadelphia cream cheese"
+        "Philadelphia cream cheese",
+        "Land O'Lakes butter"
       ],
       "Produce": [
+        "Fresh spinach leaves",
+        "Fresh parsley",
+        "Fresh mint",
+        "Apples",
+        "Pears",
+        "Bananas",
         "Red cabbage",
         "Carrots",
         "Yellow bell pepper",
-        "Tomatoes",
-        "Cilantro",
-        "Mint leaves",
-        "Pears",
-        "Apples",
-        "Bananas",
-        "Arugula",
-        "Mixed bell peppers",
+        "Red bell pepper",
+        "Green bell pepper",
+        "Orange",
         "Lemon",
-        "Lime",
-        "Orange"
+        "Lime"
       ],
-      "Proteins": [
-        "Eggs"
-      ],
+      "Proteins": [],
       "Grains": [
-        "Mission flour tortillas"
+        "Flour tortillas"
       ],
       "Condiments": [
-        "Heinz tomato ketchup",
-        "Maple Grove Farms maple syrup",
-        "Annie's mustard",
-        "Roland plum paste",
-        "Olive oil",
-        "Pastene sesame oil",
-        "Mason barbecue sauce"
+        "Maple syrup",
+        "Annie's dressing",
+        "Heinz ketchup",
+        "Hellmann's mayonnaise",
+        "Marzetti salad dressing",
+        "Colman's mustard",
+        "Roland Thai Sriracha sauce",
+        "Yokki soy sauce"
       ],
-      "Beverages": [
-        "Wine bottle",
-        "Sparkling water"
+      "Beverages": [],
+      "Snacks": [
+        "Almonds",
+        "Dates"
       ],
-      "Snacks": [],
       "Frozen": [],
-      "Canned": [],
+      "Canned": [
+        "Roland wasabi peas"
+      ],
       "Other": [
-        "Pickled onions jar",
-        "Pickled vegetables jar",
-        "Almonds jar",
-        "Sunflower seeds jar",
-        "Dates jar"
+        "Eggs",
+        "Sunflower seeds"
       ]
     }
   },
   "summary": {
-    "total_count": 33,
+    "total_count": 30,
     "categories": 10,
     "by_category": {
-      "Dairy": 3,
+      "Dairy": 2,
       "Produce": 14,
-      "Proteins": 1,
+      "Proteins": 0,
       "Grains": 1,
-      "Condiments": 7,
-      "Beverages": 2,
-      "Snacks": 0,
+      "Condiments": 8,
+      "Beverages": 0,
+      "Snacks": 2,
       "Frozen": 0,
-      "Canned": 0,
-      "Other": 5
+      "Canned": 1,
+      "Other": 2
     }
   },
-  "image_filename": "fridge_b36ace0a.jpg"
+  "image_filename": "fridge_1a0dbaaf.jpg"
 }
 
---- container/fridge_b36ace0a/recipes.json ---
+--- container/fridge_1a0dbaaf/recipes.json ---
 {
   "items": [
     {
-      "name": "Apple-Cilantro Tacos with Creamy Plum Sauce",
+      "name": "Spinach and Cream Cheese Stuffed Tortillas",
       "total_ingredients": [
-        "Mission flour tortillas",
         "Philadelphia cream cheese",
-        "Roland plum paste",
-        "Red cabbage",
-        "Apple",
-        "Cilantro",
-        "Lime",
+        "Land O'Lakes butter",
+        "Fresh spinach leaves",
+        "Flour tortillas",
         "Salt",
-        "Olive oil",
-        "Ground pepper"
+        "Pepper",
+        "Olive oil"
       ],
       "available_ingredients": [
-        "Mission flour tortillas",
         "Philadelphia cream cheese",
-        "Roland plum paste",
-        "Red cabbage",
-        "Apple",
-        "Cilantro",
-        "Lime",
-        "Olive oil"
+        "Land O'Lakes butter",
+        "Fresh spinach leaves",
+        "Flour tortillas"
       ],
       "missing_ingredients": [
         "Salt",
-        "Ground pepper"
+        "Pepper",
+        "Olive oil"
       ],
-      "completeness_score": 80,
+      "completeness_score": 66,
       "instructions": [
-        "Step 1: Thinly slice the apples and chop cilantro.",
-        "Step 2: In a bowl, mix Philadelphia cream cheese with Roland plum paste until smooth. Season with lime juice.",
-        "Step 3: Heat Mission flour tortillas in a dry pan until warmed.",
-        "Step 4: Spread creamy plum sauce onto tortillas. Top with red cabbage, sliced apples, and chopped cilantro.",
-        "Step 5: Drizzle olive oil over tacos and season with a pinch of salt and ground pepper."
+        "Step 1: Preheat oven to 350\u00b0F (175\u00b0C).",
+        "Step 2: In a skillet, melt butter over medium heat. Add spinach and saut\u00e9 until wilted.",
+        "Step 3: Mix cream cheese, salt, and pepper in a bowl. Add saut\u00e9ed spinach and stir well.",
+        "Step 4: Lay a tortilla flat and spread the mixture evenly. Roll it up.",
+        "Step 5: Place rolled tortillas in a baking dish, brush with olive oil.",
+        "Step 6: Bake for 15 minutes or until golden brown."
+      ],
+      "cooking_time": "30 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Colorful Bell Pepper Stir Fry",
+      "total_ingredients": [
+        "Red bell pepper",
+        "Yellow bell pepper",
+        "Green bell pepper",
+        "Lime",
+        "Honey",
+        "Roland Thai Sriracha sauce",
+        "Yokki soy sauce",
+        "Almonds",
+        "Olive oil"
+      ],
+      "available_ingredients": [
+        "Red bell pepper",
+        "Yellow bell pepper",
+        "Green bell pepper",
+        "Lime",
+        "Roland Thai Sriracha sauce",
+        "Yokki soy sauce",
+        "Almonds"
+      ],
+      "missing_ingredients": [
+        "Honey",
+        "Olive oil"
+      ],
+      "completeness_score": 78,
+      "instructions": [
+        "Step 1: Slice bell peppers into strips.",
+        "Step 2: Heat olive oil in a large pan over medium heat.",
+        "Step 3: Add bell peppers, stirring occasionally until tender.",
+        "Step 4: Mix lime juice, honey, Sriracha, and soy sauce in a bowl.",
+        "Step 5: Add sauce to the pan and stir until bell peppers are coated.",
+        "Step 6: Garnish with almonds before serving."
       ],
       "cooking_time": "20 minutes",
       "difficulty": "Easy"
     },
     {
-      "name": "Red Cabbage and Apple Slaw with Maple Dressing",
+      "name": "Red Cabbage Slaw",
       "total_ingredients": [
         "Red cabbage",
-        "Apple",
+        "Carrots",
+        "Fresh parsley",
+        "Fresh mint",
         "Lemon",
-        "Maple Grove Farms maple syrup",
-        "Olive oil",
-        "Salt",
-        "Ground pepper"
+        "Annie's dressing",
+        "Sunflower seeds"
       ],
       "available_ingredients": [
         "Red cabbage",
-        "Apple",
+        "Carrots",
+        "Fresh parsley",
+        "Fresh mint",
         "Lemon",
-        "Maple Grove Farms maple syrup",
-        "Olive oil"
+        "Annie's dressing",
+        "Sunflower seeds"
       ],
-      "missing_ingredients": [
-        "Salt",
-        "Ground pepper"
-      ],
-      "completeness_score": 83,
+      "missing_ingredients": [],
+      "completeness_score": 100,
       "instructions": [
-        "Step 1: Thinly slice red cabbage and apple.",
-        "Step 2: In a small bowl, whisk together olive oil, lemon juice, and maple syrup.",
-        "Step 3: Toss red cabbage and apple with dressing, seasoning with a pinch of salt and ground pepper.",
-        "Step 4: Let sit for 10 minutes before serving to meld flavors."
+        "Step 1: Shred red cabbage and carrots finely.",
+        "Step 2: Chop parsley and mint.",
+        "Step 3: In a large bowl, combine cabbage, carrots, parsley, and mint.",
+        "Step 4: Drizzle lemon juice and Annie's dressing over salad.",
+        "Step 5: Toss all ingredients together until well mixed.",
+        "Step 6: Sprinkle sunflower seeds on top before serving."
       ],
       "cooking_time": "15 minutes",
       "difficulty": "Easy"
     },
     {
-      "name": "Minty Citrus Salad with Spiced Seeds",
+      "name": "Apple and Almond Breakfast Wrap",
       "total_ingredients": [
-        "Arugula",
-        "Mint leaves",
-        "Orange",
-        "Lime",
-        "Almonds jar",
-        "Sunflower seeds jar",
-        "Olive oil",
-        "Salt",
-        "Ground pepper"
+        "Apples",
+        "Land O'Lakes butter",
+        "Almonds",
+        "Maple syrup",
+        "Cinnamon",
+        "Flour tortillas"
       ],
       "available_ingredients": [
-        "Arugula",
-        "Mint leaves",
-        "Orange",
-        "Lime",
-        "Almonds jar",
-        "Sunflower seeds jar",
-        "Olive oil"
+        "Apples",
+        "Land O'Lakes butter",
+        "Almonds",
+        "Maple syrup",
+        "Flour tortillas"
       ],
       "missing_ingredients": [
-        "Salt",
-        "Ground pepper"
+        "Cinnamon"
       ],
-      "completeness_score": 77,
+      "completeness_score": 85,
       "instructions": [
-        "Step 1: Toss arugula and mint leaves in a large salad bowl.",
-        "Step 2: Segment the orange and squeeze lime juice over the salad.",
-        "Step 3: Toast almonds and sunflower seeds in olive oil until fragrant.",
-        "Step 4: Sprinkle toasted seeds over the salad.",
-        "Step 5: Add a pinch of salt and ground pepper before serving."
+        "Step 1: Slice apples thinly.",
+        "Step 2: Heat butter in a skillet, add apple slices.",
+        "Step 3: Cook apples until tender.",
+        "Step 4: Add maple syrup and almonds, stir well.",
+        "Step 5: Sprinkle cinnamon over apples.",
+        "Step 6: Place mixture in flour tortillas, wrap, and serve warm."
       ],
-      "cooking_time": "10 minutes",
+      "cooking_time": "20 minutes",
       "difficulty": "Easy"
     },
     {
-      "name": "Bell Pepper Stir-Fry with Pickled Twist",
+      "name": "Fruit and Mint Salad",
       "total_ingredients": [
-        "Mixed bell peppers",
-        "Pickled vegetables jar",
-        "Olive oil",
-        "Pastene sesame oil",
-        "Salt",
-        "Ground pepper",
-        "Eggs",
-        "Cilantro"
-      ],
-      "available_ingredients": [
-        "Mixed bell peppers",
-        "Pickled vegetables jar",
-        "Olive oil",
-        "Pastene sesame oil",
-        "Eggs",
-        "Cilantro"
-      ],
-      "missing_ingredients": [
-        "Salt",
-        "Ground pepper"
-      ],
-      "completeness_score": 75,
-      "instructions": [
-        "Step 1: Slice mixed bell peppers.",
-        "Step 2: Heat olive oil and sesame oil in a pan over medium heat.",
-        "Step 3: Add bell peppers to the pan, stir-fry until softened.",
-        "Step 4: Add pickled vegetables and stir well.",
-        "Step 5: Beat eggs and add to the pan, scramble with vegetables.",
-        "Step 6: Garnish with fresh cilantro and season with a pinch of salt and ground pepper."
-      ],
-      "cooking_time": "20 minutes",
-      "difficulty": "Medium"
-    },
-    {
-      "name": "Fruity Citrus Smoothie",
-      "total_ingredients": [
-        "Banana",
-        "Pear",
+        "Pears",
+        "Bananas",
         "Orange",
-        "Sparkling water",
+        "Fresh mint",
         "Lime",
         "Honey"
       ],
       "available_ingredients": [
-        "Banana",
-        "Pear",
+        "Pears",
+        "Bananas",
         "Orange",
-        "Sparkling water",
+        "Fresh mint",
         "Lime"
       ],
       "missing_ingredients": [
@@ -852,68 +839,66 @@ class Config:
       ],
       "completeness_score": 83,
       "instructions": [
-        "Step 1: Peel and slice banana and pear.",
-        "Step 2: Juice the orange and lime.",
-        "Step 3: Blend banana, pear, and citrus juices until smooth.",
-        "Step 4: Add a splash of sparkling water for fizz.",
-        "Step 5: Sweeten with honey if desired."
+        "Step 1: Peel and slice pears and bananas.",
+        "Step 2: Peel and segment the orange.",
+        "Step 3: Chop fresh mint.",
+        "Step 4: Mix all fruits in a large bowl.",
+        "Step 5: Drizzle lime juice and honey over fruit mix.",
+        "Step 6: Toss gently to combine."
       ],
-      "cooking_time": "5 minutes",
+      "cooking_time": "10 minutes",
       "difficulty": "Easy"
     }
   ],
   "analysis": [
     {
-      "recipe_name": "Apple-Cilantro Tacos with Creamy Plum Sauce",
-      "completeness": 80,
-      "available_count": 8,
+      "recipe_name": "Spinach and Cream Cheese Stuffed Tortillas",
+      "completeness": 66,
+      "available_count": 4,
+      "missing_count": 3,
+      "total_ingredients": 7,
+      "cooking_time": "30 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "recipe_name": "Colorful Bell Pepper Stir Fry",
+      "completeness": 78,
+      "available_count": 7,
       "missing_count": 2,
-      "total_ingredients": 10,
+      "total_ingredients": 9,
       "cooking_time": "20 minutes",
       "difficulty": "Easy"
     },
     {
-      "recipe_name": "Red Cabbage and Apple Slaw with Maple Dressing",
-      "completeness": 83,
-      "available_count": 5,
-      "missing_count": 2,
+      "recipe_name": "Red Cabbage Slaw",
+      "completeness": 100,
+      "available_count": 7,
+      "missing_count": 0,
       "total_ingredients": 7,
       "cooking_time": "15 minutes",
       "difficulty": "Easy"
     },
     {
-      "recipe_name": "Minty Citrus Salad with Spiced Seeds",
-      "completeness": 77,
-      "available_count": 7,
-      "missing_count": 2,
-      "total_ingredients": 9,
-      "cooking_time": "10 minutes",
+      "recipe_name": "Apple and Almond Breakfast Wrap",
+      "completeness": 85,
+      "available_count": 5,
+      "missing_count": 1,
+      "total_ingredients": 6,
+      "cooking_time": "20 minutes",
       "difficulty": "Easy"
     },
     {
-      "recipe_name": "Bell Pepper Stir-Fry with Pickled Twist",
-      "completeness": 75,
-      "available_count": 6,
-      "missing_count": 2,
-      "total_ingredients": 8,
-      "cooking_time": "20 minutes",
-      "difficulty": "Medium"
-    },
-    {
-      "recipe_name": "Fruity Citrus Smoothie",
+      "recipe_name": "Fruit and Mint Salad",
       "completeness": 83,
       "available_count": 5,
       "missing_count": 1,
       "total_ingredients": 6,
-      "cooking_time": "5 minutes",
+      "cooking_time": "10 minutes",
       "difficulty": "Easy"
     }
   ],
-  "ingredient_count": 33
+  "ingredient_count": 30
 }
-
---- input/fridge.jpg ---
-[Binary file]
 
 --- main.py ---
 """
@@ -980,29 +965,13 @@ class CLIProcessor:
         Returns:
             Analysis result
         """
-        # First, check if the image is in the input directory (for backward compatibility)
-        input_image_path = os.path.join(self.config.input_dir, image_filename)
-        
-        if os.path.exists(input_image_path):
-            # Get file paths for the results directory
-            paths = self.config.get_file_paths(image_filename)
-            
-            # Copy the file from input to results directory
-            os.makedirs(os.path.dirname(paths["request_image"]), exist_ok=True)
-            shutil.copy(input_image_path, paths["request_image"])
-            print(f"Copied image from {input_image_path} to {paths['request_image']}")
-            
-            # Run analysis on the copied file
+        # Check if image already exists in the results directory
+        paths = self.config.get_file_paths(image_filename)
+        if os.path.exists(paths.get("request_image", "")):
             print(f"Analyzing image: {paths['request_image']}")
             result = self.vision_service.analyze_image(paths["request_image"])
         else:
-            # Check if image already exists in the results directory
-            paths = self.config.get_file_paths(image_filename)
-            if os.path.exists(paths.get("request_image", "")):
-                print(f"Analyzing image: {paths['request_image']}")
-                result = self.vision_service.analyze_image(paths["request_image"])
-            else:
-                raise FileNotFoundError(f"Image file {image_filename} not found in input or results directory")
+            raise FileNotFoundError(f"Image file {image_filename} not found in input or results directory")
         
         # Save full result including summary
         summary = self.vision_service.get_ingredients_summary(result)
@@ -1537,6 +1506,9 @@ python-multipart
 flask
 werkzeug
 flask-cors
+
+--- sample-images/fridge.jpg ---
+[Binary file]
 
 --- services/azure_client.py ---
 """
