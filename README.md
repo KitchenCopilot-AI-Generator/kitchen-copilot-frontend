@@ -246,24 +246,28 @@ Example response:
 ## Project Structure
 ```
 kitchen-copilot/
-├── .env                     # Environment variables
-├── main.py                  # Main entry point
-├── config.py                # Configuration and environment loading
-├── utils/                   # Utility functions
-├── services/                # Core services
-├── models/                  # Data models
-├── data/                    # Data and prompts
-│   ├── prompts/             # System prompts
-│   └── results/             # Output directory
-├── api/                     # API endpoints
-└── kitchen-copilot-frontend/                # Next.js frontend application
-    ├── src/                 # Frontend source code
-    │   ├── app/             # Next.js app router pages
-    │   ├── components/      # React components
-    │   ├── lib/             # Utility functions and API client
-    │   └── types/           # TypeScript type definitions
-    ├── public/              # Static assets
-    └── package.json         # Frontend dependencies
+├── .env                       # Environment variables
+├── backend/                   # Backend directory
+│   ├── main.py                # Main entry point
+│   ├── config.py              # Configuration and environment loading
+│   ├── utils/                 # Utility functions
+│   ├── services/              # Core services
+│   └── models/                # Data models
+├── container/                 # Container data
+│   └── fridge/                # Fridge data
+│       ├── fridge_c6ae9525/   # Specific fridge instance
+│           ├── fridge_c6ae9525.jpg
+│           ├── ingredients.json
+│           └── recipes.json
+├── api/                       # API endpoints
+└── kitchen-copilot-frontend/  # Next.js frontend application
+    ├── src/                   # Frontend source code
+    │   ├── app/               # Next.js app router pages
+    │   ├── components/        # React components
+    │   ├── lib/               # Utility functions and API client
+    │   └── types/             # TypeScript type definitions
+    ├── public/                # Static assets
+    └── package.json           # Frontend dependencies
 ```
 
 ## Troubleshooting

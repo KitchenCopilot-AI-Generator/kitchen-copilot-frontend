@@ -18,7 +18,7 @@ import json
 from typing import Optional
 
 # Import services and config
-from backend.config import Config
+from config import Config
 from services.azure_client import AzureClientService
 from services.vision_service import VisionService
 from services.recipe_service import RecipeService

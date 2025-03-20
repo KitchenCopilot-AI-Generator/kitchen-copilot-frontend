@@ -11,7 +11,6 @@ DEFAULT_IGNORE_PATTERNS = {
     '**/__pycache__/',
     '*.pyc',
     '.env',
-    'node_modules/',
     '.idea/',
     '.vscode/',
     '.pytest_cache/',
@@ -24,7 +23,7 @@ DEFAULT_IGNORE_PATTERNS = {
     'snapshot.txt',
     'snapshot.py',
     'LICENSE',
-    'kitchen-copilot-frontend/'
+    'kitchen-copilot-frontend/node_modules/'
 }
 
 def parse_gitignore() -> Set[str]:
