@@ -48,13 +48,16 @@ An application that analyses your refrigerator contents through images and sugge
 ## Usage
 
 ### Running the Full Application
+1. Navigate to the backend directory:
+   ```bash
+   cd backend
 
-1. Start the backend API server:
+2. Start the backend API server:
    ```bash
    python main.py --mode api --host 0.0.0.0 --port 5000
    ```
 
-2. In a separate terminal, start the frontend development server:
+3. In a separate terminal, start the frontend development server:
    ```bash
    cd kitchen-copilot-frontend
    npm run dev
