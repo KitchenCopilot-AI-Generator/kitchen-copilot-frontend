@@ -12,16 +12,13 @@ The application can be run in:
 
 import argparse
 import os
-from flask import Flask, request, jsonify, send_from_directory
-from werkzeug.utils import secure_filename
+from flask import Flask, request, jsonify
 import uuid
-import glob
-import time
 import json
 from typing import Optional
 
 # Import services and config
-from config import Config
+from backend.config import Config
 from services.azure_client import AzureClientService
 from services.vision_service import VisionService
 from services.recipe_service import RecipeService
@@ -64,11 +61,13 @@ class CLIProcessor:
         Returns:
             Analysis result
         """
+        # Check if image already exists in the results directory
         paths = self.config.get_file_paths(image_filename)
-        print(f"Analyzing image: {paths['input_image']}")
-        
-        # Run analysis
-        result = self.vision_service.analyze_image(paths["input_image"])
+        if os.path.exists(paths.get("request_image", "")):
+            print(f"Analyzing image: {paths['request_image']}")
+            result = self.vision_service.analyze_image(paths["request_image"])
+        else:
+            raise FileNotFoundError(f"Image file {image_filename} not found in input or results directory")
         
         # Save full result including summary
         summary = self.vision_service.get_ingredients_summary(result)
@@ -154,11 +153,11 @@ def analyze_image():
         # Get file paths
         paths = config.get_file_paths(image_filename)
         
-        # Save the uploaded file
-        file.save(paths["input_image"])
+        # Save the uploaded file directly to the results directory
+        file.save(paths["request_image"])
         
         # Process image
-        result = vision_service.analyze_image(paths["input_image"])
+        result = vision_service.analyze_image(paths["request_image"])
         
         # Get a summary
         summary = vision_service.get_ingredients_summary(result)

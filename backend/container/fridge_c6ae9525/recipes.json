@@ -1,0 +1,215 @@
+{
+  "items": [
+    {
+      "name": "Curried Veggie Tortilla Wraps",
+      "total_ingredients": [
+        "corn tortillas",
+        "mixed bell peppers",
+        "yellow bell pepper",
+        "arugula",
+        "cucumber",
+        "carrots",
+        "Boland curry paste",
+        "annie\u2019s dressing"
+      ],
+      "available_ingredients": [
+        "corn tortillas",
+        "mixed bell peppers",
+        "yellow bell pepper",
+        "arugula",
+        "cucumber",
+        "carrots",
+        "Boland curry paste",
+        "Annie's dressing"
+      ],
+      "missing_ingredients": [],
+      "completeness_score": 100,
+      "instructions": [
+        "Step 1: Chop mixed bell peppers, yellow bell pepper, cucumber, and carrots into thin strips.",
+        "Step 2: In a bowl, mix 2 tablespoons Boland curry paste with Annie's dressing.",
+        "Step 3: Spread the curry dressing generously over the corn tortillas.",
+        "Step 4: Lay down arugula on each tortilla.",
+        "Step 5: Arrange the chopped vegetables over the arugula.",
+        "Step 6: Roll up each tortilla tightly and slice in half."
+      ],
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Creamy Apple & Arugula Salad",
+      "total_ingredients": [
+        "red apples",
+        "pear",
+        "Philadelphia cream cheese",
+        "Heinz tomato ketchup",
+        "arugula",
+        "English mustard",
+        "jar of seeds"
+      ],
+      "available_ingredients": [
+        "red apples",
+        "pear",
+        "Philadelphia cream cheese",
+        "arugula",
+        "English mustard",
+        "jar of seeds"
+      ],
+      "missing_ingredients": [
+        "Heinz tomato ketchup"
+      ],
+      "completeness_score": 86,
+      "instructions": [
+        "Step 1: Dice the red apples and pears into small cubes.",
+        "Step 2: In a salad bowl, mix Philadelphia cream cheese with 1 tablespoon English mustard.",
+        "Step 3: Add the diced apples and pears to the bowl and mix well.",
+        "Step 4: Toss arugula into the salad mixture.",
+        "Step 5: Sprinkle the salad with seeds for crunch.",
+        "Step 6: Serve immediately."
+      ],
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Mint & Cilantro Masala Corn Tortilla",
+      "total_ingredients": [
+        "corn tortillas",
+        "mint",
+        "cilantro",
+        "Boland curry paste",
+        "Land O'Lakes butter",
+        "jarred pickled vegetables"
+      ],
+      "available_ingredients": [
+        "corn tortillas",
+        "mint",
+        "cilantro",
+        "Boland curry paste",
+        "Land O'Lakes butter",
+        "jarred pickled vegetables"
+      ],
+      "missing_ingredients": [],
+      "completeness_score": 100,
+      "instructions": [
+        "Step 1: Finely chop mint and cilantro.",
+        "Step 2: Melt Land O'Lakes butter in a pan.",
+        "Step 3: Stir in Boland curry paste into the melted butter.",
+        "Step 4: Add mint and cilantro; cook until fragrant.",
+        "Step 5: Warm corn tortillas in a separate pan.",
+        "Step 6: Spread curry mixture over tortillas.",
+        "Step 7: Add pickled vegetables on top and serve warm."
+      ],
+      "cooking_time": "20 minutes",
+      "difficulty": "Medium"
+    },
+    {
+      "name": "French Toast with Apple Syrup",
+      "total_ingredients": [
+        "eggs",
+        "maple syrup",
+        "red apples",
+        "Land O'Lakes butter",
+        "Namestea",
+        "dijon mustard"
+      ],
+      "available_ingredients": [
+        "eggs",
+        "maple syrup",
+        "red apples",
+        "Land O'Lakes butter",
+        "Namestea"
+      ],
+      "missing_ingredients": [
+        "dijon mustard"
+      ],
+      "completeness_score": 83,
+      "instructions": [
+        "Step 1: Whisk eggs and Namestea in a bowl.",
+        "Step 2: Slice bread and soak in egg mixture.",
+        "Step 3: Melt Land O'Lakes butter in a pan.",
+        "Step 4: Cook soaked bread until golden brown on both sides.",
+        "Step 5: In a saucepan, reduce maple syrup with diced red apples.",
+        "Step 6: Drizzle apple syrup over French toast and serve hot."
+      ],
+      "cooking_time": "25 minutes",
+      "difficulty": "Medium"
+    },
+    {
+      "name": "Ketchup Infused Pear & Banana Smoothie",
+      "total_ingredients": [
+        "pears",
+        "bananas",
+        "Heinz tomato ketchup",
+        "apple juice",
+        "cashews",
+        "Namestea"
+      ],
+      "available_ingredients": [
+        "pears",
+        "bananas",
+        "apple juice",
+        "cashews",
+        "Namestea"
+      ],
+      "missing_ingredients": [
+        "Heinz tomato ketchup"
+      ],
+      "completeness_score": 83,
+      "instructions": [
+        "Step 1: Peel and chop pears and bananas.",
+        "Step 2: Blend pears, bananas, apple juice, and Namestea until smooth.",
+        "Step 3: Add cashews to the smoothie mixture and blend again.",
+        "Step 4: For an adventurous twist, drizzle a small amount of Heinz tomato ketchup before serving."
+      ],
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    }
+  ],
+  "analysis": [
+    {
+      "recipe_name": "Curried Veggie Tortilla Wraps",
+      "completeness": 100,
+      "available_count": 8,
+      "missing_count": 0,
+      "total_ingredients": 8,
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "recipe_name": "Creamy Apple & Arugula Salad",
+      "completeness": 86,
+      "available_count": 6,
+      "missing_count": 1,
+      "total_ingredients": 7,
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "recipe_name": "Mint & Cilantro Masala Corn Tortilla",
+      "completeness": 100,
+      "available_count": 6,
+      "missing_count": 0,
+      "total_ingredients": 6,
+      "cooking_time": "20 minutes",
+      "difficulty": "Medium"
+    },
+    {
+      "recipe_name": "French Toast with Apple Syrup",
+      "completeness": 83,
+      "available_count": 5,
+      "missing_count": 1,
+      "total_ingredients": 6,
+      "cooking_time": "25 minutes",
+      "difficulty": "Medium"
+    },
+    {
+      "recipe_name": "Ketchup Infused Pear & Banana Smoothie",
+      "completeness": 83,
+      "available_count": 5,
+      "missing_count": 1,
+      "total_ingredients": 6,
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    }
+  ],
+  "ingredient_count": 29
+}

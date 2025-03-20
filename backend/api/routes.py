@@ -56,15 +56,15 @@ async def analyze_image(
         # Get file paths
         paths = config.get_file_paths(image_filename)
         
-        # Save the uploaded file
-        with open(paths["input_image"], "wb") as image_file:
+        # Save the uploaded file directly to the results directory
+        with open(paths["request_image"], "wb") as image_file:
             shutil.copyfileobj(file.file, image_file)
         
         if async_processing:
             # Process in background
             background_tasks.add_task(
                 process_image_async, 
-                paths["input_image"], 
+                paths["request_image"], 
                 paths["vision_output"]
             )
             return {
@@ -74,7 +74,7 @@ async def analyze_image(
             }
         else:
             # Process synchronously
-            result = vision_service.analyze_image(paths["input_image"])
+            result = vision_service.analyze_image(paths["request_image"])
             vision_service.save_analysis(result, paths["vision_output"])
             
             # Get a summary

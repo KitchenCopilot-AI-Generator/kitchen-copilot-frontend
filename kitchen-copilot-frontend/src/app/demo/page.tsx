@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Toaster } from 'sonner';
 import { IngredientsResponse, RecipesResponse } from '@/types';
+import { motion } from 'framer-motion';
 
 // Sample data for demo purposes
 const sampleIngredientsData: IngredientsResponse = {
@@ -226,6 +227,31 @@ const sampleRecipesData: RecipesResponse = {
   ingredient_count: 31
 };
 
+// Animation variants
+const fadeInUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.5 }
+  },
+  exit: { 
+    opacity: 0, 
+    y: -20,
+    transition: { duration: 0.3 }
+  }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
 export default function DemoPage() {
   const [activeTab, setActiveTab] = useState('ingredients');
   const [loading, setLoading] = useState(false);
@@ -241,72 +267,55 @@ export default function DemoPage() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col bg-gray-50">
-      <header className="bg-white border-b shadow-sm py-6">
-        <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-8 w-8 text-primary"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
-                />
-              </svg>
-              <h1 className="text-2xl font-bold">Kitchen Copilot (Demo)</h1>
-            </div>
-            <Button variant="ghost" onClick={() => window.location.href = '/'}>
-              Return to Main App
-            </Button>
-          </div>
-        </div>
-      </header>
-
+    <motion.main 
+      className="flex min-h-screen flex-col light:bg-gray-50"
+      initial="hidden"
+      animate="visible"
+      variants={staggerContainer}
+    >
       <div className="container mx-auto px-4 py-8">
-        <div className="bg-amber-50 border border-amber-200 rounded-md p-4 mb-6">
-          <p className="text-amber-800">
+        <motion.div 
+          className="bg-amber-50 border border-amber-200 dark:bg-gray-800 dark:border-amber-400 rounded-md p-4 mb-6"
+          variants={fadeInUp}
+        >
+          <p className="light:text-amber-800">
             <strong>Demo Mode:</strong> This page shows sample data for development and testing purposes.
           </p>
-        </div>
+        </motion.div>
         
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger 
-              value="ingredients" 
-              disabled={loading}
-            >
-              Sample Ingredients
-            </TabsTrigger>
-            <TabsTrigger 
-              value="recipes" 
-              disabled={loading}
-            >
-              Sample Recipes
-            </TabsTrigger>
-          </TabsList>
+        <motion.div variants={fadeInUp}>
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger 
+                value="ingredients" 
+                disabled={loading}
+              >
+                Sample Ingredients
+              </TabsTrigger>
+              <TabsTrigger 
+                value="recipes" 
+                disabled={loading}
+              >
+                Sample Recipes
+              </TabsTrigger>
+            </TabsList>
 
-          <TabsContent value="ingredients" className="space-y-8">
-            <IngredientsDisplay 
-              ingredientsData={sampleIngredientsData} 
-              onGenerateRecipes={handleGenerateRecipes}
-              loading={loading}
-            />
-          </TabsContent>
+            <TabsContent value="ingredients" className="space-y-8">
+              <IngredientsDisplay 
+                ingredientsData={sampleIngredientsData} 
+                onGenerateRecipes={handleGenerateRecipes}
+                loading={loading}
+              />
+            </TabsContent>
 
-          <TabsContent value="recipes" className="space-y-8">
-            <RecipesDisplay recipesData={sampleRecipesData} />
-          </TabsContent>
-        </Tabs>
+            <TabsContent value="recipes" className="space-y-8">
+              <RecipesDisplay recipesData={sampleRecipesData} />
+            </TabsContent>
+          </Tabs>
+        </motion.div>
       </div>
 
       <Toaster position="top-center" />
-    </main>
+    </motion.main>
   );
 }
