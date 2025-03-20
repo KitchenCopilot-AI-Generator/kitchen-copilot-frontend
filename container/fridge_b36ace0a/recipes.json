@@ -1,0 +1,227 @@
+{
+  "items": [
+    {
+      "name": "Apple-Cilantro Tacos with Creamy Plum Sauce",
+      "total_ingredients": [
+        "Mission flour tortillas",
+        "Philadelphia cream cheese",
+        "Roland plum paste",
+        "Red cabbage",
+        "Apple",
+        "Cilantro",
+        "Lime",
+        "Salt",
+        "Olive oil",
+        "Ground pepper"
+      ],
+      "available_ingredients": [
+        "Mission flour tortillas",
+        "Philadelphia cream cheese",
+        "Roland plum paste",
+        "Red cabbage",
+        "Apple",
+        "Cilantro",
+        "Lime",
+        "Olive oil"
+      ],
+      "missing_ingredients": [
+        "Salt",
+        "Ground pepper"
+      ],
+      "completeness_score": 80,
+      "instructions": [
+        "Step 1: Thinly slice the apples and chop cilantro.",
+        "Step 2: In a bowl, mix Philadelphia cream cheese with Roland plum paste until smooth. Season with lime juice.",
+        "Step 3: Heat Mission flour tortillas in a dry pan until warmed.",
+        "Step 4: Spread creamy plum sauce onto tortillas. Top with red cabbage, sliced apples, and chopped cilantro.",
+        "Step 5: Drizzle olive oil over tacos and season with a pinch of salt and ground pepper."
+      ],
+      "cooking_time": "20 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Red Cabbage and Apple Slaw with Maple Dressing",
+      "total_ingredients": [
+        "Red cabbage",
+        "Apple",
+        "Lemon",
+        "Maple Grove Farms maple syrup",
+        "Olive oil",
+        "Salt",
+        "Ground pepper"
+      ],
+      "available_ingredients": [
+        "Red cabbage",
+        "Apple",
+        "Lemon",
+        "Maple Grove Farms maple syrup",
+        "Olive oil"
+      ],
+      "missing_ingredients": [
+        "Salt",
+        "Ground pepper"
+      ],
+      "completeness_score": 83,
+      "instructions": [
+        "Step 1: Thinly slice red cabbage and apple.",
+        "Step 2: In a small bowl, whisk together olive oil, lemon juice, and maple syrup.",
+        "Step 3: Toss red cabbage and apple with dressing, seasoning with a pinch of salt and ground pepper.",
+        "Step 4: Let sit for 10 minutes before serving to meld flavors."
+      ],
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Minty Citrus Salad with Spiced Seeds",
+      "total_ingredients": [
+        "Arugula",
+        "Mint leaves",
+        "Orange",
+        "Lime",
+        "Almonds jar",
+        "Sunflower seeds jar",
+        "Olive oil",
+        "Salt",
+        "Ground pepper"
+      ],
+      "available_ingredients": [
+        "Arugula",
+        "Mint leaves",
+        "Orange",
+        "Lime",
+        "Almonds jar",
+        "Sunflower seeds jar",
+        "Olive oil"
+      ],
+      "missing_ingredients": [
+        "Salt",
+        "Ground pepper"
+      ],
+      "completeness_score": 77,
+      "instructions": [
+        "Step 1: Toss arugula and mint leaves in a large salad bowl.",
+        "Step 2: Segment the orange and squeeze lime juice over the salad.",
+        "Step 3: Toast almonds and sunflower seeds in olive oil until fragrant.",
+        "Step 4: Sprinkle toasted seeds over the salad.",
+        "Step 5: Add a pinch of salt and ground pepper before serving."
+      ],
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Bell Pepper Stir-Fry with Pickled Twist",
+      "total_ingredients": [
+        "Mixed bell peppers",
+        "Pickled vegetables jar",
+        "Olive oil",
+        "Pastene sesame oil",
+        "Salt",
+        "Ground pepper",
+        "Eggs",
+        "Cilantro"
+      ],
+      "available_ingredients": [
+        "Mixed bell peppers",
+        "Pickled vegetables jar",
+        "Olive oil",
+        "Pastene sesame oil",
+        "Eggs",
+        "Cilantro"
+      ],
+      "missing_ingredients": [
+        "Salt",
+        "Ground pepper"
+      ],
+      "completeness_score": 75,
+      "instructions": [
+        "Step 1: Slice mixed bell peppers.",
+        "Step 2: Heat olive oil and sesame oil in a pan over medium heat.",
+        "Step 3: Add bell peppers to the pan, stir-fry until softened.",
+        "Step 4: Add pickled vegetables and stir well.",
+        "Step 5: Beat eggs and add to the pan, scramble with vegetables.",
+        "Step 6: Garnish with fresh cilantro and season with a pinch of salt and ground pepper."
+      ],
+      "cooking_time": "20 minutes",
+      "difficulty": "Medium"
+    },
+    {
+      "name": "Fruity Citrus Smoothie",
+      "total_ingredients": [
+        "Banana",
+        "Pear",
+        "Orange",
+        "Sparkling water",
+        "Lime",
+        "Honey"
+      ],
+      "available_ingredients": [
+        "Banana",
+        "Pear",
+        "Orange",
+        "Sparkling water",
+        "Lime"
+      ],
+      "missing_ingredients": [
+        "Honey"
+      ],
+      "completeness_score": 83,
+      "instructions": [
+        "Step 1: Peel and slice banana and pear.",
+        "Step 2: Juice the orange and lime.",
+        "Step 3: Blend banana, pear, and citrus juices until smooth.",
+        "Step 4: Add a splash of sparkling water for fizz.",
+        "Step 5: Sweeten with honey if desired."
+      ],
+      "cooking_time": "5 minutes",
+      "difficulty": "Easy"
+    }
+  ],
+  "analysis": [
+    {
+      "recipe_name": "Apple-Cilantro Tacos with Creamy Plum Sauce",
+      "completeness": 80,
+      "available_count": 8,
+      "missing_count": 2,
+      "total_ingredients": 10,
+      "cooking_time": "20 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "recipe_name": "Red Cabbage and Apple Slaw with Maple Dressing",
+      "completeness": 83,
+      "available_count": 5,
+      "missing_count": 2,
+      "total_ingredients": 7,
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "recipe_name": "Minty Citrus Salad with Spiced Seeds",
+      "completeness": 77,
+      "available_count": 7,
+      "missing_count": 2,
+      "total_ingredients": 9,
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "recipe_name": "Bell Pepper Stir-Fry with Pickled Twist",
+      "completeness": 75,
+      "available_count": 6,
+      "missing_count": 2,
+      "total_ingredients": 8,
+      "cooking_time": "20 minutes",
+      "difficulty": "Medium"
+    },
+    {
+      "recipe_name": "Fruity Citrus Smoothie",
+      "completeness": 83,
+      "available_count": 5,
+      "missing_count": 1,
+      "total_ingredients": 6,
+      "cooking_time": "5 minutes",
+      "difficulty": "Easy"
+    }
+  ],
+  "ingredient_count": 33
+}

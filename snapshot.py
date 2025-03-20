@@ -24,6 +24,7 @@ DEFAULT_IGNORE_PATTERNS = {
     'snapshot.txt',
     'snapshot.py',
     'LICENSE',
+    'kitchen-copilot-frontend/'
 }
 
 def parse_gitignore() -> Set[str]:

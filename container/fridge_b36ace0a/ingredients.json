@@ -1,0 +1,74 @@
+{
+  "status": "complete",
+  "result": {
+    "ingredients": {
+      "Dairy": [
+        "Hello fresh mayonnaise",
+        "Land O'Lakes butter",
+        "Philadelphia cream cheese"
+      ],
+      "Produce": [
+        "Red cabbage",
+        "Carrots",
+        "Yellow bell pepper",
+        "Tomatoes",
+        "Cilantro",
+        "Mint leaves",
+        "Pears",
+        "Apples",
+        "Bananas",
+        "Arugula",
+        "Mixed bell peppers",
+        "Lemon",
+        "Lime",
+        "Orange"
+      ],
+      "Proteins": [
+        "Eggs"
+      ],
+      "Grains": [
+        "Mission flour tortillas"
+      ],
+      "Condiments": [
+        "Heinz tomato ketchup",
+        "Maple Grove Farms maple syrup",
+        "Annie's mustard",
+        "Roland plum paste",
+        "Olive oil",
+        "Pastene sesame oil",
+        "Mason barbecue sauce"
+      ],
+      "Beverages": [
+        "Wine bottle",
+        "Sparkling water"
+      ],
+      "Snacks": [],
+      "Frozen": [],
+      "Canned": [],
+      "Other": [
+        "Pickled onions jar",
+        "Pickled vegetables jar",
+        "Almonds jar",
+        "Sunflower seeds jar",
+        "Dates jar"
+      ]
+    }
+  },
+  "summary": {
+    "total_count": 33,
+    "categories": 10,
+    "by_category": {
+      "Dairy": 3,
+      "Produce": 14,
+      "Proteins": 1,
+      "Grains": 1,
+      "Condiments": 7,
+      "Beverages": 2,
+      "Snacks": 0,
+      "Frozen": 0,
+      "Canned": 0,
+      "Other": 5
+    }
+  },
+  "image_filename": "fridge_b36ace0a.jpg"
+}

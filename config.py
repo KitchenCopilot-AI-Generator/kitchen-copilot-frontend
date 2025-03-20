@@ -3,7 +3,6 @@ Configuration module - Handles environment variables and configuration
 """
 
 import os
-import time
 from dotenv import load_dotenv
 
 class Config:
@@ -56,20 +55,22 @@ class Config:
                 "request_dir": request_dir,
                 "vision_output": os.path.join(request_dir, "ingredients.json"),
                 "recipes_output": os.path.join(request_dir, "recipes.json"),
-                "input_image": os.path.join(self.input_dir, image_filename)
+                "request_image": os.path.join(request_dir, image_filename)  # Store image in results directory
             }
         else:
             # If no filename is provided, use the most recent request
             # by finding the most recently modified directory in results_dir
             try:
                 subdirs = [os.path.join(self.results_dir, d) for d in os.listdir(self.results_dir) 
-                          if os.path.isdir(os.path.join(self.results_dir, d))]
+                        if os.path.isdir(os.path.join(self.results_dir, d))]
                 if subdirs:
                     latest_dir = max(subdirs, key=os.path.getmtime)
+                    base_image_name = os.path.basename(latest_dir) + ".jpg"  # Assuming jpg extension
                     paths = {
                         "request_dir": latest_dir,
                         "vision_output": os.path.join(latest_dir, "ingredients.json"),
-                        "recipes_output": os.path.join(latest_dir, "recipes.json")
+                        "recipes_output": os.path.join(latest_dir, "recipes.json"),
+                        "request_image": os.path.join(latest_dir, base_image_name)
                     }
                 else:
                     # Fallback to default paths if no subdirectories exist
@@ -83,5 +84,5 @@ class Config:
                     "vision_output": os.path.join(self.results_dir, "ingredients.json"),
                     "recipes_output": os.path.join(self.results_dir, "recipes.json")
                 }
-            
+                
         return paths
