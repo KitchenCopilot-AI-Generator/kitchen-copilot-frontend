@@ -1,0 +1,241 @@
+{
+  "items": [
+    {
+      "name": "Rainbow Veggie Wraps",
+      "total_ingredients": [
+        "Tortillas",
+        "Philadelphia cream cheese",
+        "Fresh spinach leaves",
+        "Green bell pepper",
+        "Yellow bell pepper",
+        "Orange bell pepper",
+        "Carrots",
+        "Red cabbage",
+        "Fresh parsley",
+        "Hellmann's mayonnaise",
+        "Lemons",
+        "Salt",
+        "Pepper"
+      ],
+      "available_ingredients": [
+        "Tortillas",
+        "Philadelphia cream cheese",
+        "Fresh spinach leaves",
+        "Green bell pepper",
+        "Yellow bell pepper",
+        "Orange bell pepper",
+        "Carrots",
+        "Red cabbage",
+        "Fresh parsley",
+        "Hellmann's mayonnaise",
+        "Lemons"
+      ],
+      "missing_ingredients": [
+        "Salt",
+        "Pepper"
+      ],
+      "completeness_score": 83,
+      "instructions": [
+        "Step 1: Spread Philadelphia cream cheese evenly over each tortilla.",
+        "Step 2: In a bowl, mix mayonnaise with lemon juice, salt, and pepper.",
+        "Step 3: Thinly slice the bell peppers, carrots, and red cabbage.",
+        "Step 4: Chop fresh parsley.",
+        "Step 5: Layer spinach, bell peppers, carrots, cabbage, and parsley on the tortilla.",
+        "Step 6: Drizzle with the prepared mayo mix.",
+        "Step 7: Roll the tortillas tightly and cut them in half to serve."
+      ],
+      "cooking_time": "20 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Cheesy Herb Omelette",
+      "total_ingredients": [
+        "Eggs",
+        "Cheese slices (cheddar)",
+        "Fresh cilantro",
+        "Fresh parsley",
+        "Fresh mint",
+        "Salt",
+        "Pepper",
+        "Olive oil"
+      ],
+      "available_ingredients": [
+        "Eggs",
+        "Cheese slices (possibly cheddar)",
+        "Fresh cilantro",
+        "Fresh parsley",
+        "Fresh mint"
+      ],
+      "missing_ingredients": [
+        "Salt",
+        "Pepper",
+        "Olive oil"
+      ],
+      "completeness_score": 63,
+      "instructions": [
+        "Step 1: Crack the eggs into a bowl and beat them well.",
+        "Step 2: Chop cilantro, parsley, and mint, and add to the eggs.",
+        "Step 3: Cut cheese slices into small pieces and add to the egg mixture.",
+        "Step 4: Heat olive oil in a non-stick pan over medium heat.",
+        "Step 5: Pour the egg mixture into the pan, cook until the eggs set.",
+        "Step 6: Season with salt and pepper, fold the omelette, and serve."
+      ],
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Almond Maple Spinach Salad",
+      "total_ingredients": [
+        "Fresh spinach leaves",
+        "Almonds",
+        "Maple syrup",
+        "Apple cider vinegar",
+        "Sunflower seeds",
+        "Apples",
+        "Salt",
+        "Pepper"
+      ],
+      "available_ingredients": [
+        "Fresh spinach leaves",
+        "Almonds",
+        "Maple syrup",
+        "Sunflower seeds",
+        "Apples"
+      ],
+      "missing_ingredients": [
+        "Apple cider vinegar",
+        "Salt",
+        "Pepper"
+      ],
+      "completeness_score": 71,
+      "instructions": [
+        "Step 1: Wash and dry spinach leaves.",
+        "Step 2: Slice apples thinly.",
+        "Step 3: Toast almonds and sunflower seeds in a pan for a few minutes.",
+        "Step 4: Mix maple syrup with apple cider vinegar, salt, and pepper.",
+        "Step 5: Combine spinach, apples, almonds, and sunflower seeds in a bowl.",
+        "Step 6: Drizzle with the dressing and toss before serving."
+      ],
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Minty Fruit Salad",
+      "total_ingredients": [
+        "Apples",
+        "Pears",
+        "Bananas",
+        "Fresh mint",
+        "Lemons",
+        "Maple syrup"
+      ],
+      "available_ingredients": [
+        "Apples",
+        "Pears",
+        "Bananas",
+        "Fresh mint",
+        "Lemons",
+        "Maple syrup"
+      ],
+      "missing_ingredients": [],
+      "completeness_score": 100,
+      "instructions": [
+        "Step 1: Chop apples, pears, and bananas into bite-sized pieces.",
+        "Step 2: Tear fresh mint leaves.",
+        "Step 3: In a small bowl, mix lemon juice and maple syrup.",
+        "Step 4: Combine fruits and mint in a large bowl.",
+        "Step 5: Drizzle the lemon syrup mix over the salad and toss gently."
+      ],
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Spicy Veggie Tapenade Tortilla Pizza",
+      "total_ingredients": [
+        "Tortillas",
+        "Olive tapenade",
+        "Green bell pepper",
+        "Yellow bell pepper",
+        "Orange bell pepper",
+        "Red cabbage",
+        "Cheese slices (possibly cheddar)",
+        "Heinz tomato ketchup",
+        "Soy sauce",
+        "Horseradish sauce"
+      ],
+      "available_ingredients": [
+        "Tortillas",
+        "Olive tapenade",
+        "Green bell pepper",
+        "Yellow bell pepper",
+        "Orange bell pepper",
+        "Red cabbage",
+        "Cheese slices (possibly cheddar)",
+        "Heinz tomato ketchup",
+        "Soy sauce",
+        "Horseradish sauce"
+      ],
+      "missing_ingredients": [],
+      "completeness_score": 100,
+      "instructions": [
+        "Step 1: Preheat your oven to 200\u00b0C (390\u00b0F).",
+        "Step 2: Spread olive tapenade over the surface of each tortilla.",
+        "Step 3: Thinly slice bell peppers and red cabbage.",
+        "Step 4: Arrange vegetables over the tapenade layer.",
+        "Step 5: Mix ketchup with soy sauce and horseradish sauce, drizzle over veggies.",
+        "Step 6: Top with cheese slices.",
+        "Step 7: Bake in the oven for 10-12 minutes or until cheese is melted."
+      ],
+      "cooking_time": "15 minutes",
+      "difficulty": "Medium"
+    }
+  ],
+  "analysis": [
+    {
+      "recipe_name": "Rainbow Veggie Wraps",
+      "completeness": 83,
+      "available_count": 11,
+      "missing_count": 2,
+      "total_ingredients": 13,
+      "cooking_time": "20 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "recipe_name": "Cheesy Herb Omelette",
+      "completeness": 63,
+      "available_count": 5,
+      "missing_count": 3,
+      "total_ingredients": 8,
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "recipe_name": "Almond Maple Spinach Salad",
+      "completeness": 71,
+      "available_count": 5,
+      "missing_count": 3,
+      "total_ingredients": 8,
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "recipe_name": "Minty Fruit Salad",
+      "completeness": 100,
+      "available_count": 6,
+      "missing_count": 0,
+      "total_ingredients": 6,
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "recipe_name": "Spicy Veggie Tapenade Tortilla Pizza",
+      "completeness": 100,
+      "available_count": 10,
+      "missing_count": 0,
+      "total_ingredients": 10,
+      "cooking_time": "15 minutes",
+      "difficulty": "Medium"
+    }
+  ],
+  "ingredient_count": 28
+}
