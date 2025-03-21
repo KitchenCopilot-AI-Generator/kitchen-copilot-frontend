@@ -56,7 +56,7 @@ export default function AppPage() {
   };
 
   return (
-    <div className="bg-gray-50 py-8">
+    <div className=" py-8">
       <div className="container mx-auto px-4">
         <Card className="mb-8">
           <CardHeader>
