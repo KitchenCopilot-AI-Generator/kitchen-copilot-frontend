@@ -9,6 +9,9 @@ from services.recipe_service import RecipeService
 
 from flask_cors import CORS
 
+import sys
+sys.dont_write_bytecode = True
+
 # Initialize Flask app
 app = Flask(__name__)
 CORS(app)  # This enables CORS for all routes
