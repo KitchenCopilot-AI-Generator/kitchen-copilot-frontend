@@ -11,12 +11,12 @@ backend
     └── routes.py
 ├── config.py
 ├── container
-    ├── fridge_c6ae9525
-        ├── fridge_c6ae9525.jpg
+    ├── fridge_84771ad40e8d8afc
+        ├── fridge_84771ad40e8d8afc.jpg
         ├── ingredients.json
         └── recipes.json
-    └── fridge_f22e6749
-        ├── fridge_f22e6749.jpg
+    └── fridge_d1ea98cc4b729f52
+        ├── fridge_d1ea98cc4b729f52.jpg
         ├── ingredients.json
         └── recipes.json
 ├── main.py
@@ -348,1010 +348,24 @@ If you encounter CORS errors when the frontend tries to communicate with the bac
 
 --- backend/api/routes.py ---
 """
-API Routes - FastAPI routes for the application
+API Routes - Flask routes for the Kitchen Copilot application
+
+This module preserves the exact API interface expected by the frontend,
+while using Flask instead of FastAPI for implementation.
 """
 
 import os
 import json
-import shutil
-from fastapi import FastAPI, UploadFile, File, HTTPException, BackgroundTasks
-from fastapi.responses import JSONResponse
-from typing import Optional
-from pydantic import BaseModel
+from flask import Blueprint, request, jsonify
 
-# This will be initialized by main.py
-app = FastAPI()
+# Create a Blueprint instead of a Flask app
+app = Blueprint('api', __name__)
 
 # Store references to services initialized in main.py
 vision_service = None
 recipe_service = None
 config = None
 
-class RecipeRequest(BaseModel):
-    """Model for recipe generation request"""
-    num_recipes: Optional[int] = 5
-    ingredients_file: Optional[str] = None  # If not provided, use latest analysis
-
-async def process_image_async(image_path, output_path):
-    """Process image asynchronously"""
-    try:
-        result = vision_service.analyze_image(image_path)
-        vision_service.save_analysis(result, output_path)
-        return result
-    except Exception as e:
-        raise e
-
-@app.post("/analyze-image")
-async def analyze_image(
-    background_tasks: BackgroundTasks,
-    file: UploadFile = File(...),
-    async_processing: bool = False
-):
-    """
-    Analyze a fridge/food image and identify ingredients
-    
-    Args:
-        file: Uploaded image file
-        async_processing: Whether to process the image asynchronously
-        
-    Returns:
-        Analysis result or processing status
-    """
-    try:
-        # Create a unique filename using timestamp
-        file_ext = os.path.splitext(file.filename)[1]
-        image_filename = f"fridge_{os.urandom(8).hex()}{file_ext}"
-        
-        # Get file paths
-        paths = config.get_file_paths(image_filename)
-        
-        # Save the uploaded file directly to the results directory
-        with open(paths["request_image"], "wb") as image_file:
-            shutil.copyfileobj(file.file, image_file)
-        
-        if async_processing:
-            # Process in background
-            background_tasks.add_task(
-                process_image_async, 
-                paths["request_image"], 
-                paths["vision_output"]
-            )
-            return {
-                "status": "processing",
-                "message": "Image analysis started in background",
-                "image_filename": image_filename
-            }
-        else:
-            # Process synchronously
-            result = vision_service.analyze_image(paths["request_image"])
-            vision_service.save_analysis(result, paths["vision_output"])
-            
-            # Get a summary
-            summary = vision_service.get_ingredients_summary(result)
-            
-            return {
-                "status": "complete",
-                "result": result,
-                "summary": summary,
-                "image_filename": image_filename
-            }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.get("/ingredients")
-async def get_ingredients(filename: Optional[str] = None):
-    """
-    Get ingredients from the most recent analysis or specified file
-    
-    Args:
-        filename: Optional filename to load specific analysis
-        
-    Returns:
-        Ingredients data
-    """
-    try:
-        # Get path to the ingredients file
-        if filename:
-            ingredients_file = os.path.join(config.results_dir, filename)
-        else:
-            paths = config.get_file_paths()
-            ingredients_file = paths["vision_output"]
-        
-        # Check if file exists
-        if not os.path.exists(ingredients_file):
-            raise HTTPException(
-                status_code=404, 
-                detail="No ingredients analysis found. Please analyze an image first."
-            )
-        
-        # Load and return the ingredients
-        with open(ingredients_file, "r") as f:
-            return JSONResponse(content=json.load(f))
-    except HTTPException as e:
-        raise e
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.post("/generate-recipes")
-async def generate_recipes(request: RecipeRequest):
-    """
-    Generate recipe suggestions based on available ingredients
-    
-    Args:
-        request: Recipe generation request parameters
-        
-    Returns:
-        Generated recipes
-    """
-    try:
-        # Determine ingredients file path
-        if request.ingredients_file:
-            ingredients_file = os.path.join(config.results_dir, request.ingredients_file)
-        else:
-            paths = config.get_file_paths()
-            ingredients_file = paths["vision_output"]
-        
-        # Check if file exists
-        if not os.path.exists(ingredients_file):
-            raise HTTPException(
-                status_code=404, 
-                detail="No ingredients analysis found. Please analyze an image first."
-            )
-        
-        # Load ingredients
-        ingredients = recipe_service.load_ingredients(ingredients_file)
-        
-        # Generate recipes
-        recipes_data = recipe_service.generate_recipes(
-            ingredients, 
-            num_recipes=request.num_recipes
-        )
-        
-        # Save recipes
-        paths = config.get_file_paths()
-        recipe_service.save_recipes(recipes_data, paths["recipes_output"])
-        
-        # Get analysis
-        analysis = recipe_service.get_recipes_analysis(recipes_data)
-        analysis_dict = analysis.to_dict('records') if analysis is not None else []
-        
-        return {
-            "recipes": recipes_data,
-            "analysis": analysis_dict,
-            "ingredient_count": len(ingredients)
-        }
-    except HTTPException as e:
-        raise e
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
---- backend/config.py ---
-"""
-Configuration module - Handles environment variables and configuration
-"""
-
-import os
-from dotenv import load_dotenv
-
-class Config:
-    """Configuration class that loads and provides access to environment variables"""
-    
-    def __init__(self):
-        """Initialize configuration by loading environment variables"""
-        load_dotenv()
-        self.azure_openai_api_key = os.getenv("AZURE_OPENAI_API_KEY")
-        self.azure_openai_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
-        self.api_version = os.getenv("API_VERSION")
-        self.model_name = os.getenv("MODEL_NAME")
-        
-        # Default paths
-        self.results_dir = os.getenv("RESULTS_DIR", "./data/results")
-        
-        # Ensure directories exist
-        os.makedirs(self.results_dir, exist_ok=True)
-    
-    def get_azure_config(self):
-        """Get Azure OpenAI configuration as a dictionary"""
-        return {
-            "api_key": self.azure_openai_api_key,
-            "api_version": self.api_version,
-            "endpoint": self.azure_openai_endpoint,
-            "model_name": self.model_name
-        }
-    
-    def get_file_paths(self, image_filename=None):
-        """
-        Get file paths for input and output files
-        
-        Args:
-            image_filename: Optional image filename to create request-specific paths
-            
-        Returns:
-            Dictionary with paths for input and output files
-        """
-        if image_filename:
-            # Extract the base name without extension for folder naming
-            base_name = os.path.splitext(image_filename)[0]
-            
-            # Create request-specific result directory
-            request_dir = os.path.join(self.results_dir, base_name)
-            os.makedirs(request_dir, exist_ok=True)
-            
-            paths = {
-                "request_dir": request_dir,
-                "vision_output": os.path.join(request_dir, "ingredients.json"),
-                "recipes_output": os.path.join(request_dir, "recipes.json"),
-                "request_image": os.path.join(request_dir, image_filename)  # Store image in results directory
-            }
-        else:
-            # If no filename is provided, use the most recent request
-            # by finding the most recently modified directory in results_dir
-            try:
-                subdirs = [os.path.join(self.results_dir, d) for d in os.listdir(self.results_dir) 
-                        if os.path.isdir(os.path.join(self.results_dir, d))]
-                if subdirs:
-                    latest_dir = max(subdirs, key=os.path.getmtime)
-                    base_image_name = os.path.basename(latest_dir) + ".jpg"  # Assuming jpg extension
-                    paths = {
-                        "request_dir": latest_dir,
-                        "vision_output": os.path.join(latest_dir, "ingredients.json"),
-                        "recipes_output": os.path.join(latest_dir, "recipes.json"),
-                        "request_image": os.path.join(latest_dir, base_image_name)
-                    }
-                else:
-                    # Fallback to default paths if no subdirectories exist
-                    paths = {
-                        "vision_output": os.path.join(self.results_dir, "ingredients.json"),
-                        "recipes_output": os.path.join(self.results_dir, "recipes.json")
-                    }
-            except (FileNotFoundError, ValueError):
-                # Fallback to default paths if error occurs
-                paths = {
-                    "vision_output": os.path.join(self.results_dir, "ingredients.json"),
-                    "recipes_output": os.path.join(self.results_dir, "recipes.json")
-                }
-                
-        return paths
-
---- backend/container/fridge_c6ae9525/fridge_c6ae9525.jpg ---
-[Binary file]
-
---- backend/container/fridge_c6ae9525/ingredients.json ---
-{
-  "status": "complete",
-  "result": {
-    "ingredients": {
-      "Dairy": [
-        "eggs",
-        "Hellmann's mayonnaise",
-        "Philadelphia cream cheese",
-        "Land O'Lakes butter"
-      ],
-      "Produce": [
-        "red apples",
-        "pears",
-        "bananas",
-        "cilantro",
-        "mint",
-        "mixed bell peppers",
-        "orange",
-        "arugula",
-        "cucumber",
-        "red cabbage",
-        "carrots",
-        "yellow bell pepper"
-      ],
-      "Proteins": [],
-      "Grains": [
-        "corn tortillas"
-      ],
-      "Condiments": [
-        "Heinz tomato ketchup",
-        "maple syrup",
-        "Annie's dressing",
-        "Boland curry paste",
-        "English mustard",
-        "Werner's horseradish",
-        "dijon mustard"
-      ],
-      "Beverages": [
-        "apple juice",
-        "Namestea"
-      ],
-      "Snacks": [
-        "cashews"
-      ],
-      "Frozen": [],
-      "Canned": [],
-      "Other": [
-        "jarred pickled vegetables",
-        "jar of seeds"
-      ]
-    }
-  },
-  "summary": {
-    "total_count": 29,
-    "categories": 10,
-    "by_category": {
-      "Dairy": 4,
-      "Produce": 12,
-      "Proteins": 0,
-      "Grains": 1,
-      "Condiments": 7,
-      "Beverages": 2,
-      "Snacks": 1,
-      "Frozen": 0,
-      "Canned": 0,
-      "Other": 2
-    }
-  },
-  "image_filename": "fridge_c6ae9525.jpg"
-}
-
---- backend/container/fridge_c6ae9525/recipes.json ---
-{
-  "items": [
-    {
-      "name": "Curried Veggie Tortilla Wraps",
-      "total_ingredients": [
-        "corn tortillas",
-        "mixed bell peppers",
-        "yellow bell pepper",
-        "arugula",
-        "cucumber",
-        "carrots",
-        "Boland curry paste",
-        "annie\u2019s dressing"
-      ],
-      "available_ingredients": [
-        "corn tortillas",
-        "mixed bell peppers",
-        "yellow bell pepper",
-        "arugula",
-        "cucumber",
-        "carrots",
-        "Boland curry paste",
-        "Annie's dressing"
-      ],
-      "missing_ingredients": [],
-      "completeness_score": 100,
-      "instructions": [
-        "Step 1: Chop mixed bell peppers, yellow bell pepper, cucumber, and carrots into thin strips.",
-        "Step 2: In a bowl, mix 2 tablespoons Boland curry paste with Annie's dressing.",
-        "Step 3: Spread the curry dressing generously over the corn tortillas.",
-        "Step 4: Lay down arugula on each tortilla.",
-        "Step 5: Arrange the chopped vegetables over the arugula.",
-        "Step 6: Roll up each tortilla tightly and slice in half."
-      ],
-      "cooking_time": "15 minutes",
-      "difficulty": "Easy"
-    },
-    {
-      "name": "Creamy Apple & Arugula Salad",
-      "total_ingredients": [
-        "red apples",
-        "pear",
-        "Philadelphia cream cheese",
-        "Heinz tomato ketchup",
-        "arugula",
-        "English mustard",
-        "jar of seeds"
-      ],
-      "available_ingredients": [
-        "red apples",
-        "pear",
-        "Philadelphia cream cheese",
-        "arugula",
-        "English mustard",
-        "jar of seeds"
-      ],
-      "missing_ingredients": [
-        "Heinz tomato ketchup"
-      ],
-      "completeness_score": 86,
-      "instructions": [
-        "Step 1: Dice the red apples and pears into small cubes.",
-        "Step 2: In a salad bowl, mix Philadelphia cream cheese with 1 tablespoon English mustard.",
-        "Step 3: Add the diced apples and pears to the bowl and mix well.",
-        "Step 4: Toss arugula into the salad mixture.",
-        "Step 5: Sprinkle the salad with seeds for crunch.",
-        "Step 6: Serve immediately."
-      ],
-      "cooking_time": "10 minutes",
-      "difficulty": "Easy"
-    },
-    {
-      "name": "Mint & Cilantro Masala Corn Tortilla",
-      "total_ingredients": [
-        "corn tortillas",
-        "mint",
-        "cilantro",
-        "Boland curry paste",
-        "Land O'Lakes butter",
-        "jarred pickled vegetables"
-      ],
-      "available_ingredients": [
-        "corn tortillas",
-        "mint",
-        "cilantro",
-        "Boland curry paste",
-        "Land O'Lakes butter",
-        "jarred pickled vegetables"
-      ],
-      "missing_ingredients": [],
-      "completeness_score": 100,
-      "instructions": [
-        "Step 1: Finely chop mint and cilantro.",
-        "Step 2: Melt Land O'Lakes butter in a pan.",
-        "Step 3: Stir in Boland curry paste into the melted butter.",
-        "Step 4: Add mint and cilantro; cook until fragrant.",
-        "Step 5: Warm corn tortillas in a separate pan.",
-        "Step 6: Spread curry mixture over tortillas.",
-        "Step 7: Add pickled vegetables on top and serve warm."
-      ],
-      "cooking_time": "20 minutes",
-      "difficulty": "Medium"
-    },
-    {
-      "name": "French Toast with Apple Syrup",
-      "total_ingredients": [
-        "eggs",
-        "maple syrup",
-        "red apples",
-        "Land O'Lakes butter",
-        "Namestea",
-        "dijon mustard"
-      ],
-      "available_ingredients": [
-        "eggs",
-        "maple syrup",
-        "red apples",
-        "Land O'Lakes butter",
-        "Namestea"
-      ],
-      "missing_ingredients": [
-        "dijon mustard"
-      ],
-      "completeness_score": 83,
-      "instructions": [
-        "Step 1: Whisk eggs and Namestea in a bowl.",
-        "Step 2: Slice bread and soak in egg mixture.",
-        "Step 3: Melt Land O'Lakes butter in a pan.",
-        "Step 4: Cook soaked bread until golden brown on both sides.",
-        "Step 5: In a saucepan, reduce maple syrup with diced red apples.",
-        "Step 6: Drizzle apple syrup over French toast and serve hot."
-      ],
-      "cooking_time": "25 minutes",
-      "difficulty": "Medium"
-    },
-    {
-      "name": "Ketchup Infused Pear & Banana Smoothie",
-      "total_ingredients": [
-        "pears",
-        "bananas",
-        "Heinz tomato ketchup",
-        "apple juice",
-        "cashews",
-        "Namestea"
-      ],
-      "available_ingredients": [
-        "pears",
-        "bananas",
-        "apple juice",
-        "cashews",
-        "Namestea"
-      ],
-      "missing_ingredients": [
-        "Heinz tomato ketchup"
-      ],
-      "completeness_score": 83,
-      "instructions": [
-        "Step 1: Peel and chop pears and bananas.",
-        "Step 2: Blend pears, bananas, apple juice, and Namestea until smooth.",
-        "Step 3: Add cashews to the smoothie mixture and blend again.",
-        "Step 4: For an adventurous twist, drizzle a small amount of Heinz tomato ketchup before serving."
-      ],
-      "cooking_time": "10 minutes",
-      "difficulty": "Easy"
-    }
-  ],
-  "analysis": [
-    {
-      "recipe_name": "Curried Veggie Tortilla Wraps",
-      "completeness": 100,
-      "available_count": 8,
-      "missing_count": 0,
-      "total_ingredients": 8,
-      "cooking_time": "15 minutes",
-      "difficulty": "Easy"
-    },
-    {
-      "recipe_name": "Creamy Apple & Arugula Salad",
-      "completeness": 86,
-      "available_count": 6,
-      "missing_count": 1,
-      "total_ingredients": 7,
-      "cooking_time": "10 minutes",
-      "difficulty": "Easy"
-    },
-    {
-      "recipe_name": "Mint & Cilantro Masala Corn Tortilla",
-      "completeness": 100,
-      "available_count": 6,
-      "missing_count": 0,
-      "total_ingredients": 6,
-      "cooking_time": "20 minutes",
-      "difficulty": "Medium"
-    },
-    {
-      "recipe_name": "French Toast with Apple Syrup",
-      "completeness": 83,
-      "available_count": 5,
-      "missing_count": 1,
-      "total_ingredients": 6,
-      "cooking_time": "25 minutes",
-      "difficulty": "Medium"
-    },
-    {
-      "recipe_name": "Ketchup Infused Pear & Banana Smoothie",
-      "completeness": 83,
-      "available_count": 5,
-      "missing_count": 1,
-      "total_ingredients": 6,
-      "cooking_time": "10 minutes",
-      "difficulty": "Easy"
-    }
-  ],
-  "ingredient_count": 29
-}
-
---- backend/container/fridge_f22e6749/fridge_f22e6749.jpg ---
-[Binary file]
-
---- backend/container/fridge_f22e6749/ingredients.json ---
-{
-  "status": "complete",
-  "result": {
-    "ingredients": {
-      "Dairy": [
-        "Philadelphia cream cheese",
-        "Eggs",
-        "Cheese slices (possibly cheddar)"
-      ],
-      "Produce": [
-        "Bunch of fresh cilantro",
-        "Bunch of fresh parsley",
-        "Fresh mint",
-        "Fresh spinach leaves",
-        "Green bell pepper",
-        "Yellow bell pepper",
-        "Orange bell pepper",
-        "Red cabbage",
-        "Carrots",
-        "Apples",
-        "Pears",
-        "Bananas",
-        "Lemons"
-      ],
-      "Proteins": [],
-      "Grains": [
-        "Tortillas"
-      ],
-      "Condiments": [
-        "Heinz tomato ketchup",
-        "Hellmann's mayonnaise",
-        "Annie's dressing",
-        "Maple syrup",
-        "Soy sauce",
-        "Horseradish sauce"
-      ],
-      "Beverages": [],
-      "Snacks": [],
-      "Frozen": [],
-      "Canned": [
-        "Olive tapenade",
-        "Sunflower seeds",
-        "Almonds",
-        "Dried dates",
-        "Crispy rye breadsticks"
-      ],
-      "Other": []
-    }
-  },
-  "summary": {
-    "total_count": 28,
-    "categories": 10,
-    "by_category": {
-      "Dairy": 3,
-      "Produce": 13,
-      "Proteins": 0,
-      "Grains": 1,
-      "Condiments": 6,
-      "Beverages": 0,
-      "Snacks": 0,
-      "Frozen": 0,
-      "Canned": 5,
-      "Other": 0
-    }
-  },
-  "image_filename": "fridge_f22e6749.jpg"
-}
-
---- backend/container/fridge_f22e6749/recipes.json ---
-{
-  "items": [
-    {
-      "name": "Rainbow Veggie Wraps",
-      "total_ingredients": [
-        "Tortillas",
-        "Philadelphia cream cheese",
-        "Fresh spinach leaves",
-        "Green bell pepper",
-        "Yellow bell pepper",
-        "Orange bell pepper",
-        "Carrots",
-        "Red cabbage",
-        "Fresh parsley",
-        "Hellmann's mayonnaise",
-        "Lemons",
-        "Salt",
-        "Pepper"
-      ],
-      "available_ingredients": [
-        "Tortillas",
-        "Philadelphia cream cheese",
-        "Fresh spinach leaves",
-        "Green bell pepper",
-        "Yellow bell pepper",
-        "Orange bell pepper",
-        "Carrots",
-        "Red cabbage",
-        "Fresh parsley",
-        "Hellmann's mayonnaise",
-        "Lemons"
-      ],
-      "missing_ingredients": [
-        "Salt",
-        "Pepper"
-      ],
-      "completeness_score": 83,
-      "instructions": [
-        "Step 1: Spread Philadelphia cream cheese evenly over each tortilla.",
-        "Step 2: In a bowl, mix mayonnaise with lemon juice, salt, and pepper.",
-        "Step 3: Thinly slice the bell peppers, carrots, and red cabbage.",
-        "Step 4: Chop fresh parsley.",
-        "Step 5: Layer spinach, bell peppers, carrots, cabbage, and parsley on the tortilla.",
-        "Step 6: Drizzle with the prepared mayo mix.",
-        "Step 7: Roll the tortillas tightly and cut them in half to serve."
-      ],
-      "cooking_time": "20 minutes",
-      "difficulty": "Easy"
-    },
-    {
-      "name": "Cheesy Herb Omelette",
-      "total_ingredients": [
-        "Eggs",
-        "Cheese slices (cheddar)",
-        "Fresh cilantro",
-        "Fresh parsley",
-        "Fresh mint",
-        "Salt",
-        "Pepper",
-        "Olive oil"
-      ],
-      "available_ingredients": [
-        "Eggs",
-        "Cheese slices (possibly cheddar)",
-        "Fresh cilantro",
-        "Fresh parsley",
-        "Fresh mint"
-      ],
-      "missing_ingredients": [
-        "Salt",
-        "Pepper",
-        "Olive oil"
-      ],
-      "completeness_score": 63,
-      "instructions": [
-        "Step 1: Crack the eggs into a bowl and beat them well.",
-        "Step 2: Chop cilantro, parsley, and mint, and add to the eggs.",
-        "Step 3: Cut cheese slices into small pieces and add to the egg mixture.",
-        "Step 4: Heat olive oil in a non-stick pan over medium heat.",
-        "Step 5: Pour the egg mixture into the pan, cook until the eggs set.",
-        "Step 6: Season with salt and pepper, fold the omelette, and serve."
-      ],
-      "cooking_time": "10 minutes",
-      "difficulty": "Easy"
-    },
-    {
-      "name": "Almond Maple Spinach Salad",
-      "total_ingredients": [
-        "Fresh spinach leaves",
-        "Almonds",
-        "Maple syrup",
-        "Apple cider vinegar",
-        "Sunflower seeds",
-        "Apples",
-        "Salt",
-        "Pepper"
-      ],
-      "available_ingredients": [
-        "Fresh spinach leaves",
-        "Almonds",
-        "Maple syrup",
-        "Sunflower seeds",
-        "Apples"
-      ],
-      "missing_ingredients": [
-        "Apple cider vinegar",
-        "Salt",
-        "Pepper"
-      ],
-      "completeness_score": 71,
-      "instructions": [
-        "Step 1: Wash and dry spinach leaves.",
-        "Step 2: Slice apples thinly.",
-        "Step 3: Toast almonds and sunflower seeds in a pan for a few minutes.",
-        "Step 4: Mix maple syrup with apple cider vinegar, salt, and pepper.",
-        "Step 5: Combine spinach, apples, almonds, and sunflower seeds in a bowl.",
-        "Step 6: Drizzle with the dressing and toss before serving."
-      ],
-      "cooking_time": "15 minutes",
-      "difficulty": "Easy"
-    },
-    {
-      "name": "Minty Fruit Salad",
-      "total_ingredients": [
-        "Apples",
-        "Pears",
-        "Bananas",
-        "Fresh mint",
-        "Lemons",
-        "Maple syrup"
-      ],
-      "available_ingredients": [
-        "Apples",
-        "Pears",
-        "Bananas",
-        "Fresh mint",
-        "Lemons",
-        "Maple syrup"
-      ],
-      "missing_ingredients": [],
-      "completeness_score": 100,
-      "instructions": [
-        "Step 1: Chop apples, pears, and bananas into bite-sized pieces.",
-        "Step 2: Tear fresh mint leaves.",
-        "Step 3: In a small bowl, mix lemon juice and maple syrup.",
-        "Step 4: Combine fruits and mint in a large bowl.",
-        "Step 5: Drizzle the lemon syrup mix over the salad and toss gently."
-      ],
-      "cooking_time": "10 minutes",
-      "difficulty": "Easy"
-    },
-    {
-      "name": "Spicy Veggie Tapenade Tortilla Pizza",
-      "total_ingredients": [
-        "Tortillas",
-        "Olive tapenade",
-        "Green bell pepper",
-        "Yellow bell pepper",
-        "Orange bell pepper",
-        "Red cabbage",
-        "Cheese slices (possibly cheddar)",
-        "Heinz tomato ketchup",
-        "Soy sauce",
-        "Horseradish sauce"
-      ],
-      "available_ingredients": [
-        "Tortillas",
-        "Olive tapenade",
-        "Green bell pepper",
-        "Yellow bell pepper",
-        "Orange bell pepper",
-        "Red cabbage",
-        "Cheese slices (possibly cheddar)",
-        "Heinz tomato ketchup",
-        "Soy sauce",
-        "Horseradish sauce"
-      ],
-      "missing_ingredients": [],
-      "completeness_score": 100,
-      "instructions": [
-        "Step 1: Preheat your oven to 200\u00b0C (390\u00b0F).",
-        "Step 2: Spread olive tapenade over the surface of each tortilla.",
-        "Step 3: Thinly slice bell peppers and red cabbage.",
-        "Step 4: Arrange vegetables over the tapenade layer.",
-        "Step 5: Mix ketchup with soy sauce and horseradish sauce, drizzle over veggies.",
-        "Step 6: Top with cheese slices.",
-        "Step 7: Bake in the oven for 10-12 minutes or until cheese is melted."
-      ],
-      "cooking_time": "15 minutes",
-      "difficulty": "Medium"
-    }
-  ],
-  "analysis": [
-    {
-      "recipe_name": "Rainbow Veggie Wraps",
-      "completeness": 83,
-      "available_count": 11,
-      "missing_count": 2,
-      "total_ingredients": 13,
-      "cooking_time": "20 minutes",
-      "difficulty": "Easy"
-    },
-    {
-      "recipe_name": "Cheesy Herb Omelette",
-      "completeness": 63,
-      "available_count": 5,
-      "missing_count": 3,
-      "total_ingredients": 8,
-      "cooking_time": "10 minutes",
-      "difficulty": "Easy"
-    },
-    {
-      "recipe_name": "Almond Maple Spinach Salad",
-      "completeness": 71,
-      "available_count": 5,
-      "missing_count": 3,
-      "total_ingredients": 8,
-      "cooking_time": "15 minutes",
-      "difficulty": "Easy"
-    },
-    {
-      "recipe_name": "Minty Fruit Salad",
-      "completeness": 100,
-      "available_count": 6,
-      "missing_count": 0,
-      "total_ingredients": 6,
-      "cooking_time": "10 minutes",
-      "difficulty": "Easy"
-    },
-    {
-      "recipe_name": "Spicy Veggie Tapenade Tortilla Pizza",
-      "completeness": 100,
-      "available_count": 10,
-      "missing_count": 0,
-      "total_ingredients": 10,
-      "cooking_time": "15 minutes",
-      "difficulty": "Medium"
-    }
-  ],
-  "ingredient_count": 28
-}
-
---- backend/main.py ---
-"""
-Fridge Recipe Generator - Main entry point for the application
-
-This application:
-1. Analyzes fridge/food images to identify ingredients
-2. Generates recipe suggestions based on available ingredients
-
-The application can be run in:
-- CLI mode for direct command line use
-- API mode for integration with other applications or frontends
-"""
-
-import argparse
-import os
-from flask import Flask, request, jsonify
-import uuid
-import json
-from typing import Optional
-
-# Import services and config
-from config import Config
-from services.azure_client import AzureClientService
-from services.vision_service import VisionService
-from services.recipe_service import RecipeService
-
-from flask_cors import CORS
-
-# Initialize Flask app
-app = Flask(__name__)
-
-CORS(app)  # This enables CORS for all routes
-
-# Global services - will be initialized in setup_api_mode
-config = None
-vision_service = None
-recipe_service = None
-
-class CLIProcessor:
-    """Command-line interface processor for the application"""
-    
-    def __init__(self, config, vision_service, recipe_service):
-        """
-        Initialize CLI processor
-        
-        Args:
-            config: Configuration object
-            vision_service: Vision analysis service
-            recipe_service: Recipe generation service
-        """
-        self.config = config
-        self.vision_service = vision_service
-        self.recipe_service = recipe_service
-    
-    def analyze_image(self, image_filename: str) -> dict:
-        """
-        Analyze a fridge/food image and identify ingredients
-        
-        Args:
-            image_filename: Filename of the image to analyze
-            
-        Returns:
-            Analysis result
-        """
-        # Check if image already exists in the results directory
-        paths = self.config.get_file_paths(image_filename)
-        if os.path.exists(paths.get("request_image", "")):
-            print(f"Analyzing image: {paths['request_image']}")
-            result = self.vision_service.analyze_image(paths["request_image"])
-        else:
-            raise FileNotFoundError(f"Image file {image_filename} not found in input or results directory")
-        
-        # Save full result including summary
-        summary = self.vision_service.get_ingredients_summary(result)
-        full_result = {
-            "status": "complete",
-            "result": result,
-            "summary": summary,
-            "image_filename": image_filename
-        }
-        output_path = self.vision_service.save_analysis(full_result, paths["vision_output"])
-        print(f"Analysis saved to {output_path}")
-        
-        # Get summary
-        summary = self.vision_service.get_ingredients_summary(result)
-        print(f"\nFound {summary['total_count']} ingredients in {summary['categories']} categories:")
-        for category, count in summary["by_category"].items():
-            print(f"- {category}: {count} items")
-        
-        return result
-    
-    def generate_recipes(self, image_filename: Optional[str] = None, num_recipes: int = 5) -> dict:
-        """
-        Generate recipe suggestions based on available ingredients
-        
-        Args:
-            image_filename: Optional filename of previously analyzed image
-            num_recipes: Number of recipes to generate
-            
-        Returns:
-            Generated recipes
-        """
-        paths = self.config.get_file_paths(image_filename)
-        
-        # Check if ingredients file exists
-        if not os.path.exists(paths["vision_output"]):
-            print("No ingredients analysis found. Please analyze an image first.")
-            return {}
-        
-        # Load ingredients
-        ingredients = self.recipe_service.load_ingredients(paths["vision_output"])
-        print(f"Loaded {len(ingredients)} ingredients from analysis")
-        
-        # Generate recipes
-        print(f"Generating {num_recipes} recipe suggestions...")
-        recipes_data = self.recipe_service.generate_recipes(ingredients, num_recipes=num_recipes)
-        
-        # Save recipes
-        output_path = self.recipe_service.save_recipes(recipes_data, paths["recipes_output"])
-        print(f"Recipes saved to {output_path}")
-        
-        # Print recipe analysis
-        df = self.recipe_service.get_recipes_analysis(recipes_data)
-        if df is not None:
-            print("\n==== RECIPE ANALYSIS ====")
-            print(df)
-        else:
-            print("No recipes were generated.")
-        
-        return recipes_data
-
-# Flask route handlers
 @app.route('/analyze-image', methods=['POST'])
 def analyze_image():
     """
@@ -1369,32 +383,23 @@ def analyze_image():
         if file.filename == '':
             return jsonify({"error": "No file selected"}), 400
             
-        # Create a unique filename
+        # Create a unique filename using timestamp
         file_ext = os.path.splitext(file.filename)[1]
-        image_filename = f"fridge_{uuid.uuid4().hex[:8]}{file_ext}"
+        image_filename = f"fridge_{os.urandom(8).hex()}{file_ext}"
         
         # Get file paths
         paths = config.get_file_paths(image_filename)
         
         # Save the uploaded file directly to the results directory
+        os.makedirs(os.path.dirname(paths["request_image"]), exist_ok=True)
         file.save(paths["request_image"])
         
-        # Process image
+        # Process synchronously
         result = vision_service.analyze_image(paths["request_image"])
+        vision_service.save_analysis(result, paths["vision_output"])
         
         # Get a summary
         summary = vision_service.get_ingredients_summary(result)
-        
-        # Create full response
-        full_response = {
-            "status": "complete",
-            "result": result,
-            "summary": summary,
-            "image_filename": image_filename
-        }
-        
-        # Save the full response
-        vision_service.save_analysis(full_response, paths["vision_output"])
         
         # Include request_id (which is the base name of the image)
         request_id = os.path.splitext(image_filename)[0]
@@ -1540,9 +545,683 @@ def generate_recipes():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-def setup_api_mode():
+--- backend/config.py ---
+"""
+Configuration module - Handles environment variables and configuration
+"""
+
+import os
+from dotenv import load_dotenv
+
+class Config:
+    """Configuration class that loads and provides access to environment variables"""
+    
+    def __init__(self):
+        """Initialize configuration by loading environment variables"""
+        load_dotenv()
+        self.azure_openai_api_key = os.getenv("AZURE_OPENAI_API_KEY")
+        self.azure_openai_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
+        self.api_version = os.getenv("API_VERSION")
+        self.model_name = os.getenv("MODEL_NAME")
+        
+        # Default paths
+        self.results_dir = os.getenv("RESULTS_DIR", "./data/results")
+        
+        # Ensure directories exist
+        os.makedirs(self.results_dir, exist_ok=True)
+    
+    def get_azure_config(self):
+        """Get Azure OpenAI configuration as a dictionary"""
+        return {
+            "api_key": self.azure_openai_api_key,
+            "api_version": self.api_version,
+            "endpoint": self.azure_openai_endpoint,
+            "model_name": self.model_name
+        }
+    
+    def get_file_paths(self, image_filename=None):
+        """
+        Get file paths for input and output files
+        
+        Args:
+            image_filename: Optional image filename to create request-specific paths
+            
+        Returns:
+            Dictionary with paths for input and output files
+        """
+        if image_filename:
+            # Extract the base name without extension for folder naming
+            base_name = os.path.splitext(image_filename)[0]
+            
+            # Create request-specific result directory
+            request_dir = os.path.join(self.results_dir, base_name)
+            os.makedirs(request_dir, exist_ok=True)
+            
+            paths = {
+                "request_dir": request_dir,
+                "vision_output": os.path.join(request_dir, "ingredients.json"),
+                "recipes_output": os.path.join(request_dir, "recipes.json"),
+                "request_image": os.path.join(request_dir, image_filename)  # Store image in results directory
+            }
+        else:
+            # If no filename is provided, use the most recent request
+            # by finding the most recently modified directory in results_dir
+            try:
+                subdirs = [os.path.join(self.results_dir, d) for d in os.listdir(self.results_dir) 
+                        if os.path.isdir(os.path.join(self.results_dir, d))]
+                if subdirs:
+                    latest_dir = max(subdirs, key=os.path.getmtime)
+                    base_image_name = os.path.basename(latest_dir) + ".jpg"  # Assuming jpg extension
+                    paths = {
+                        "request_dir": latest_dir,
+                        "vision_output": os.path.join(latest_dir, "ingredients.json"),
+                        "recipes_output": os.path.join(latest_dir, "recipes.json"),
+                        "request_image": os.path.join(latest_dir, base_image_name)
+                    }
+                else:
+                    # Fallback to default paths if no subdirectories exist
+                    paths = {
+                        "vision_output": os.path.join(self.results_dir, "ingredients.json"),
+                        "recipes_output": os.path.join(self.results_dir, "recipes.json")
+                    }
+            except (FileNotFoundError, ValueError):
+                # Fallback to default paths if error occurs
+                paths = {
+                    "vision_output": os.path.join(self.results_dir, "ingredients.json"),
+                    "recipes_output": os.path.join(self.results_dir, "recipes.json")
+                }
+                
+        return paths
+
+--- backend/container/fridge_84771ad40e8d8afc/fridge_84771ad40e8d8afc.jpg ---
+[Binary file]
+
+--- backend/container/fridge_84771ad40e8d8afc/ingredients.json ---
+{
+  "ingredients": {
+    "Dairy": [
+      "Philadelphia cream cheese",
+      "Parmesan cheese block",
+      "Eggs (in carton)"
+    ],
+    "Produce": [
+      "Red cabbage",
+      "Carrots",
+      "Yellow bell pepper",
+      "Red tomatoes",
+      "Cucumber",
+      "Fresh spinach leaves",
+      "Fresh cilantro",
+      "Fresh mint",
+      "Bananas",
+      "Pears",
+      "Apples",
+      "Lemons",
+      "Oranges",
+      "Limes"
+    ],
+    "Proteins": [
+      "Eggs (in carton)"
+    ],
+    "Grains": [
+      "Flour tortillas",
+      "Bread"
+    ],
+    "Condiments": [
+      "Heinz tomato ketchup",
+      "Hellmann's mayonnaise",
+      "Maple syrup",
+      "Annie's mustard",
+      "Boland's pasta sauce",
+      "Soy sauce",
+      "Floyd's pickled onions"
+    ],
+    "Beverages": [],
+    "Snacks": [
+      "Almonds",
+      "Dates"
+    ],
+    "Frozen": [],
+    "Canned": [],
+    "Other": [
+      "Sunflower seeds",
+      "Rice"
+    ]
+  }
+}
+
+--- backend/container/fridge_84771ad40e8d8afc/recipes.json ---
+{
+  "items": [
+    {
+      "name": "Garden Fresh Veggie Wraps",
+      "total_ingredients": [
+        "Flour tortillas",
+        "Red cabbage",
+        "Carrots",
+        "Yellow bell pepper",
+        "Cucumber",
+        "Fresh spinach leaves",
+        "Philadelphia cream cheese",
+        "Annie's mustard",
+        "Lemons",
+        "Fresh cilantro"
+      ],
+      "available_ingredients": [
+        "Flour tortillas",
+        "Red cabbage",
+        "Carrots",
+        "Yellow bell pepper",
+        "Cucumber",
+        "Fresh spinach leaves",
+        "Philadelphia cream cheese",
+        "Annie's mustard",
+        "Lemons",
+        "Fresh cilantro"
+      ],
+      "missing_ingredients": [],
+      "completeness_score": 100,
+      "instructions": [
+        "Slice the carrots, yellow bell pepper, cucumber, and red cabbage into thin strips.",
+        "Mix Philadelphia cream cheese, a squeeze of lemon juice, and chopped fresh cilantro to make a spread.",
+        "Lay a flour tortilla flat and spread the cream cheese mixture evenly.",
+        "Arrange spinach leaves, sliced vegetables, and a drizzle of Annie's mustard on top.",
+        "Roll the tortilla tightly and slice in half for serving."
+      ],
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Spinach and Cheese Frittata",
+      "total_ingredients": [
+        "Eggs",
+        "Fresh spinach leaves",
+        "Parmesan cheese block",
+        "Hellmann's mayonnaise",
+        "Red tomatoes",
+        "Salt",
+        "Pepper"
+      ],
+      "available_ingredients": [
+        "Eggs",
+        "Fresh spinach leaves",
+        "Parmesan cheese block",
+        "Hellmann's mayonnaise",
+        "Red tomatoes"
+      ],
+      "missing_ingredients": [
+        "Salt",
+        "Pepper"
+      ],
+      "completeness_score": 85,
+      "instructions": [
+        "Preheat the oven to 350\u00b0F (175\u00b0C).",
+        "Whisk eggs and add a tablespoon of Hellmann's mayonnaise for creaminess.",
+        "Grate Parmesan cheese and chop fresh spinach leaves.",
+        "Dice red tomatoes.",
+        "Mix eggs, spinach, tomatoes, and grated cheese, then season with salt and pepper.",
+        "Pour the mixture into a greased baking dish.",
+        "Bake for 20-25 minutes, or until the frittata has set in the center."
+      ],
+      "cooking_time": "30 minutes",
+      "difficulty": "Medium"
+    },
+    {
+      "name": "Fruity Breakfast Bowl",
+      "total_ingredients": [
+        "Bananas",
+        "Pears",
+        "Apples",
+        "Almonds",
+        "Dates",
+        "Sunflower seeds",
+        "Maple syrup",
+        "Fresh mint"
+      ],
+      "available_ingredients": [
+        "Bananas",
+        "Pears",
+        "Apples",
+        "Almonds",
+        "Dates",
+        "Sunflower seeds",
+        "Maple syrup",
+        "Fresh mint"
+      ],
+      "missing_ingredients": [],
+      "completeness_score": 100,
+      "instructions": [
+        "Chop bananas, pears, and apples into bite-sized pieces.",
+        "Finely chop dates.",
+        "In a bowl, combine chopped fruits and mix well.",
+        "Top with almonds, sunflower seeds, and chopped dates.",
+        "Drizzle maple syrup over the top.",
+        "Garnish with fresh mint leaves prior to serving."
+      ],
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Citrus-Glazed Carrot and Almond Salad",
+      "total_ingredients": [
+        "Carrots",
+        "Lemons",
+        "Oranges",
+        "Almonds",
+        "Soy sauce",
+        "Fresh cilantro",
+        "Fresh mint",
+        "Salt",
+        "Pepper"
+      ],
+      "available_ingredients": [
+        "Carrots",
+        "Lemons",
+        "Oranges",
+        "Almonds",
+        "Soy sauce",
+        "Fresh cilantro",
+        "Fresh mint"
+      ],
+      "missing_ingredients": [
+        "Salt",
+        "Pepper"
+      ],
+      "completeness_score": 88,
+      "instructions": [
+        "Peel and grate the carrots into a salad bowl.",
+        "Toast almonds in a dry pan until lightly brown and fragrant.",
+        "In a small bowl, mix the juice of lemons and oranges with a dash of soy sauce.",
+        "Pour the citrus dressing over the grated carrots and toss well.",
+        "Add toasted almonds and toss again.",
+        "Garnish with chopped fresh cilantro and mint.",
+        "Season with salt and pepper to taste."
+      ],
+      "cooking_time": "20 minutes",
+      "difficulty": "Medium"
+    },
+    {
+      "name": "Tomato Basil Rice",
+      "total_ingredients": [
+        "Rice",
+        "Red tomatoes",
+        "Boland's pasta sauce",
+        "Philadelphia cream cheese",
+        "Fresh basil (substitute with cilantro)",
+        "Parmesan cheese block",
+        "Salt",
+        "Pepper"
+      ],
+      "available_ingredients": [
+        "Rice",
+        "Red tomatoes",
+        "Boland's pasta sauce",
+        "Philadelphia cream cheese",
+        "Parmesan cheese block"
+      ],
+      "missing_ingredients": [
+        "Fresh basil",
+        "Salt",
+        "Pepper"
+      ],
+      "completeness_score": 71,
+      "instructions": [
+        "Cook the rice according to package instructions.",
+        "Dice tomatoes and stir them into Boland's pasta sauce.",
+        "Add a spoonful of Philadelphia cream cheese into the sauce for creaminess.",
+        "Stir the sauce into the cooked rice.",
+        "Grate Parmesan cheese and fold it into the rice mixture.",
+        "Garnish with chopped fresh basil or finely chopped cilantro if basil is unavailable.",
+        "Season with salt and pepper to taste."
+      ],
+      "cooking_time": "35 minutes",
+      "difficulty": "Medium"
+    }
+  ],
+  "analysis": [
+    {
+      "recipe_name": "Garden Fresh Veggie Wraps",
+      "completeness": 100,
+      "available_count": 10,
+      "missing_count": 0,
+      "total_ingredients": 10,
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "recipe_name": "Spinach and Cheese Frittata",
+      "completeness": 85,
+      "available_count": 5,
+      "missing_count": 2,
+      "total_ingredients": 7,
+      "cooking_time": "30 minutes",
+      "difficulty": "Medium"
+    },
+    {
+      "recipe_name": "Fruity Breakfast Bowl",
+      "completeness": 100,
+      "available_count": 8,
+      "missing_count": 0,
+      "total_ingredients": 8,
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "recipe_name": "Citrus-Glazed Carrot and Almond Salad",
+      "completeness": 88,
+      "available_count": 7,
+      "missing_count": 2,
+      "total_ingredients": 9,
+      "cooking_time": "20 minutes",
+      "difficulty": "Medium"
+    },
+    {
+      "recipe_name": "Tomato Basil Rice",
+      "completeness": 71,
+      "available_count": 5,
+      "missing_count": 3,
+      "total_ingredients": 8,
+      "cooking_time": "35 minutes",
+      "difficulty": "Medium"
+    }
+  ],
+  "ingredient_count": 31
+}
+
+--- backend/container/fridge_d1ea98cc4b729f52/fridge_d1ea98cc4b729f52.jpg ---
+[Binary file]
+
+--- backend/container/fridge_d1ea98cc4b729f52/ingredients.json ---
+{
+  "ingredients": {
+    "Dairy": [
+      "Philadelphia cream cheese",
+      "Land O'Lakes butter",
+      "Hellmann's mayonnaise"
+    ],
+    "Produce": [
+      "Bananas",
+      "Pears",
+      "Apples",
+      "Cilantro",
+      "Mint",
+      "Mixed bell peppers",
+      "Red cabbage",
+      "Yellow bell pepper",
+      "Carrots",
+      "Arugula"
+    ],
+    "Proteins": [
+      "Eggs",
+      "Mozzarella cheese ball"
+    ],
+    "Grains": [
+      "Tortillas"
+    ],
+    "Condiments": [
+      "Heinz tomato ketchup",
+      "Maple Grove Farms syrup",
+      "Annie's mustard",
+      "Roland kalamata olive paste",
+      "Yokki sesame paste",
+      "Colman's mustard",
+      "Heinz salad cream",
+      "Zoe garlic paste"
+    ],
+    "Beverages": [],
+    "Snacks": [
+      "Almonds",
+      "Dates"
+    ],
+    "Frozen": [],
+    "Canned": [],
+    "Other": [
+      "Savory biscuits",
+      "Sunflower seeds"
+    ]
+  }
+}
+
+--- backend/container/fridge_d1ea98cc4b729f52/recipes.json ---
+{
+  "items": [
+    {
+      "name": "Creamy Bell Pepper Wraps",
+      "total_ingredients": [
+        "Philadelphia cream cheese",
+        "Land O'Lakes butter",
+        "Mixed bell peppers",
+        "Tortillas",
+        "Mozzarella cheese ball",
+        "Mint",
+        "Arugula"
+      ],
+      "available_ingredients": [
+        "Philadelphia cream cheese",
+        "Land O'Lakes butter",
+        "Mixed bell peppers",
+        "Tortillas",
+        "Mozzarella cheese ball",
+        "Mint",
+        "Arugula"
+      ],
+      "missing_ingredients": [],
+      "completeness_score": 100,
+      "instructions": [
+        "Step 1: Melt the Philadelphia cream cheese with a touch of Land O'Lakes butter in a pan.",
+        "Step 2: Dice the mixed bell peppers and saut\u00e9 them until soft.",
+        "Step 3: Spread the cream cheese mixture onto the tortillas.",
+        "Step 4: Layer the saut\u00e9ed bell peppers, shredded mozzarella cheese, fresh mint leaves, and arugula.",
+        "Step 5: Roll the tortilla tightly and slice into wrap-sized pieces."
+      ],
+      "cooking_time": "20 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Sesame Olive Salad",
+      "total_ingredients": [
+        "Hellmann's mayonnaise",
+        "Roland kalamata olive paste",
+        "Yokki sesame paste",
+        "Cilantro",
+        "Arugula",
+        "Red cabbage",
+        "Sunflower seeds"
+      ],
+      "available_ingredients": [
+        "Hellmann's mayonnaise",
+        "Roland kalamata olive paste",
+        "Yokki sesame paste",
+        "Cilantro",
+        "Arugula",
+        "Red cabbage",
+        "Sunflower seeds"
+      ],
+      "missing_ingredients": [],
+      "completeness_score": 100,
+      "instructions": [
+        "Step 1: In a bowl, mix Hellmann's mayonnaise with Roland kalamata olive paste and Yokki sesame paste.",
+        "Step 2: Finely chop cilantro, arugula, and red cabbage.",
+        "Step 3: Combine chopped greens and cabbage with the mayonnaise mixture.",
+        "Step 4: Sprinkle sunflower seeds on top and toss everything to coat evenly."
+      ],
+      "cooking_time": "15 minutes",
+      "difficulty": "Medium"
+    },
+    {
+      "name": "Buttered Apple and Pear Crumble",
+      "total_ingredients": [
+        "Land O'Lakes butter",
+        "Apples",
+        "Pears",
+        "Maple Grove Farms syrup",
+        "Savory biscuits",
+        "Almonds",
+        "Eggs"
+      ],
+      "available_ingredients": [
+        "Land O'Lakes butter",
+        "Apples",
+        "Pears",
+        "Maple Grove Farms syrup",
+        "Savory biscuits",
+        "Almonds"
+      ],
+      "missing_ingredients": [
+        "Eggs"
+      ],
+      "completeness_score": 86,
+      "instructions": [
+        "Step 1: Preheat the oven to 375\u00b0F (190\u00b0C).",
+        "Step 2: Slice apples and pears, and toss with a drizzle of Maple Grove Farms syrup.",
+        "Step 3: Crush savory biscuits and almonds, and mix with melted Land O'Lakes butter.",
+        "Step 4: Layer the fruit mixture in a baking dish and top with the biscuit-almond crumble.",
+        "Step 5: Bake for 30 minutes or until golden brown."
+      ],
+      "cooking_time": "40 minutes",
+      "difficulty": "Medium"
+    },
+    {
+      "name": "Spicy Mint Egg Omelette",
+      "total_ingredients": [
+        "Eggs",
+        "Annie's mustard",
+        "Mint",
+        "Cilantro",
+        "Mixed bell peppers",
+        "Mozzarella cheese ball",
+        "Zoe garlic paste"
+      ],
+      "available_ingredients": [
+        "Eggs",
+        "Annie's mustard",
+        "Mint",
+        "Cilantro",
+        "Mixed bell peppers",
+        "Mozzarella cheese ball",
+        "Zoe garlic paste"
+      ],
+      "missing_ingredients": [],
+      "completeness_score": 100,
+      "instructions": [
+        "Step 1: Beat eggs in a bowl with Annie's mustard and Zoe garlic paste.",
+        "Step 2: Finely chop mint leaves, cilantro, and mixed bell peppers.",
+        "Step 3: Stir chopped veggies into the egg mixture.",
+        "Step 4: Heat a pan and pour in the egg mixture.",
+        "Step 5: Sprinkle shredded mozzarella cheese over the omelette.",
+        "Step 6: Cook until set, then fold and serve."
+      ],
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Fruit & Nut Salad with Creamy Dressing",
+      "total_ingredients": [
+        "Bananas",
+        "Pears",
+        "Apples",
+        "Hellmann's mayonnaise",
+        "Colman's mustard",
+        "Sunflower seeds",
+        "Dates",
+        "Almonds"
+      ],
+      "available_ingredients": [
+        "Bananas",
+        "Pears",
+        "Apples",
+        "Hellmann's mayonnaise",
+        "Colman's mustard",
+        "Sunflower seeds",
+        "Dates",
+        "Almonds"
+      ],
+      "missing_ingredients": [],
+      "completeness_score": 100,
+      "instructions": [
+        "Step 1: Slice bananas, pears, and apples into bite-sized pieces.",
+        "Step 2: In a bowl, mix Hellmann's mayonnaise with a small amount of Colman's mustard.",
+        "Step 3: Combine the fruits with sunflower seeds, chopped dates, and almonds.",
+        "Step 4: Drizzle the creamy dressing over the fruit salad and mix gently."
+      ],
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    }
+  ],
+  "analysis": [
+    {
+      "recipe_name": "Creamy Bell Pepper Wraps",
+      "completeness": 100,
+      "available_count": 7,
+      "missing_count": 0,
+      "total_ingredients": 7,
+      "cooking_time": "20 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "recipe_name": "Sesame Olive Salad",
+      "completeness": 100,
+      "available_count": 7,
+      "missing_count": 0,
+      "total_ingredients": 7,
+      "cooking_time": "15 minutes",
+      "difficulty": "Medium"
+    },
+    {
+      "recipe_name": "Buttered Apple and Pear Crumble",
+      "completeness": 86,
+      "available_count": 6,
+      "missing_count": 1,
+      "total_ingredients": 7,
+      "cooking_time": "40 minutes",
+      "difficulty": "Medium"
+    },
+    {
+      "recipe_name": "Spicy Mint Egg Omelette",
+      "completeness": 100,
+      "available_count": 7,
+      "missing_count": 0,
+      "total_ingredients": 7,
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "recipe_name": "Fruit & Nut Salad with Creamy Dressing",
+      "completeness": 100,
+      "available_count": 8,
+      "missing_count": 0,
+      "total_ingredients": 8,
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    }
+  ],
+  "ingredient_count": 28
+}
+
+--- backend/main.py ---
+import argparse
+from flask import Flask
+
+# Import services and config
+from config import Config
+from services.azure_client import AzureClientService
+from services.vision_service import VisionService
+from services.recipe_service import RecipeService
+
+from flask_cors import CORS
+
+# Initialize Flask app
+app = Flask(__name__)
+CORS(app)  # This enables CORS for all routes
+
+# Global services
+config = None
+vision_service = None
+recipe_service = None
+
+def setup_services():
     """
-    Set up the application in API mode
+    Set up the application services
     """
     global config, vision_service, recipe_service
     
@@ -1553,41 +1232,32 @@ def setup_api_mode():
     azure_client = AzureClientService(config)
     vision_service = VisionService(azure_client)
     recipe_service = RecipeService(azure_client)
+    
+    # Import routes after Flask app is initialized
+    from api.routes import app as routes_blueprint
+    
+    # Register blueprint with the main Flask app
+    app.register_blueprint(routes_blueprint)
+    
+    # Provide services to routes module
+    import api.routes as routes
+    routes.vision_service = vision_service
+    routes.recipe_service = recipe_service
+    routes.config = config
 
 def main():
     """Main entry point for the application"""
-    parser = argparse.ArgumentParser(description="Fridge Recipe Generator")
-    parser.add_argument("--mode", choices=["cli", "api"], default="cli", help="Run mode (cli or api)")
-    parser.add_argument("--action", choices=["analyze", "recipes", "both"], default="both", help="Action to perform in CLI mode")
-    parser.add_argument("--image", help="Image filename for analysis (in input directory)")
-    parser.add_argument("--recipes", type=int, default=5, help="Number of recipes to generate")
+    parser = argparse.ArgumentParser(description="Kitchen Copilot API Server")
     parser.add_argument("--host", default="127.0.0.1", help="Host for API server")
     parser.add_argument("--port", type=int, default=5000, help="Port for API server")
     
     args = parser.parse_args()
     
-    if args.mode == "api":
-        # API mode
-        setup_api_mode()
-        print(f"Starting Flask API server on {args.host}:{args.port}")
-        app.run(host=args.host, port=args.port, debug=False)
-    else:
-        # CLI mode
-        config = Config()
-        azure_client = AzureClientService(config)
-        vision_service = VisionService(azure_client)
-        recipe_service = RecipeService(azure_client)
-        
-        cli = CLIProcessor(config, vision_service, recipe_service)
-        
-        if args.action in ["analyze", "both"]:
-            if not args.image:
-                print("Error: Image filename required for analysis")
-                return
-            cli.analyze_image(args.image)
-        
-        if args.action in ["recipes", "both"]:
-            cli.generate_recipes(args.image, args.recipes)
+    # Setup services
+    setup_services()
+    
+    print(f"Starting Kitchen Copilot API server on {args.host}:{args.port}")
+    app.run(host=args.host, port=args.port, debug=False)
 
 if __name__ == "__main__":
     main()

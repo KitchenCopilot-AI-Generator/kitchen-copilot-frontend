@@ -7,6 +7,7 @@ while using Flask instead of FastAPI for implementation.
 
 import os
 import json
+import glob
 from flask import Blueprint, request, jsonify
 
 # Create a Blueprint instead of a Flask app
@@ -34,12 +35,8 @@ def analyze_image():
         if file.filename == '':
             return jsonify({"error": "No file selected"}), 400
             
-        # Create a unique filename using timestamp
-        file_ext = os.path.splitext(file.filename)[1]
-        image_filename = f"fridge_{os.urandom(8).hex()}{file_ext}"
-        
-        # Get file paths
-        paths = config.get_file_paths(image_filename)
+        # Get file paths with the new naming convention
+        paths = config.get_file_paths(file.filename)
         
         # Save the uploaded file directly to the results directory
         os.makedirs(os.path.dirname(paths["request_image"]), exist_ok=True)
@@ -52,8 +49,10 @@ def analyze_image():
         # Get a summary
         summary = vision_service.get_ingredients_summary(result)
         
-        # Include request_id (which is the base name of the image)
-        request_id = os.path.splitext(image_filename)[0]
+        # Include request_id (which is the folder name)
+        request_id = paths["request_id"]
+        # Get just the filename, not the full path
+        image_filename = os.path.basename(paths["request_image"])
         
         return jsonify({
             "status": "complete",
@@ -80,7 +79,17 @@ def get_ingredients():
         if request_id:
             # Look for the request folder
             request_dir = os.path.join(config.results_dir, request_id)
-            ingredients_file = os.path.join(request_dir, "ingredients.json")
+            
+            # Find the ingredients file that matches the pattern
+            ingredients_files = glob.glob(os.path.join(request_dir, "ingredients_*.json"))
+            
+            if not ingredients_files:
+                return jsonify({
+                    "error": "No ingredients analysis found for the specified request ID."
+                }), 404
+                
+            # Use the first matching file (should only be one)
+            ingredients_file = ingredients_files[0]
         else:
             # Use most recent analysis
             paths = config.get_file_paths()
@@ -113,7 +122,17 @@ def get_recipes():
         if request_id:
             # Look for the request folder
             request_dir = os.path.join(config.results_dir, request_id)
-            recipes_file = os.path.join(request_dir, "recipes.json")
+            
+            # Find the recipes file that matches the pattern
+            recipes_files = glob.glob(os.path.join(request_dir, "recipes_*.json"))
+            
+            if not recipes_files:
+                return jsonify({
+                    "error": "No recipes found for the specified request ID."
+                }), 404
+                
+            # Use the first matching file (should only be one)
+            recipes_file = recipes_files[0]
         else:
             # Use most recent analysis
             paths = config.get_file_paths()
@@ -148,7 +167,17 @@ def generate_recipes():
         # Determine ingredients file path
         if request_id:
             request_dir = os.path.join(config.results_dir, request_id)
-            ingredients_file = os.path.join(request_dir, "ingredients.json")
+            
+            # Find the ingredients file that matches the pattern
+            ingredients_files = glob.glob(os.path.join(request_dir, "ingredients_*.json"))
+            
+            if not ingredients_files:
+                return jsonify({
+                    "error": "No ingredients analysis found for the specified request ID."
+                }), 404
+                
+            # Use the first matching file (should only be one)
+            ingredients_file = ingredients_files[0]
         else:
             paths = config.get_file_paths()
             ingredients_file = paths["vision_output"]
@@ -182,7 +211,11 @@ def generate_recipes():
         # Determine the recipes output path - use the same request_id if provided
         if request_id:
             request_dir = os.path.join(config.results_dir, request_id)
-            recipes_output = os.path.join(request_dir, "recipes.json")
+            
+            # Create a recipes filename based on the ingredients filename pattern
+            ingredients_basename = os.path.basename(ingredients_file)
+            timestamp_id_part = ingredients_basename.replace("ingredients_", "").replace(".json", "")
+            recipes_output = os.path.join(request_dir, f"recipes_{timestamp_id_part}.json")
         else:
             paths = config.get_file_paths()
             recipes_output = paths["recipes_output"]

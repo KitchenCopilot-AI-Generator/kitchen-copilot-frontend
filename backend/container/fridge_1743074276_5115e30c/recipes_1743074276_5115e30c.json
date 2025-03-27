@@ -1,0 +1,233 @@
+{
+  "items": [
+    {
+      "name": "Fresh Summer Spinach Wraps",
+      "total_ingredients": [
+        "Fresh spinach leaves",
+        "Mixed bell peppers",
+        "Carrots",
+        "Chopped onions",
+        "Tortillas",
+        "Organic oregano seasoning",
+        "Hellmann's mayonnaise",
+        "Sliced almonds",
+        "Sunflower seeds",
+        "Roland garlic chili paste"
+      ],
+      "available_ingredients": [
+        "Fresh spinach leaves",
+        "Mixed bell peppers",
+        "Carrots",
+        "Chopped onions",
+        "Tortillas",
+        "Organic oregano seasoning",
+        "Hellmann's mayonnaise",
+        "Sliced almonds",
+        "Sunflower seeds",
+        "Roland garlic chili paste"
+      ],
+      "missing_ingredients": [],
+      "completeness_score": 100,
+      "instructions": [
+        "Step 1: Thinly slice mixed bell peppers, carrots, and onions.",
+        "Step 2: In a bowl, mix chopped vegetables with a spoonful of garlic chili paste and oregano seasoning.",
+        "Step 3: Spread mayonnaise over the tortilla.",
+        "Step 4: Layer spinach leaves, followed by mixed vegetables, sunflower seeds, and sliced almonds.",
+        "Step 5: Roll the tortilla tightly into a wrap.",
+        "Step 6: Slice the wrap in halves and serve."
+      ],
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Banana Caramel Cream Dessert",
+      "total_ingredients": [
+        "Bananas",
+        "Philadelphia cream cheese",
+        "Maple Grove Farms maple syrup",
+        "Mixed nuts",
+        "Sliced almonds",
+        "Crackd egg replacement",
+        "Butter",
+        "Brown sugar"
+      ],
+      "available_ingredients": [
+        "Bananas",
+        "Philadelphia cream cheese",
+        "Maple Grove Farms maple syrup",
+        "Mixed nuts",
+        "Sliced almonds",
+        "Crackd egg replacement",
+        "Butter"
+      ],
+      "missing_ingredients": [
+        "Brown sugar"
+      ],
+      "completeness_score": 88,
+      "instructions": [
+        "Step 1: Preheat your oven to 350\u00b0F (175\u00b0C).",
+        "Step 2: Mash bananas and mix them with Philadelphia cream cheese until smooth.",
+        "Step 3: Add maple syrup and Crackd egg replacement to the mixture.",
+        "Step 4: Place butter in a skillet and let it melt; add brown sugar (missing) to create a caramel.",
+        "Step 5: Add the banana and cream mixture to the skillet and mix.",
+        "Step 6: Pour mixture into a baking dish, top with mixed nuts and sliced almonds.",
+        "Step 7: Bake for 20 minutes until top is golden brown.",
+        "Step 8: Let cool, then chill in the refrigerator before serving."
+      ],
+      "cooking_time": "50 minutes",
+      "difficulty": "Medium"
+    },
+    {
+      "name": "Spicy Garlic Chili Pasta",
+      "total_ingredients": [
+        "Roland garlic chili paste",
+        "Hellmann's mayonnaise",
+        "Chopped onions",
+        "Fresh cilantro",
+        "Fresh spinach leaves",
+        "Maple Grove Farms maple syrup",
+        "Pasta (missing)"
+      ],
+      "available_ingredients": [
+        "Roland garlic chili paste",
+        "Hellmann's mayonnaise",
+        "Chopped onions",
+        "Fresh cilantro",
+        "Fresh spinach leaves",
+        "Maple Grove Farms maple syrup"
+      ],
+      "missing_ingredients": [
+        "Pasta"
+      ],
+      "completeness_score": 75,
+      "instructions": [
+        "Step 1: Boil pasta according to package instructions, drain and set aside.",
+        "Step 2: In a pan, saut\u00e9 chopped onions until translucent.",
+        "Step 3: Add garlic chili paste, maple syrup, mayonnaise, and a handful of fresh spinach, cook until spinach wilts.",
+        "Step 4: Add cooked pasta to the pan, toss to coat with sauce.",
+        "Step 5: Garnish with chopped fresh cilantro and serve warm."
+      ],
+      "cooking_time": "30 minutes",
+      "difficulty": "Medium"
+    },
+    {
+      "name": "Fruity Nutty Kale Salad",
+      "total_ingredients": [
+        "Apples",
+        "Pears",
+        "Sunflower seeds",
+        "Mixed nuts",
+        "Organic oregano seasoning",
+        "Raisins",
+        "Fresh mint",
+        "Lemon juice"
+      ],
+      "available_ingredients": [
+        "Apples",
+        "Pears",
+        "Sunflower seeds",
+        "Mixed nuts",
+        "Organic oregano seasoning",
+        "Raisins",
+        "Fresh mint"
+      ],
+      "missing_ingredients": [
+        "Lemon juice"
+      ],
+      "completeness_score": 86,
+      "instructions": [
+        "Step 1: Chop apples and pears into bite-sized pieces.",
+        "Step 2: In a large salad bowl, combine chopped fruits with sunflower seeds and mixed nuts.",
+        "Step 3: Add raisins and freshly chopped mint to the bowl.",
+        "Step 4: Sprinkle organic oregano seasoning over the salad.",
+        "Step 5: Drizzle with lemon juice (missing), toss gently, and serve chilled."
+      ],
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Citrus Mint Parfait",
+      "total_ingredients": [
+        "Oranges",
+        "Lemons",
+        "Philadelphia cream cheese",
+        "Hellmann's mayonnaise",
+        "Mixed nuts",
+        "Fresh mint",
+        "Honey (missing)",
+        "Granola (missing)"
+      ],
+      "available_ingredients": [
+        "Oranges",
+        "Lemons",
+        "Philadelphia cream cheese",
+        "Hellmann's mayonnaise",
+        "Mixed nuts",
+        "Fresh mint"
+      ],
+      "missing_ingredients": [
+        "Honey",
+        "Granola"
+      ],
+      "completeness_score": 75,
+      "instructions": [
+        "Step 1: Peel and section oranges and lemons.",
+        "Step 2: Mix Philadelphia cream cheese and Hellmann's mayonnaise in a bowl until creamy.",
+        "Step 3: Layer cream mixture in parfait glasses.",
+        "Step 4: Top each layer with sections of orange and lemon.",
+        "Step 5: Add a sprinkle of mixed nuts and fresh mint.",
+        "Step 6: Drizzle with honey (missing) and top with granola (missing) before serving."
+      ],
+      "cooking_time": "15 minutes",
+      "difficulty": "Medium"
+    }
+  ],
+  "analysis": [
+    {
+      "recipe_name": "Fresh Summer Spinach Wraps",
+      "completeness": 100,
+      "available_count": 10,
+      "missing_count": 0,
+      "total_ingredients": 10,
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "recipe_name": "Banana Caramel Cream Dessert",
+      "completeness": 88,
+      "available_count": 7,
+      "missing_count": 1,
+      "total_ingredients": 8,
+      "cooking_time": "50 minutes",
+      "difficulty": "Medium"
+    },
+    {
+      "recipe_name": "Spicy Garlic Chili Pasta",
+      "completeness": 75,
+      "available_count": 6,
+      "missing_count": 1,
+      "total_ingredients": 7,
+      "cooking_time": "30 minutes",
+      "difficulty": "Medium"
+    },
+    {
+      "recipe_name": "Fruity Nutty Kale Salad",
+      "completeness": 86,
+      "available_count": 7,
+      "missing_count": 1,
+      "total_ingredients": 8,
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "recipe_name": "Citrus Mint Parfait",
+      "completeness": 75,
+      "available_count": 6,
+      "missing_count": 2,
+      "total_ingredients": 8,
+      "cooking_time": "15 minutes",
+      "difficulty": "Medium"
+    }
+  ],
+  "ingredient_count": 28
+}
