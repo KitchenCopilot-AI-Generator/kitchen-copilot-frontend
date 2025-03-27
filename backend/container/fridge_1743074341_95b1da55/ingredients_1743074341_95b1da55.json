@@ -1,0 +1,53 @@
+{
+  "ingredients": {
+    "Dairy": [
+      "Hellmann's mayonnaise",
+      "Philadelphia cream cheese",
+      "Land O'Lakes butter",
+      "egg carton"
+    ],
+    "Produce": [
+      "fresh cilantro",
+      "fresh mint leaves",
+      "red cabbage",
+      "carrots",
+      "yellow bell pepper",
+      "red bell pepper",
+      "green bell pepper",
+      "orange bell pepper",
+      "lemons",
+      "limes",
+      "oranges",
+      "pears",
+      "apples",
+      "bananas",
+      "fresh arugula leaves"
+    ],
+    "Proteins": [],
+    "Grains": [
+      "tortilla wraps"
+    ],
+    "Condiments": [
+      "Heinz tomato ketchup",
+      "Maple grove farms maple syrup",
+      "Annie's dressing",
+      "Colemans mustard",
+      "sesame paste",
+      "Boland curry paste"
+    ],
+    "Beverages": [
+      "bottle partially visible near door"
+    ],
+    "Snacks": [
+      "jar with almonds",
+      "jar with dates"
+    ],
+    "Frozen": [],
+    "Canned": [],
+    "Other": [
+      "jar with pickled vegetables",
+      "jar with sunflower seeds",
+      "jar with grains"
+    ]
+  }
+}

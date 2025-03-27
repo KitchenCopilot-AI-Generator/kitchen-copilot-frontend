@@ -1,153 +1,173 @@
 """
-API Routes - FastAPI routes for the application
+API Routes - Flask routes for the Kitchen Copilot application
+
+This module preserves the exact API interface expected by the frontend,
+while using Flask instead of FastAPI for implementation.
 """
 
 import os
 import json
-import shutil
-from fastapi import FastAPI, UploadFile, File, HTTPException, BackgroundTasks
-from fastapi.responses import JSONResponse
-from typing import Optional
-from pydantic import BaseModel
+import glob
+from flask import Blueprint, request, jsonify
 
-# This will be initialized by main.py
-app = FastAPI()
+# Create a Blueprint instead of a Flask app
+app = Blueprint('api', __name__)
 
 # Store references to services initialized in main.py
 vision_service = None
 recipe_service = None
 config = None
 
-class RecipeRequest(BaseModel):
-    """Model for recipe generation request"""
-    num_recipes: Optional[int] = 5
-    ingredients_file: Optional[str] = None  # If not provided, use latest analysis
-
-async def process_image_async(image_path, output_path):
-    """Process image asynchronously"""
-    try:
-        result = vision_service.analyze_image(image_path)
-        vision_service.save_analysis(result, output_path)
-        return result
-    except Exception as e:
-        raise e
-
-@app.post("/analyze-image")
-async def analyze_image(
-    background_tasks: BackgroundTasks,
-    file: UploadFile = File(...),
-    async_processing: bool = False
-):
+@app.route('/analyze-image', methods=['POST'])
+def analyze_image():
     """
     Analyze a fridge/food image and identify ingredients
     
-    Args:
-        file: Uploaded image file
-        async_processing: Whether to process the image asynchronously
-        
     Returns:
         Analysis result or processing status
     """
     try:
-        # Create a unique filename using timestamp
-        file_ext = os.path.splitext(file.filename)[1]
-        image_filename = f"fridge_{os.urandom(8).hex()}{file_ext}"
-        
-        # Get file paths
-        paths = config.get_file_paths(image_filename)
+        # Check if file was uploaded
+        if 'file' not in request.files:
+            return jsonify({"error": "No file part in the request"}), 400
+            
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({"error": "No file selected"}), 400
+            
+        # Get file paths with the new naming convention
+        paths = config.get_file_paths(file.filename)
         
         # Save the uploaded file directly to the results directory
-        with open(paths["request_image"], "wb") as image_file:
-            shutil.copyfileobj(file.file, image_file)
+        os.makedirs(os.path.dirname(paths["request_image"]), exist_ok=True)
+        file.save(paths["request_image"])
         
-        if async_processing:
-            # Process in background
-            background_tasks.add_task(
-                process_image_async, 
-                paths["request_image"], 
-                paths["vision_output"]
-            )
-            return {
-                "status": "processing",
-                "message": "Image analysis started in background",
-                "image_filename": image_filename
-            }
-        else:
-            # Process synchronously
-            result = vision_service.analyze_image(paths["request_image"])
-            vision_service.save_analysis(result, paths["vision_output"])
-            
-            # Get a summary
-            summary = vision_service.get_ingredients_summary(result)
-            
-            return {
-                "status": "complete",
-                "result": result,
-                "summary": summary,
-                "image_filename": image_filename
-            }
+        # Process synchronously
+        result = vision_service.analyze_image(paths["request_image"])
+        vision_service.save_analysis(result, paths["vision_output"])
+        
+        # Get a summary
+        summary = vision_service.get_ingredients_summary(result)
+        
+        # Include request_id (which is the folder name)
+        request_id = paths["request_id"]
+        # Get just the filename, not the full path
+        image_filename = os.path.basename(paths["request_image"])
+        
+        return jsonify({
+            "status": "complete",
+            "result": result,
+            "summary": summary,
+            "image_filename": image_filename,
+            "request_id": request_id
+        })
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        return jsonify({"error": str(e)}), 500
 
-@app.get("/ingredients")
-async def get_ingredients(filename: Optional[str] = None):
+@app.route('/ingredients', methods=['GET'])
+def get_ingredients():
     """
-    Get ingredients from the most recent analysis or specified file
+    Get ingredients for the specified request ID
     
-    Args:
-        filename: Optional filename to load specific analysis
-        
     Returns:
         Ingredients data
     """
     try:
-        # Get path to the ingredients file
-        if filename:
-            ingredients_file = os.path.join(config.results_dir, filename)
-        else:
-            paths = config.get_file_paths()
+        # Get request ID (folder name) from query parameter
+        request_id = request.args.get('request_id')
+        
+        if not request_id:
+            return jsonify({
+                "error": "Missing required parameter: request_id. Please specify a request_id to retrieve ingredients."
+            }), 400
+        
+        try:
+            # Get paths using the request_id
+            paths = config.get_file_paths(request_id=request_id)
             ingredients_file = paths["vision_output"]
+        except ValueError as e:
+            return jsonify({"error": str(e)}), 404
         
         # Check if file exists
         if not os.path.exists(ingredients_file):
-            raise HTTPException(
-                status_code=404, 
-                detail="No ingredients analysis found. Please analyze an image first."
-            )
+            return jsonify({
+                "error": f"No ingredients file found for request_id: {request_id}"
+            }), 404
         
         # Load and return the ingredients
         with open(ingredients_file, "r") as f:
-            return JSONResponse(content=json.load(f))
-    except HTTPException as e:
-        raise e
+            return jsonify(json.load(f))
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        return jsonify({"error": str(e)}), 500
 
-@app.post("/generate-recipes")
-async def generate_recipes(request: RecipeRequest):
+@app.route('/recipes', methods=['GET'])
+def get_recipes():
     """
-    Generate recipe suggestions based on available ingredients
+    Get recipes for the specified request ID
     
-    Args:
-        request: Recipe generation request parameters
+    Returns:
+        Recipes data
+    """
+    try:
+        # Get request ID (folder name) from query parameter
+        request_id = request.args.get('request_id')
         
+        if not request_id:
+            return jsonify({
+                "error": "Missing required parameter: request_id. Please specify a request_id to retrieve recipes."
+            }), 400
+        
+        try:
+            # Get paths using the request_id
+            paths = config.get_file_paths(request_id=request_id)
+            recipes_file = paths["recipes_output"]
+        except ValueError as e:
+            return jsonify({"error": str(e)}), 404
+        
+        # Check if file exists
+        if not os.path.exists(recipes_file):
+            return jsonify({
+                "error": f"No recipes file found for request_id: {request_id}"
+            }), 404
+        
+        # Load and return the recipes
+        with open(recipes_file, "r") as f:
+            return jsonify(json.load(f))
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/generate-recipes', methods=['POST'])
+def generate_recipes():
+    """
+    Generate recipe suggestions based on available ingredients for the specified request ID
+    
     Returns:
         Generated recipes
     """
     try:
-        # Determine ingredients file path
-        if request.ingredients_file:
-            ingredients_file = os.path.join(config.results_dir, request.ingredients_file)
-        else:
-            paths = config.get_file_paths()
+        # Parse request data
+        data = request.get_json() or {}
+        num_recipes = data.get('num_recipes', 5)
+        request_id = data.get('request_id')
+        
+        if not request_id:
+            return jsonify({
+                "error": "Missing required parameter: request_id. Please specify a request_id to generate recipes."
+            }), 400
+        
+        try:
+            # Get paths using the request_id
+            paths = config.get_file_paths(request_id=request_id)
             ingredients_file = paths["vision_output"]
+            recipes_output = paths["recipes_output"]
+        except ValueError as e:
+            return jsonify({"error": str(e)}), 404
         
         # Check if file exists
         if not os.path.exists(ingredients_file):
-            raise HTTPException(
-                status_code=404, 
-                detail="No ingredients analysis found. Please analyze an image first."
-            )
+            return jsonify({
+                "error": f"No ingredients file found for request_id: {request_id}"
+            }), 404
         
         # Load ingredients
         ingredients = recipe_service.load_ingredients(ingredients_file)
@@ -155,23 +175,25 @@ async def generate_recipes(request: RecipeRequest):
         # Generate recipes
         recipes_data = recipe_service.generate_recipes(
             ingredients, 
-            num_recipes=request.num_recipes
+            num_recipes=num_recipes
         )
-        
-        # Save recipes
-        paths = config.get_file_paths()
-        recipe_service.save_recipes(recipes_data, paths["recipes_output"])
         
         # Get analysis
         analysis = recipe_service.get_recipes_analysis(recipes_data)
         analysis_dict = analysis.to_dict('records') if analysis is not None else []
         
-        return {
-            "recipes": recipes_data,
+        # Create full response
+        full_response = {
+            "items": recipes_data["recipes"],
             "analysis": analysis_dict,
             "ingredient_count": len(ingredients)
         }
-    except HTTPException as e:
-        raise e
+        
+        # Save the full response
+        os.makedirs(os.path.dirname(recipes_output), exist_ok=True)
+        with open(recipes_output, "w") as f:
+            json.dump(full_response, f, indent=2)
+        
+        return jsonify(full_response)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        return jsonify({"error": str(e)}), 500

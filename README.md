@@ -54,7 +54,7 @@ An application that analyses your refrigerator contents through images and sugge
 
 2. Start the backend API server:
    ```bash
-   python main.py --mode api --host 0.0.0.0 --port 5000
+   python main.py --host 0.0.0.0 --port 5000
    ```
 
 3. In a separate terminal, start the frontend development server:
@@ -64,28 +64,6 @@ An application that analyses your refrigerator contents through images and sugge
    ```
 
 3. Open [http://localhost:3000](http://localhost:3000) in your browser to access the application
-
-### Backend CLI Mode
-Analyze an image and generate recipes:
-```bash
-python main.py --mode cli --action both --image fridge.jpg --recipes 5
-```
-
-Just analyze an image:
-```bash
-python main.py --mode cli --action analyze --image fridge.jpg
-```
-
-Just generate recipes from previous analysis:
-```bash
-python main.py --mode cli --action recipes --recipes 7
-```
-
-### Backend API Mode
-Start the API server alone:
-```bash
-python main.py --mode api --host 0.0.0.0 --port 5000
-```
 
 #### API Endpoints
 - `POST /analyze-image`: Upload and analyze a fridge image
