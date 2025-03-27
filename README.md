@@ -110,8 +110,8 @@ Example response:
       "Condiments": 3
     }
   },
-  "image_filename": "fridge_a1b2c3d4.jpg",
-  "request_id": "fridge_a1b2c3d4"
+  "image_filename": "image_1743074276_5115e30c.jpg",
+  "request_id": "fridge_1743074276_5115e30c"
 }
 ```
 
@@ -184,10 +184,10 @@ Example response:
    ```json
    {
      "num_recipes": 5,
-     "request_id": "fridge_630cee49"
+     "request_id": "fridge_1743074276_5115e30c"
    }
    ```
-   - Replace "fridge_630cee49" with the actual request_id from your analyze-image response
+   - Replace "fridge_1743074276_5115e30c" with the actual request_id from your analyze-image response
    - You can omit the request_id to use the most recent analysis
 5. Click "Send" to submit the request
 
@@ -224,28 +224,28 @@ Example response:
 ## Project Structure
 ```
 kitchen-copilot/
-├── .env                       # Environment variables
-├── backend/                   # Backend directory
-│   ├── main.py                # Main entry point
-│   ├── config.py              # Configuration and environment loading
-│   ├── utils/                 # Utility functions
-│   ├── services/              # Core services
-│   └── models/                # Data models
-├── container/                 # Container data
-│   └── fridge/                # Fridge data
-│       ├── fridge_c6ae9525/   # Specific fridge instance
-│           ├── fridge_c6ae9525.jpg
-│           ├── ingredients.json
-│           └── recipes.json
-├── api/                       # API endpoints
-└── kitchen-copilot-frontend/  # Next.js frontend application
-    ├── src/                   # Frontend source code
-    │   ├── app/               # Next.js app router pages
-    │   ├── components/        # React components
-    │   ├── lib/               # Utility functions and API client
-    │   └── types/             # TypeScript type definitions
-    ├── public/                # Static assets
-    └── package.json           # Frontend dependencies
+├── .env                                                  # Environment variables
+├── backend/                                              # Backend directory
+│   ├── main.py                                           # Main entry point
+│   ├── config.py                                         # Configuration and environment loading
+│   ├── utils/                                            # Utility functions
+│   ├── services/                                         # Core services
+│   └── models/                                           # Data models
+├── container/                                            # Container data
+│   └── fridge/                                           # Fridge data
+│       ├── fridge_1743074276_5115e30c/                   # Specific fridge instance
+│           ├── image_1743074276_5115e30c.jpg
+│           ├── ingredients_1743074276_5115e30c.json
+│           └── recipes_1743074276_5115e30c.json
+├── api/                                                  # API endpoints
+└── kitchen-copilot-frontend/                             # Next.js frontend application
+    ├── src/                                              # Frontend source code
+    │   ├── app/                                          # Next.js app router pages
+    │   ├── components/                                   # React components
+    │   ├── lib/                                          # Utility functions and API client
+    │   └── types/                                        # TypeScript type definitions
+    ├── public/                                           # Static assets
+    └── package.json                                      # Frontend dependencies
 ```
 
 ## Troubleshooting
