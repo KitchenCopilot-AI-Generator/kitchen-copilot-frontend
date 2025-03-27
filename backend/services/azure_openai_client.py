@@ -1,10 +1,10 @@
 """
-Azure Client Service - Handles Azure OpenAI API client initialization
+Azure OpenAI Client Service - Handles Azure OpenAI API client initialization
 """
 
 from openai import AzureOpenAI
 
-class AzureClientService:
+class AzureOpenAIClientService:
     """Service for interacting with Azure OpenAI API"""
     
     def __init__(self, config):
