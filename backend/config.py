@@ -32,15 +32,19 @@ class Config:
             "model_name": self.model_name
         }
     
-    def get_file_paths(self, image_filename=None):
+    def get_file_paths(self, image_filename=None, request_id=None):
         """
         Get file paths for input and output files
         
         Args:
             image_filename: Optional image filename to create request-specific paths
+            request_id: Optional request ID to retrieve existing paths
             
         Returns:
             Dictionary with paths for input and output files
+            
+        Raises:
+            ValueError: If neither image_filename nor request_id is provided
         """
         if image_filename:
             # Create a timestamp and unique ID for file naming
@@ -71,64 +75,36 @@ class Config:
                 "request_image": os.path.join(request_dir, image_name),
                 "request_id": folder_name
             }
+        elif request_id:
+            # Use the provided request_id to locate files
+            request_dir = os.path.join(self.results_dir, request_id)
+            
+            if not os.path.exists(request_dir):
+                raise ValueError(f"Request directory not found for request_id: {request_id}")
+                
+            # Find corresponding files in the directory
+            dir_files = os.listdir(request_dir)
+            image_files = [f for f in dir_files if f.startswith("image_")]
+            ingredients_files = [f for f in dir_files if f.startswith("ingredients_")]
+            recipes_files = [f for f in dir_files if f.startswith("recipes_")]
+            
+            # Use the files if they exist, otherwise construct expected filenames
+            # Extract timestamp_unique_id part from request_id (after "fridge_")
+            id_part = request_id.split('_', 1)[1] if '_' in request_id else request_id
+            
+            image_file = image_files[0] if image_files else f"image_{id_part}.jpg"
+            ingredients_file = ingredients_files[0] if ingredients_files else f"ingredients_{id_part}.json"
+            recipes_file = recipes_files[0] if recipes_files else f"recipes_{id_part}.json"
+            
+            paths = {
+                "request_dir": request_dir,
+                "vision_output": os.path.join(request_dir, ingredients_file),
+                "recipes_output": os.path.join(request_dir, recipes_file),
+                "request_image": os.path.join(request_dir, image_file),
+                "request_id": request_id
+            }
         else:
-            # If no filename is provided, use the most recent request
-            # by finding the most recently modified directory in results_dir
-            try:
-                subdirs = [os.path.join(self.results_dir, d) for d in os.listdir(self.results_dir) 
-                        if os.path.isdir(os.path.join(self.results_dir, d))]
-                if subdirs:
-                    latest_dir = max(subdirs, key=os.path.getmtime)
-                    folder_name = os.path.basename(latest_dir)
-                    
-                    # Find corresponding files in the directory
-                    dir_files = os.listdir(latest_dir)
-                    image_files = [f for f in dir_files if f.startswith("image_")]
-                    ingredients_files = [f for f in dir_files if f.startswith("ingredients_")]
-                    recipes_files = [f for f in dir_files if f.startswith("recipes_")]
-                    
-                    image_file = image_files[0] if image_files else f"image_{folder_name.split('_', 1)[1]}.jpg"
-                    ingredients_file = ingredients_files[0] if ingredients_files else f"ingredients_{folder_name.split('_', 1)[1]}.json"
-                    recipes_file = recipes_files[0] if recipes_files else f"recipes_{folder_name.split('_', 1)[1]}.json"
-                    
-                    paths = {
-                        "request_dir": latest_dir,
-                        "vision_output": os.path.join(latest_dir, ingredients_file),
-                        "recipes_output": os.path.join(latest_dir, recipes_file),
-                        "request_image": os.path.join(latest_dir, image_file),
-                        "request_id": folder_name
-                    }
-                else:
-                    # Fallback to default paths if no subdirectories exist
-                    timestamp = int(time.time())
-                    unique_id = os.urandom(4).hex()
-                    folder_name = f"fridge_{timestamp}_{unique_id}"
-                    
-                    request_dir = os.path.join(self.results_dir, folder_name)
-                    os.makedirs(request_dir, exist_ok=True)
-                    
-                    paths = {
-                        "request_dir": request_dir,
-                        "vision_output": os.path.join(request_dir, f"ingredients_{timestamp}_{unique_id}.json"),
-                        "recipes_output": os.path.join(request_dir, f"recipes_{timestamp}_{unique_id}.json"),
-                        "request_image": os.path.join(request_dir, f"image_{timestamp}_{unique_id}.jpg"),
-                        "request_id": folder_name
-                    }
-            except (FileNotFoundError, ValueError):
-                # Fallback to default paths if error occurs
-                timestamp = int(time.time())
-                unique_id = os.urandom(4).hex()
-                folder_name = f"fridge_{timestamp}_{unique_id}"
-                
-                request_dir = os.path.join(self.results_dir, folder_name)
-                os.makedirs(request_dir, exist_ok=True)
-                
-                paths = {
-                    "request_dir": request_dir, 
-                    "vision_output": os.path.join(request_dir, f"ingredients_{timestamp}_{unique_id}.json"),
-                    "recipes_output": os.path.join(request_dir, f"recipes_{timestamp}_{unique_id}.json"),
-                    "request_image": os.path.join(request_dir, f"image_{timestamp}_{unique_id}.jpg"),
-                    "request_id": folder_name
-                }
+            # No filename or request_id provided - this is an error case
+            raise ValueError("Either image_filename or request_id must be provided to get file paths")
                 
         return paths

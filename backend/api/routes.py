@@ -67,7 +67,7 @@ def analyze_image():
 @app.route('/ingredients', methods=['GET'])
 def get_ingredients():
     """
-    Get ingredients from the most recent analysis or specified request ID
+    Get ingredients for the specified request ID
     
     Returns:
         Ingredients data
@@ -76,29 +76,22 @@ def get_ingredients():
         # Get request ID (folder name) from query parameter
         request_id = request.args.get('request_id')
         
-        if request_id:
-            # Look for the request folder
-            request_dir = os.path.join(config.results_dir, request_id)
-            
-            # Find the ingredients file that matches the pattern
-            ingredients_files = glob.glob(os.path.join(request_dir, "ingredients_*.json"))
-            
-            if not ingredients_files:
-                return jsonify({
-                    "error": "No ingredients analysis found for the specified request ID."
-                }), 404
-                
-            # Use the first matching file (should only be one)
-            ingredients_file = ingredients_files[0]
-        else:
-            # Use most recent analysis
-            paths = config.get_file_paths()
+        if not request_id:
+            return jsonify({
+                "error": "Missing required parameter: request_id. Please specify a request_id to retrieve ingredients."
+            }), 400
+        
+        try:
+            # Get paths using the request_id
+            paths = config.get_file_paths(request_id=request_id)
             ingredients_file = paths["vision_output"]
+        except ValueError as e:
+            return jsonify({"error": str(e)}), 404
         
         # Check if file exists
         if not os.path.exists(ingredients_file):
             return jsonify({
-                "error": "No ingredients analysis found. Please analyze an image first."
+                "error": f"No ingredients file found for request_id: {request_id}"
             }), 404
         
         # Load and return the ingredients
@@ -110,7 +103,7 @@ def get_ingredients():
 @app.route('/recipes', methods=['GET'])
 def get_recipes():
     """
-    Get recipes from the most recent generation or specified request ID
+    Get recipes for the specified request ID
     
     Returns:
         Recipes data
@@ -119,29 +112,22 @@ def get_recipes():
         # Get request ID (folder name) from query parameter
         request_id = request.args.get('request_id')
         
-        if request_id:
-            # Look for the request folder
-            request_dir = os.path.join(config.results_dir, request_id)
-            
-            # Find the recipes file that matches the pattern
-            recipes_files = glob.glob(os.path.join(request_dir, "recipes_*.json"))
-            
-            if not recipes_files:
-                return jsonify({
-                    "error": "No recipes found for the specified request ID."
-                }), 404
-                
-            # Use the first matching file (should only be one)
-            recipes_file = recipes_files[0]
-        else:
-            # Use most recent analysis
-            paths = config.get_file_paths()
+        if not request_id:
+            return jsonify({
+                "error": "Missing required parameter: request_id. Please specify a request_id to retrieve recipes."
+            }), 400
+        
+        try:
+            # Get paths using the request_id
+            paths = config.get_file_paths(request_id=request_id)
             recipes_file = paths["recipes_output"]
+        except ValueError as e:
+            return jsonify({"error": str(e)}), 404
         
         # Check if file exists
         if not os.path.exists(recipes_file):
             return jsonify({
-                "error": "No recipes found. Please generate recipes first."
+                "error": f"No recipes file found for request_id: {request_id}"
             }), 404
         
         # Load and return the recipes
@@ -153,7 +139,7 @@ def get_recipes():
 @app.route('/generate-recipes', methods=['POST'])
 def generate_recipes():
     """
-    Generate recipe suggestions based on available ingredients
+    Generate recipe suggestions based on available ingredients for the specified request ID
     
     Returns:
         Generated recipes
@@ -164,28 +150,23 @@ def generate_recipes():
         num_recipes = data.get('num_recipes', 5)
         request_id = data.get('request_id')
         
-        # Determine ingredients file path
-        if request_id:
-            request_dir = os.path.join(config.results_dir, request_id)
-            
-            # Find the ingredients file that matches the pattern
-            ingredients_files = glob.glob(os.path.join(request_dir, "ingredients_*.json"))
-            
-            if not ingredients_files:
-                return jsonify({
-                    "error": "No ingredients analysis found for the specified request ID."
-                }), 404
-                
-            # Use the first matching file (should only be one)
-            ingredients_file = ingredients_files[0]
-        else:
-            paths = config.get_file_paths()
+        if not request_id:
+            return jsonify({
+                "error": "Missing required parameter: request_id. Please specify a request_id to generate recipes."
+            }), 400
+        
+        try:
+            # Get paths using the request_id
+            paths = config.get_file_paths(request_id=request_id)
             ingredients_file = paths["vision_output"]
+            recipes_output = paths["recipes_output"]
+        except ValueError as e:
+            return jsonify({"error": str(e)}), 404
         
         # Check if file exists
         if not os.path.exists(ingredients_file):
             return jsonify({
-                "error": "No ingredients analysis found. Please analyze an image first."
+                "error": f"No ingredients file found for request_id: {request_id}"
             }), 404
         
         # Load ingredients
@@ -207,18 +188,6 @@ def generate_recipes():
             "analysis": analysis_dict,
             "ingredient_count": len(ingredients)
         }
-        
-        # Determine the recipes output path - use the same request_id if provided
-        if request_id:
-            request_dir = os.path.join(config.results_dir, request_id)
-            
-            # Create a recipes filename based on the ingredients filename pattern
-            ingredients_basename = os.path.basename(ingredients_file)
-            timestamp_id_part = ingredients_basename.replace("ingredients_", "").replace(".json", "")
-            recipes_output = os.path.join(request_dir, f"recipes_{timestamp_id_part}.json")
-        else:
-            paths = config.get_file_paths()
-            recipes_output = paths["recipes_output"]
         
         # Save the full response
         os.makedirs(os.path.dirname(recipes_output), exist_ok=True)
