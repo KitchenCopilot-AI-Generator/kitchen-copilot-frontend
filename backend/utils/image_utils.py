@@ -1,39 +1,46 @@
 """
-Image Utilities - Functions for handling images
+Image Utilities - Functions for handling images with Azure Blob Storage
 """
 
 import base64
-import os
-import glob
+from io import BytesIO
 
-def encode_image(image_path):
+def encode_image_from_blob(blob_data):
     """
-    Encode an image to base64 string
+    Encode a blob image to base64 string
     
     Args:
-        image_path: Path to the image file
+        blob_data: BytesIO object containing the image data
         
     Returns:
         Base64 encoded string of the image
-    
-    Raises:
-        FileNotFoundError: If the image file doesn't exist
     """
-    if not os.path.exists(image_path):
-        raise FileNotFoundError(f"Image not found at path: {image_path}")
-        
-    with open(image_path, "rb") as image_file:
-        return base64.b64encode(image_file.read()).decode('utf-8')
+    blob_data.seek(0)
+    return base64.b64encode(blob_data.read()).decode('utf-8')
 
-def find_image_in_folder(folder_path):
+def encode_image_from_bytes(image_bytes):
     """
-    Find the image file in a given folder that follows the naming pattern
+    Encode bytes to base64 string
     
     Args:
-        folder_path: Path to the folder containing the image
+        image_bytes: Bytes containing the image data
         
     Returns:
-        Path to the image file or None if not found
+        Base64 encoded string of the image
     """
-    image_files = glob.glob(os.path.join(folder_path, "image_*.*"))
-    return image_files[0] if image_files else None
+    return base64.b64encode(image_bytes).decode('utf-8')
+
+def find_image_in_container(azure_blob_service, prefix):
+    """
+    Find the image file in Azure Blob Storage that follows the naming pattern
+    
+    Args:
+        azure_blob_service: Azure Blob Storage service instance
+        prefix: Prefix (folder path) to search in
+        
+    Returns:
+        Blob path to the image file or None if not found
+    """
+    blobs = azure_blob_service.list_blobs(prefix=prefix)
+    image_blobs = [blob for blob in blobs if 'image_' in blob]
+    return image_blobs[0] if image_blobs else None

@@ -4,6 +4,7 @@ from flask import Flask
 # Import services and config
 from config import Config
 from services.azure_client import AzureClientService
+from services.azure_blob_service import AzureBlobService
 from services.vision_service import VisionService
 from services.recipe_service import RecipeService
 
@@ -18,6 +19,8 @@ CORS(app)  # This enables CORS for all routes
 
 # Global services
 config = None
+azure_client = None
+azure_blob_service = None
 vision_service = None
 recipe_service = None
 
@@ -25,15 +28,24 @@ def setup_services():
     """
     Set up the application services
     """
-    global config, vision_service, recipe_service
+    global config, azure_client, azure_blob_service, vision_service, recipe_service
     
     # Initialize configuration
     config = Config()
     
     # Initialize services
     azure_client = AzureClientService(config)
-    vision_service = VisionService(azure_client)
-    recipe_service = RecipeService(azure_client)
+    
+    # Initialize Azure Blob Storage service
+    storage_config = config.get_azure_storage_config()
+    azure_blob_service = AzureBlobService(
+        connection_string=storage_config["connection_string"],
+        container_name=storage_config["container_name"]
+    )
+    
+    # Initialize vision and recipe services with blob storage
+    vision_service = VisionService(azure_client, azure_blob_service)
+    recipe_service = RecipeService(azure_client, azure_blob_service)
     
     # Import routes after Flask app is initialized
     from api.routes import app as routes_blueprint
@@ -45,6 +57,7 @@ def setup_services():
     import api.routes as routes
     routes.vision_service = vision_service
     routes.recipe_service = recipe_service
+    routes.azure_blob_service = azure_blob_service
     routes.config = config
 
 def main():

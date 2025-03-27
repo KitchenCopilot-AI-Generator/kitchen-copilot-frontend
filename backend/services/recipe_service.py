@@ -3,36 +3,37 @@ Recipe Service - Service for generating recipe suggestions based on ingredients
 """
 
 import json
-import os
 import pandas as pd
 from prompts.recipe_prompt import get_recipe_system_prompt
 
 class RecipeService:
     """Service for generating recipes based on available ingredients"""
     
-    def __init__(self, azure_client):
+    def __init__(self, azure_client, azure_blob_service=None):
         """
         Initialize the Recipe Service
         
         Args:
             azure_client: An initialized AzureClientService object
+            azure_blob_service: An initialized AzureBlobService object
         """
         self.client = azure_client.get_client()
         self.model_name = azure_client.get_model_name()
+        self.azure_blob_service = azure_blob_service
     
-    def load_ingredients(self, json_path):
+    def load_ingredients(self, blob_path):
         """
-        Load and flatten ingredients from JSON file
+        Load and flatten ingredients from JSON in Azure Blob Storage
         
         Args:
-            json_path: Path to the JSON file with ingredients
+            blob_path: Path to the blob containing ingredients JSON
             
         Returns:
             List of ingredient strings
         """
         try:
-            with open(json_path, 'r') as f:
-                data = json.load(f)
+            # Download the JSON from Azure Blob Storage
+            data = self.azure_blob_service.download_json(blob_path)
             
             # Extract ingredients from the full response
             # Check if it's a full API response or just the ingredients
@@ -84,21 +85,18 @@ require a few additional ingredients. Focus on wholesome, flavorful dishes."""
         except Exception as e:
             raise Exception(f"Error generating recipes: {str(e)}")
     
-    def save_recipes(self, recipes_data, output_path):
+    def save_recipes(self, recipes_data, blob_path):
         """
-        Save recipes to a JSON file
+        Save recipes to Azure Blob Storage
         
         Args:
             recipes_data: Recipe data (complete response)
-            output_path: Path to save the output file
+            blob_path: Path within the container where to save the JSON
             
         Returns:
-            Path to the saved file
+            URL to the saved JSON file
         """
-        os.makedirs(os.path.dirname(output_path), exist_ok=True)
-        with open(output_path, "w") as f:
-            json.dump(recipes_data, f, indent=2)
-        return output_path
+        return self.azure_blob_service.upload_json(recipes_data, blob_path)
     
     def get_recipes_analysis(self, recipes_data):
         """

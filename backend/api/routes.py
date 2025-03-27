@@ -5,8 +5,6 @@ This module preserves the exact API interface expected by the frontend,
 while using Flask instead of FastAPI for implementation.
 """
 
-import os
-import json
 from flask import Blueprint, request, jsonify
 
 # Create a Blueprint instead of a Flask app
@@ -15,6 +13,7 @@ app = Blueprint('api', __name__)
 # Store references to services initialized in main.py
 vision_service = None
 recipe_service = None
+azure_blob_service = None
 config = None
 
 @app.route('/analyze-image', methods=['POST'])
@@ -34,24 +33,27 @@ def analyze_image():
         if file.filename == '':
             return jsonify({"error": "No file selected"}), 400
             
-        # Get file paths with the new naming convention
+        # Get file paths for Azure Blob Storage
         paths = config.get_file_paths(file.filename)
         
-        # Save the uploaded file directly to the results directory
-        os.makedirs(os.path.dirname(paths["request_image"]), exist_ok=True)
-        file.save(paths["request_image"])
+        # Read the file into memory
+        file_bytes = file.read()
         
-        # Process synchronously
-        result = vision_service.analyze_image(paths["request_image"])
+        # Upload the image to Azure Blob Storage
+        azure_blob_service.upload_file(file_bytes, paths["request_image"])
+        
+        # Process image from the uploaded bytes
+        result = vision_service.analyze_image_bytes(file_bytes)
+        
+        # Save analysis to Azure Blob Storage
         vision_service.save_analysis(result, paths["vision_output"])
         
         # Get a summary
         summary = vision_service.get_ingredients_summary(result)
         
-        # Include request_id (which is the folder name)
+        # Include request_id and just the image filename (not the full path)
         request_id = paths["request_id"]
-        # Get just the filename, not the full path
-        image_filename = os.path.basename(paths["request_image"])
+        image_filename = paths["request_image"].split('/')[-1]
         
         return jsonify({
             "status": "complete",
@@ -83,19 +85,19 @@ def get_ingredients():
         try:
             # Get paths using the request_id
             paths = config.get_file_paths(request_id=request_id)
-            ingredients_file = paths["vision_output"]
+            ingredients_blob = paths["vision_output"]
         except ValueError as e:
             return jsonify({"error": str(e)}), 404
         
-        # Check if file exists
-        if not os.path.exists(ingredients_file):
+        # Check if blob exists
+        if not azure_blob_service.blob_exists(ingredients_blob):
             return jsonify({
                 "error": f"No ingredients file found for request_id: {request_id}"
             }), 404
         
-        # Load and return the ingredients
-        with open(ingredients_file, "r") as f:
-            return jsonify(json.load(f))
+        # Load and return the ingredients from Azure Blob Storage
+        ingredients_data = azure_blob_service.download_json(ingredients_blob)
+        return jsonify(ingredients_data)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -119,19 +121,19 @@ def get_recipes():
         try:
             # Get paths using the request_id
             paths = config.get_file_paths(request_id=request_id)
-            recipes_file = paths["recipes_output"]
+            recipes_blob = paths["recipes_output"]
         except ValueError as e:
             return jsonify({"error": str(e)}), 404
         
-        # Check if file exists
-        if not os.path.exists(recipes_file):
+        # Check if blob exists
+        if not azure_blob_service.blob_exists(recipes_blob):
             return jsonify({
                 "error": f"No recipes file found for request_id: {request_id}"
             }), 404
         
-        # Load and return the recipes
-        with open(recipes_file, "r") as f:
-            return jsonify(json.load(f))
+        # Load and return the recipes from Azure Blob Storage
+        recipes_data = azure_blob_service.download_json(recipes_blob)
+        return jsonify(recipes_data)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -157,19 +159,19 @@ def generate_recipes():
         try:
             # Get paths using the request_id
             paths = config.get_file_paths(request_id=request_id)
-            ingredients_file = paths["vision_output"]
-            recipes_output = paths["recipes_output"]
+            ingredients_blob = paths["vision_output"]
+            recipes_blob = paths["recipes_output"]
         except ValueError as e:
             return jsonify({"error": str(e)}), 404
         
-        # Check if file exists
-        if not os.path.exists(ingredients_file):
+        # Check if ingredients blob exists
+        if not azure_blob_service.blob_exists(ingredients_blob):
             return jsonify({
                 "error": f"No ingredients file found for request_id: {request_id}"
             }), 404
         
-        # Load ingredients
-        ingredients = recipe_service.load_ingredients(ingredients_file)
+        # Load ingredients from Azure Blob Storage
+        ingredients = recipe_service.load_ingredients(ingredients_blob)
         
         # Generate recipes
         recipes_data = recipe_service.generate_recipes(
@@ -188,10 +190,8 @@ def generate_recipes():
             "ingredient_count": len(ingredients)
         }
         
-        # Save the full response
-        os.makedirs(os.path.dirname(recipes_output), exist_ok=True)
-        with open(recipes_output, "w") as f:
-            json.dump(full_response, f, indent=2)
+        # Save the full response to Azure Blob Storage
+        recipe_service.save_recipes(full_response, recipes_blob)
         
         return jsonify(full_response)
     except Exception as e:
