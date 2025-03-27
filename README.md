@@ -8,7 +8,7 @@ An application that analyses your refrigerator contents through images and sugge
 ## Features
 - **Image Analysis**: Upload a photo of your fridge or food items to identify ingredients
 - **Recipe Generation**: Get customized recipe suggestions based on identified ingredients
-- **Dual Operation Modes**: Run as a CLI tool or as an API backend
+- **Cloud Storage**: All data is stored in Azure Blob Storage for reliability and scalability
 - **Modern Frontend**: Interactive web interface for easy ingredient analysis and recipe browsing
 
 ## Requirements
@@ -25,10 +25,17 @@ An application that analyses your refrigerator contents through images and sugge
    ```bash
    pip install -r requirements.txt
    ```
-4. Copy the `.env.example` file to `.env` and add your Azure OpenAI API keys and settings
-5. Install CORS support for the API:
-   ```bash
-   pip install flask-cors
+4. Copy the `.env.example` file to `.env` and add your configuration details:
+   ```
+   # Azure OpenAI API settings
+   AZURE_OPENAI_API_KEY=your_azure_openai_api_key
+   AZURE_OPENAI_ENDPOINT=https://your-resource-name.openai.azure.com
+   API_VERSION=2023-12-01-preview
+   MODEL_NAME=your-gpt4-vision-deployed-model-name
+
+   # Azure Blob Storage settings
+   AZURE_STORAGE_CONNECTION_STRING=your_azure_storage_connection_string
+   AZURE_STORAGE_CONTAINER=container01
    ```
 
 ### Frontend Setup
@@ -229,15 +236,20 @@ kitchen-copilot/
 │   ├── main.py                                           # Main entry point
 │   ├── config.py                                         # Configuration and environment loading
 │   ├── utils/                                            # Utility functions
+│   │   └── image_utils.py                                # Image handling utilities
 │   ├── services/                                         # Core services
-│   └── models/                                           # Data models
-├── container/                                            # Container data
-│   └── fridge/                                           # Fridge data
-│       ├── fridge_1743074276_5115e30c/                   # Specific fridge instance
-│           ├── image_1743074276_5115e30c.jpg
-│           ├── ingredients_1743074276_5115e30c.json
-│           └── recipes_1743074276_5115e30c.json
-├── api/                                                  # API endpoints
+│   │   ├── azure_openai_client.py                        # Azure OpenAI API client
+│   │   ├── azure_blob_service.py                         # Azure Blob Storage service
+│   │   ├── vision_service.py                             # Image analysis service
+│   │   └── recipe_service.py                             # Recipe generation service
+│   ├── models/                                           # Data models
+│   │   ├── ingredients.py                                # Ingredients data model
+│   │   └── recipes.py                                    # Recipes data model
+│   ├── prompts/                                          # Prompt templates
+│   │   ├── vision_prompt.py                              # Image analysis prompt
+│   │   └── recipe_prompt.py                              # Recipe generation prompt
+│   └── api/                                              # API endpoints
+│       └── routes.py                                     # Flask routes
 └── kitchen-copilot-frontend/                             # Next.js frontend application
     ├── src/                                              # Frontend source code
     │   ├── app/                                          # Next.js app router pages
@@ -249,23 +261,6 @@ kitchen-copilot/
 ```
 
 ## Troubleshooting
-
-### CORS Issues
-If you encounter CORS errors when the frontend tries to communicate with the backend:
-
-1. Make sure you've installed flask-cors:
-   ```bash
-   pip install flask-cors
-   ```
-
-2. Ensure your main.py includes:
-   ```python
-   from flask import Flask
-   from flask_cors import CORS
-
-   app = Flask(__name__)
-   CORS(app)
-   ```
 
 ### API Connection Issues
 - Verify that the backend API is running on the correct host and port
