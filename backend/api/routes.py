@@ -7,7 +7,6 @@ while using Flask instead of FastAPI for implementation.
 
 import os
 import json
-import glob
 from flask import Blueprint, request, jsonify
 
 # Create a Blueprint instead of a Flask app
