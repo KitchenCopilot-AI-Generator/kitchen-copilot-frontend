@@ -9,16 +9,16 @@ from prompts.recipe_prompt import get_recipe_system_prompt
 class RecipeService:
     """Service for generating recipes based on available ingredients"""
     
-    def __init__(self, azure_client, azure_blob_service=None):
+    def __init__(self, azure_openai_client, azure_blob_service=None):
         """
         Initialize the Recipe Service
         
         Args:
-            azure_client: An initialized AzureClientService object
+            azure_openai_client: An initialized AzureOpenAIClientService object
             azure_blob_service: An initialized AzureBlobService object
         """
-        self.client = azure_client.get_client()
-        self.model_name = azure_client.get_model_name()
+        self.client = azure_openai_client.get_client()
+        self.model_name = azure_openai_client.get_model_name()
         self.azure_blob_service = azure_blob_service
     
     def load_ingredients(self, blob_path):

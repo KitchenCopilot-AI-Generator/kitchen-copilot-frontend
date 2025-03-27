@@ -9,16 +9,16 @@ from prompts.vision_prompt import get_vision_system_prompt
 class VisionService:
     """Service for analyzing food/fridge images using Azure OpenAI Vision API"""
     
-    def __init__(self, azure_client, azure_blob_service=None):
+    def __init__(self, azure_openai_client, azure_blob_service=None):
         """
         Initialize the Vision Service
         
         Args:
-            azure_client: An initialized AzureClientService object
+            azure_openai_client: An initialized AzureOpenAIClientService object
             azure_blob_service: An initialized AzureBlobService object
         """
-        self.client = azure_client.get_client()
-        self.model_name = azure_client.get_model_name()
+        self.client = azure_openai_client.get_client()
+        self.model_name = azure_openai_client.get_model_name()
         self.azure_blob_service = azure_blob_service
     
     def analyze_image_bytes(self, image_bytes):
@@ -60,6 +60,9 @@ class VisionService:
     def analyze_image(self, blob_path):
         """
         Analyze the image from Azure Blob Storage using Azure OpenAI Vision API
+        
+        This method is provided for cases where you need to analyze an image
+        that's already stored in Azure Blob Storage.
         
         Args:
             blob_path: Path to the blob within the container
