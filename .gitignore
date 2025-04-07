@@ -170,3 +170,6 @@ cython_debug/
 .pypirc
 
 *.pt
+
+./snapshot.py
+./snapshot.txt

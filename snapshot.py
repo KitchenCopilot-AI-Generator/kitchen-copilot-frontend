@@ -18,14 +18,14 @@ DEFAULT_IGNORE_PATTERNS = {
     '.gitignore'
     'venv/',
     '.venv/',
-    'pretrained_models/',
     'snapshot/',
     'snapshot.txt',
     'snapshot.py',
     'LICENSE',
     'kitchen-copilot-frontend/node_modules/',
-    'kitchen-copilot-frontend/*',
     'sample-images/*',
+    'package-lock.json',
+    'TODO'
 }
 
 def parse_gitignore() -> Set[str]:
