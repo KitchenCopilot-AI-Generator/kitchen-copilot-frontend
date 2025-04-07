@@ -71,10 +71,10 @@ export default function AppPage() {
         <Card className="mb-8">
           <CardHeader>
             <CardTitle>Kitchen Copilot Tool</CardTitle>
-            <CardDescription>Upload a photo of your fridge to get recipe suggestions</CardDescription>
+            <CardDescription>Upload a Fridge Photo — Get Recipe Ideas Instantly ⏰</CardDescription>
           </CardHeader>
           <CardContent>
-            <p>Use this tool to analyze your refrigerator contents and receive personalized recipe suggestions based on what you have available. You can also specify dietary restrictions.</p>
+            <p>Snap a photo of your fridge and let Kitchen Copilot do the rest. We’ll take a look at what you’ve got and suggest personalised recipes you can make right now. Have dietary restrictions? No problem — just let us know!</p>
           </CardContent>
         </Card>
 
