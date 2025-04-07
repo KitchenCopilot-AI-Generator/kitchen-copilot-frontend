@@ -276,13 +276,6 @@ The Kitchen Copilot app allows users to specify dietary restrictions for persona
 - Paleo (no processed foods, grains, dairy)
 - Pescatarian (vegetarian plus fish)
 
-### How It Works
-
-1. After analyzing your fridge image, you can select dietary restrictions from the ingredients screen
-2. The system will warn you if any selected restrictions conflict with ingredients in your fridge
-3. When generating recipes, the system ensures all suggestions comply with your dietary needs
-4. The recipes returned will be tailored to both your available ingredients and dietary preferences
-
 ## Project Structure
 ```
 kitchen-copilot/
