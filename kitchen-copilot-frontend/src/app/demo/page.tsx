@@ -6,7 +6,7 @@ import { RecipesDisplay } from '@/components/kitchen/RecipesDisplay';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Toaster } from 'sonner';
-import { IngredientsResponse, RecipesResponse } from '@/types';
+import { IngredientsResponse, RecipesResponse, DietaryRestriction } from '@/types';
 import { motion } from 'framer-motion';
 
 // Sample data for demo purposes
@@ -227,6 +227,148 @@ const sampleRecipesData: RecipesResponse = {
   ingredient_count: 31
 };
 
+// Create a vegetarian-friendly version of the sample recipes data
+const vegetarianRecipesData: RecipesResponse = {
+  items: [
+    {
+      "name": "Mediterranean Veggie Tortilla Wrap",
+      "total_ingredients": [
+        "Tortillas",
+        "Mixed bell peppers",
+        "Red cabbage",
+        "Carrots",
+        "Zucchini",
+        "Fresh basil",
+        "Hellmann's mayonnaise",
+        "Philadelphia cream cheese",
+        "Annies mustard",
+        "Lemons",
+        "Cilantro"
+      ],
+      "available_ingredients": [
+        "Tortillas",
+        "Mixed bell peppers",
+        "Red cabbage",
+        "Carrots",
+        "Zucchini",
+        "Fresh basil",
+        "Hellmann's mayonnaise",
+        "Philadelphia cream cheese",
+        "Annies mustard",
+        "Lemons",
+        "Cilantro"
+      ],
+      "missing_ingredients": [],
+      "completeness_score": 100,
+      "instructions": [
+        "Step 1: Thinly slice the mixed bell peppers, red cabbage, carrots, and zucchini.",
+        "Step 2: In a bowl, mix Hellmann's mayonnaise, Philadelphia cream cheese, a squeeze of lemon juice, and a teaspoon of Annies mustard.",
+        "Step 3: Spread the mixture on tortillas. Layer with sliced vegetables and sprinkle fresh basil and cilantro before rolling the wrap.",
+        "Step 4: Roll tightly and serve immediately."
+      ],
+      "cooking_time": "20 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Veggie Stir Fry with Citrus Soy Glaze",
+      "total_ingredients": [
+        "Zucchini",
+        "Mixed bell peppers",
+        "Red cabbage",
+        "Carrots",
+        "Soy sauce",
+        "Limes",
+        "Cilantro",
+        "Sunflower seeds",
+        "Tortillas"
+      ],
+      "available_ingredients": [
+        "Zucchini",
+        "Mixed bell peppers",
+        "Red cabbage",
+        "Carrots",
+        "Soy sauce",
+        "Limes",
+        "Cilantro",
+        "Sunflower seeds",
+        "Tortillas"
+      ],
+      "missing_ingredients": [],
+      "completeness_score": 100,
+      "instructions": [
+        "Step 1: Julienne all vegetables into thin strips.",
+        "Step 2: Heat a pan and toast sunflower seeds lightly, then set aside.",
+        "Step 3: In the same pan, stir-fry vegetables for 5-7 minutes until tender-crisp.",
+        "Step 4: Mix soy sauce with lime juice and drizzle over vegetables.",
+        "Step 5: Garnish with cilantro and toasted sunflower seeds, serve with warm tortillas."
+      ],
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Fruity Breakfast Bowl",
+      "total_ingredients": [
+        "Bananas",
+        "Apples",
+        "Pears",
+        "Oranges",
+        "Almonds", 
+        "Sunflower seeds",
+        "Organic maple syrup"
+      ],
+      "available_ingredients": [
+        "Bananas",
+        "Apples",
+        "Pears",
+        "Oranges",
+        "Almonds", 
+        "Sunflower seeds",
+        "Organic maple syrup"
+      ],
+      "missing_ingredients": [],
+      "completeness_score": 100,
+      "instructions": [
+        "Step 1: Dice the bananas, apples, pears, and oranges into bite-sized pieces.",
+        "Step 2: Mix the fruit together in a bowl.",
+        "Step 3: Top with chopped almonds and sunflower seeds.",
+        "Step 4: Drizzle with organic maple syrup and serve immediately."
+      ],
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    }
+  ],
+  analysis: [
+    {
+      "recipe_name": "Mediterranean Veggie Tortilla Wrap",
+      "completeness": 100,
+      "available_count": 11,
+      "missing_count": 0,
+      "total_ingredients": 11,
+      "cooking_time": "20 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "recipe_name": "Veggie Stir Fry with Citrus Soy Glaze",
+      "completeness": 100,
+      "available_count": 9,
+      "missing_count": 0,
+      "total_ingredients": 9,
+      "cooking_time": "15 minutes",
+      "difficulty": "Easy"
+    },
+    {
+      "recipe_name": "Fruity Breakfast Bowl",
+      "completeness": 100,
+      "available_count": 7,
+      "missing_count": 0,
+      "total_ingredients": 7,
+      "cooking_time": "10 minutes",
+      "difficulty": "Easy"
+    }
+  ],
+  ingredient_count: 31
+};
+
 // Animation variants
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
@@ -255,12 +397,20 @@ const staggerContainer = {
 export default function DemoPage() {
   const [activeTab, setActiveTab] = useState('ingredients');
   const [loading, setLoading] = useState(false);
+  const [currentRecipesData, setCurrentRecipesData] = useState<RecipesResponse>(sampleRecipesData);
 
-  const handleGenerateRecipes = () => {
+  const handleGenerateRecipes = (dietaryRestrictions: DietaryRestriction[]) => {
     setLoading(true);
     
     // Simulate API call delay
     setTimeout(() => {
+      // If vegetarian is selected, use the vegetarian sample data
+      if (dietaryRestrictions.some(r => r.id === 'vegetarian')) {
+        setCurrentRecipesData(vegetarianRecipesData);
+      } else {
+        setCurrentRecipesData(sampleRecipesData);
+      }
+      
       setActiveTab('recipes');
       setLoading(false);
     }, 1500);
@@ -279,7 +429,7 @@ export default function DemoPage() {
           variants={fadeInUp}
         >
           <p className="light:text-amber-800">
-            <strong>Demo Mode:</strong> This page shows sample data for development and testing purposes.
+            <strong>Demo Mode:</strong> This page shows sample data for development and testing purposes. You can try selecting dietary restrictions to see how it affects recipe suggestions!
           </p>
         </motion.div>
         
@@ -309,7 +459,7 @@ export default function DemoPage() {
             </TabsContent>
 
             <TabsContent value="recipes" className="space-y-8">
-              <RecipesDisplay recipesData={sampleRecipesData} />
+              <RecipesDisplay recipesData={currentRecipesData} />
             </TabsContent>
           </Tabs>
         </motion.div>

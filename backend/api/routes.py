@@ -6,6 +6,7 @@ while using Flask instead of FastAPI for implementation.
 """
 
 from flask import Blueprint, request, jsonify
+import json
 
 # Create a Blueprint instead of a Flask app
 app = Blueprint('api', __name__)
@@ -150,6 +151,7 @@ def generate_recipes():
         data = request.get_json() or {}
         num_recipes = data.get('num_recipes', 5)
         request_id = data.get('request_id')
+        dietary_restrictions = data.get('dietary_restrictions', [])
         
         if not request_id:
             return jsonify({
@@ -161,6 +163,9 @@ def generate_recipes():
             paths = config.get_file_paths(request_id=request_id)
             ingredients_blob = paths["vision_output"]
             recipes_blob = paths["recipes_output"]
+            
+            # New path for dietary restrictions if any are provided
+            dietary_blob = paths.get("dietary_output") if dietary_restrictions else None
         except ValueError as e:
             return jsonify({"error": str(e)}), 404
         
@@ -173,10 +178,16 @@ def generate_recipes():
         # Load ingredients from Azure Blob Storage
         ingredients = recipe_service.load_ingredients(ingredients_blob)
         
-        # Generate recipes
+        # Save dietary restrictions if provided
+        if dietary_restrictions:
+            dietary_blob = f"{paths['request_dir']}/dietary_{request_id.split('_', 1)[1]}.json"
+            azure_blob_service.upload_json({"dietary_restrictions": dietary_restrictions}, dietary_blob)
+        
+        # Generate recipes with dietary restrictions if provided
         recipes_data = recipe_service.generate_recipes(
             ingredients, 
-            num_recipes=num_recipes
+            num_recipes=num_recipes,
+            dietary_restrictions=dietary_restrictions
         )
         
         # Get analysis
@@ -187,7 +198,8 @@ def generate_recipes():
         full_response = {
             "items": recipes_data["recipes"],
             "analysis": analysis_dict,
-            "ingredient_count": len(ingredients)
+            "ingredient_count": len(ingredients),
+            "dietary_restrictions": dietary_restrictions if dietary_restrictions else []
         }
         
         # Save the full response to Azure Blob Storage

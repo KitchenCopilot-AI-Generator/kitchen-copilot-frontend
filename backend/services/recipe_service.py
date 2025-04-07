@@ -53,22 +53,37 @@ class RecipeService:
         except Exception as e:
             raise Exception(f"Error loading ingredients: {str(e)}")
     
-    def generate_recipes(self, ingredients, num_recipes=5):
+    def generate_recipes(self, ingredients, num_recipes=5, dietary_restrictions=None):
         """
         Generate recipe suggestions using Azure OpenAI API
         
         Args:
             ingredients: List of available ingredients
             num_recipes: Number of recipes to generate
+            dietary_restrictions: List of dietary restrictions to consider
             
         Returns:
             Dictionary containing recipe suggestions
         """
         ingredients_str = ", ".join(ingredients)
+        
+        # Build user prompt with dietary restrictions if provided
         user_prompt = f"""Here are the ingredients I have available: {ingredients_str}. 
 Please suggest {num_recipes} diverse recipes that I could make with these ingredients. 
 Include some recipes that use most of what I have, and some creative options that might 
 require a few additional ingredients. Focus on wholesome, flavorful dishes."""
+
+        # Add dietary restrictions to the prompt if present
+        if dietary_restrictions and len(dietary_restrictions) > 0:
+            # Extract just the names for a more readable prompt
+            restrictions = [restriction.get('name', 'Unknown') for restriction in dietary_restrictions]
+            restrictions_str = ", ".join(restrictions)
+            
+            user_prompt += f"""
+
+IMPORTANT: I have the following dietary restrictions that must be strictly followed: {restrictions_str}.
+Make sure ALL recipe suggestions comply with these restrictions.
+"""
 
         try:
             response = self.client.chat.completions.create(
