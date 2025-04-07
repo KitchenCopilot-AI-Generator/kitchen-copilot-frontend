@@ -8,6 +8,7 @@ An application that analyses your refrigerator contents through images and sugge
 ## Features
 - **Image Analysis**: Upload a photo of your fridge or food items to identify ingredients
 - **Recipe Generation**: Get customized recipe suggestions based on identified ingredients
+- **Dietary Restrictions**: Specify allergies or dietary preferences for personalized recipes
 - **Cloud Storage**: All data is stored in Azure Blob Storage for reliability and scalability
 - **Modern Frontend**: Interactive web interface for easy ingredient analysis and recipe browsing
 
@@ -75,7 +76,7 @@ An application that analyses your refrigerator contents through images and sugge
 #### API Endpoints
 - `POST /analyze-image`: Upload and analyze a fridge image
 - `GET /ingredients`: Get ingredients from the most recent analysis
-- `POST /generate-recipes`: Generate recipe suggestions based on available ingredients
+- `POST /generate-recipes`: Generate recipe suggestions based on available ingredients and dietary restrictions
 - `GET /recipes`: Get previously generated recipes
 
 ## Demo Mode
@@ -178,7 +179,8 @@ Example response:
       "difficulty": "Easy"
     }
   ],
-  "ingredient_count": 10
+  "ingredient_count": 10,
+  "dietary_restrictions": []
 }
 ```
 
@@ -191,11 +193,22 @@ Example response:
    ```json
    {
      "num_recipes": 5,
-     "request_id": "fridge_1743074276_5115e30c"
+     "request_id": "fridge_1743074276_5115e30c",
+     "dietary_restrictions": [
+       {
+         "id": "vegetarian",
+         "name": "Vegetarian"
+       },
+       {
+         "id": "nuts",
+         "name": "Nuts"
+       }
+     ]
    }
    ```
    - Replace "fridge_1743074276_5115e30c" with the actual request_id from your analyze-image response
    - You can omit the request_id to use the most recent analysis
+   - The "dietary_restrictions" field is optional and can include multiple restrictions
 5. Click "Send" to submit the request
 
 Example response:
@@ -203,11 +216,11 @@ Example response:
 {
   "items": [
     {
-      "name": "Quick Chicken Salad",
-      "total_ingredients": ["chicken breast", "lettuce", "tomatoes", "onions", "mayonnaise", "salt", "pepper"],
-      "available_ingredients": ["chicken breast", "lettuce", "tomatoes", "onions", "mayonnaise"],
+      "name": "Vegetarian Mediterranean Wrap",
+      "total_ingredients": ["tortillas", "lettuce", "tomatoes", "onions", "mayonnaise", "yogurt", "salt", "pepper"],
+      "available_ingredients": ["tortillas", "lettuce", "tomatoes", "onions", "mayonnaise", "yogurt"],
       "missing_ingredients": ["salt", "pepper"],
-      "completeness_score": 71,
+      "completeness_score": 75,
       "instructions": ["Step 1...", "Step 2..."],
       "cooking_time": "15 minutes",
       "difficulty": "Easy"
@@ -215,18 +228,58 @@ Example response:
   ],
   "analysis": [
     {
-      "recipe_name": "Quick Chicken Salad",
-      "completeness": 71,
-      "available_count": 5,
+      "recipe_name": "Vegetarian Mediterranean Wrap",
+      "completeness": 75,
+      "available_count": 6,
       "missing_count": 2,
-      "total_ingredients": 7,
+      "total_ingredients": 8,
       "cooking_time": "15 minutes",
       "difficulty": "Easy"
     }
   ],
-  "ingredient_count": 10
+  "ingredient_count": 10,
+  "dietary_restrictions": [
+    {
+      "id": "vegetarian",
+      "name": "Vegetarian"
+    },
+    {
+      "id": "nuts",
+      "name": "Nuts"
+    }
+  ]
 }
 ```
+
+## Dietary Restrictions Feature
+
+The Kitchen Copilot app allows users to specify dietary restrictions for personalized recipe suggestions:
+
+### Available Restrictions
+
+#### Allergies & Intolerances
+- Nuts (peanuts, tree nuts)
+- Dairy (milk, cheese, yogurt)
+- Gluten (wheat, barley, rye)
+- Shellfish (shrimp, crab, lobster)
+- Eggs
+- Soy
+- Fish
+- Sesame
+
+#### Diets
+- Vegetarian (no meat or fish)
+- Vegan (no animal products)
+- Keto (low carb, high fat)
+- Paleo (no processed foods, grains, dairy)
+- Pescatarian (vegetarian plus fish)
+
+### How It Works
+
+1. After analyzing your fridge image, you can select dietary restrictions from the ingredients screen
+2. The system will warn you if any selected restrictions conflict with ingredients in your fridge
+3. When generating recipes, the system ensures all suggestions comply with your dietary needs
+4. The recipes returned will be tailored to both your available ingredients and dietary preferences
 
 ## Project Structure
 ```
@@ -254,6 +307,11 @@ kitchen-copilot/
     ├── src/                                              # Frontend source code
     │   ├── app/                                          # Next.js app router pages
     │   ├── components/                                   # React components
+    │   │   ├── kitchen/                                  # Kitchen-specific components
+    │   │   │   ├── ImageUpload.tsx                       # Image upload component
+    │   │   │   ├── IngredientsDisplay.tsx                # Ingredients display component
+    │   │   │   ├── DietaryRestrictions.tsx               # Dietary restrictions component
+    │   │   │   └── RecipesDisplay.tsx                    # Recipes display component
     │   ├── lib/                                          # Utility functions and API client
     │   └── types/                                        # TypeScript type definitions
     ├── public/                                           # Static assets
@@ -266,3 +324,8 @@ kitchen-copilot/
 - Verify that the backend API is running on the correct host and port
 - Check that `NEXT_PUBLIC_API_URL` in the frontend's `.env.local` matches the backend URL
 - Try accessing the API directly in the browser (e.g., http://localhost:5000/ingredients)
+
+### Dietary Restrictions Not Applied
+- Ensure you've selected restrictions before clicking "Generate Recipe Suggestions"
+- Check the API request payload to confirm dietary restrictions are being sent
+- Verify that the backend is properly receiving and processing the restrictions
