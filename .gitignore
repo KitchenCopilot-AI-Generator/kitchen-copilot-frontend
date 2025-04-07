@@ -171,5 +171,5 @@ cython_debug/
 
 *.pt
 
-./snapshot.py
-./snapshot.txt
+snapshot.py  
+snapshot.txt
