@@ -56,11 +56,7 @@ class Config:
             # Create a timestamp and unique ID for blob naming
             timestamp = int(time.time())
             
-            # Extract the unique part of the uploaded image filename or generate a new one
-            if '_' in image_filename:
-                unique_id = image_filename.split('_')[-1].split('.')[0]
-            else:
-                unique_id = os.urandom(4).hex()
+            unique_id = os.urandom(4).hex()
                 
             # Create a timestamp-based folder name
             folder_name = f"fridge_{timestamp}_{unique_id}"
