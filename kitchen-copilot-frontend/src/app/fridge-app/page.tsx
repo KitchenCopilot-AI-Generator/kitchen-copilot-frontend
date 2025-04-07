@@ -105,7 +105,7 @@ export default function AppPage() {
               <div className="text-center mb-8 space-y-2">
                 <h2 className="text-2xl font-bold">Upload a Photo of Your Fridge</h2>
                 <p className="text-muted-foreground">
-                  Our AI will analyze the contents and suggest recipes you can make
+                  Our AI will scan what’s inside and suggest recipes you can make right now.
                 </p>
               </div>
 

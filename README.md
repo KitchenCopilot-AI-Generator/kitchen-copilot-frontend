@@ -255,6 +255,8 @@ Example response:
 
 The Kitchen Copilot app allows users to specify dietary restrictions for personalized recipe suggestions:
 
+![Allergy & Dietary Display](assets/Allergy.png)
+
 ### Available Restrictions
 
 #### Allergies & Intolerances
@@ -324,8 +326,3 @@ kitchen-copilot/
 - Verify that the backend API is running on the correct host and port
 - Check that `NEXT_PUBLIC_API_URL` in the frontend's `.env.local` matches the backend URL
 - Try accessing the API directly in the browser (e.g., http://localhost:5000/ingredients)
-
-### Dietary Restrictions Not Applied
-- Ensure you've selected restrictions before clicking "Generate Recipe Suggestions"
-- Check the API request payload to confirm dietary restrictions are being sent
-- Verify that the backend is properly receiving and processing the restrictions
