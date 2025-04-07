@@ -7,7 +7,7 @@ import { ImageUpload } from '@/components/kitchen/ImageUpload';
 import { IngredientsDisplay } from '@/components/kitchen/IngredientsDisplay';
 import { RecipesDisplay } from '@/components/kitchen/RecipesDisplay';
 import { generateRecipes } from '@/lib/api-client';
-import { IngredientsResponse, RecipesResponse } from '@/types';
+import { IngredientsResponse, RecipesResponse, DietaryRestriction } from '@/types';
 import { toast } from 'sonner';
 import { Toaster } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -29,7 +29,7 @@ export default function AppPage() {
     setRecipesData(null);
   };
 
-  const handleGenerateRecipes = async () => {
+  const handleGenerateRecipes = async (dietaryRestrictions: DietaryRestriction[]) => {
     if (!ingredientsData?.request_id) {
       toast.error('No ingredients analysis found');
       return;
@@ -37,10 +37,20 @@ export default function AppPage() {
 
     try {
       setLoading(true);
-      const recipes = await generateRecipes(ingredientsData.request_id, 5);
+      // Pass dietary restrictions to the generateRecipes function
+      const recipes = await generateRecipes(
+        ingredientsData.request_id, 
+        5, 
+        dietaryRestrictions
+      );
       setRecipesData(recipes);
       setActiveTab('recipes');
-      toast.success('Recipes generated successfully!');
+      
+      if (dietaryRestrictions.length > 0) {
+        toast.success(`Recipes generated with ${dietaryRestrictions.length} dietary restrictions!`);
+      } else {
+        toast.success('Recipes generated successfully!');
+      }
     } catch (error) {
       toast.error('Failed to generate recipes');
       console.error('Recipe generation error:', error);
@@ -56,7 +66,7 @@ export default function AppPage() {
   };
 
   return (
-    <div className=" py-8">
+    <div className="py-8">
       <div className="container mx-auto px-4">
         <Card className="mb-8">
           <CardHeader>
@@ -64,7 +74,7 @@ export default function AppPage() {
             <CardDescription>Upload a photo of your fridge to get recipe suggestions</CardDescription>
           </CardHeader>
           <CardContent>
-            <p>Use this tool to analyze your refrigerator contents and receive personalized recipe suggestions based on what you have available.</p>
+            <p>Use this tool to analyze your refrigerator contents and receive personalized recipe suggestions based on what you have available. You can also specify dietary restrictions.</p>
           </CardContent>
         </Card>
 

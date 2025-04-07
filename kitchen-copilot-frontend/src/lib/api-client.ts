@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { IngredientsResponse, RecipesResponse } from '@/types';
+import { IngredientsResponse, RecipesResponse, DietaryRestriction, GenerateRecipesParams } from '@/types';
 
 // Create axios instance with base configuration
 const apiClient = axios.create({
@@ -30,13 +30,20 @@ export async function getIngredients(requestId?: string): Promise<IngredientsRes
 
 export async function generateRecipes(
   requestId?: string, 
-  numRecipes: number = 5
+  numRecipes: number = 5,
+  dietaryRestrictions: DietaryRestriction[] = []
 ): Promise<RecipesResponse> {
-  const response = await apiClient.post('/generate-recipes', {
+  const payload: GenerateRecipesParams = {
     request_id: requestId,
     num_recipes: numRecipes,
-  });
+  };
   
+  // Only add dietary restrictions if there are any selected
+  if (dietaryRestrictions.length > 0) {
+    payload.dietary_restrictions = dietaryRestrictions;
+  }
+  
+  const response = await apiClient.post('/generate-recipes', payload);
   return response.data;
 }
 

@@ -69,11 +69,13 @@ class Config:
             image_name = f"image_{timestamp}_{unique_id}{os.path.splitext(image_filename)[1]}"
             ingredients_name = f"ingredients_{timestamp}_{unique_id}.json"
             recipes_name = f"recipes_{timestamp}_{unique_id}.json"
+            dietary_name = f"dietary_{timestamp}_{unique_id}.json"
             
             paths = {
                 "request_dir": folder_name,
                 "vision_output": f"{folder_name}/{ingredients_name}",
                 "recipes_output": f"{folder_name}/{recipes_name}",
+                "dietary_output": f"{folder_name}/{dietary_name}",
                 "request_image": f"{folder_name}/{image_name}",
                 "request_id": folder_name
             }
@@ -85,6 +87,7 @@ class Config:
                 "request_dir": request_id,
                 "vision_output": f"{request_id}/ingredients_{id_part}.json",
                 "recipes_output": f"{request_id}/recipes_{id_part}.json",
+                "dietary_output": f"{request_id}/dietary_{id_part}.json",
                 "request_image": f"{request_id}/image_{id_part}.jpg",  # Default to .jpg
                 "request_id": request_id
             }
