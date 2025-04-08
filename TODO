@@ -1,6 +1,8 @@
 # TODO List
 
-1. Host the frontend as an Azure Static Web App.
+1. Add auth mechanism for api connection
+
+2. Host the frontend as an Azure Static Web App.
     - Configure the frontend for deployment.
     - Set up an Azure Static Web App resource.
     - Deploy the frontend to Azure.

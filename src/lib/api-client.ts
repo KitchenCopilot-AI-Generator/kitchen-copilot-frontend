@@ -1,11 +1,15 @@
 import axios from 'axios';
 import { IngredientsResponse, RecipesResponse, DietaryRestriction, GenerateRecipesParams } from '@/types';
 
+// Get the function key from environment variables
+const FUNCTION_KEY = process.env.NEXT_PUBLIC_FUNCTION_KEY;
+
 // Create axios instance with base configuration
 const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   headers: {
     'Content-Type': 'application/json',
+    'x-functions-key': FUNCTION_KEY,
   },
 });
 
@@ -16,6 +20,8 @@ export async function analyzeImage(file: File): Promise<IngredientsResponse> {
   const response = await apiClient.post('/analyze-image', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
+      // Ensure the key is also included in form submissions
+      'x-functions-key': FUNCTION_KEY,
     },
   });
   
