@@ -9,8 +9,3 @@
     - Configure the frontend for deployment.
     - Set up an Azure Static Web App resource.
     - Deploy the frontend to Azure.
-
-3. Add allergen configurations.
-    - Define a schema for allergen data.
-    - Implement backend support for allergen configurations.
-    - Update the frontend to display and manage allergen information.
