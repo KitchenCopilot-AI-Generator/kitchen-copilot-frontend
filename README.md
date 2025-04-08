@@ -58,7 +58,7 @@ An application that analyses your refrigerator contents through images and sugge
 ### Running the Full Application
 1. Navigate to the backend directory:
    ```bash
-   cd backend
+   cd kitchen-copilot-backend
 
 2. Start the backend API server:
    ```bash
@@ -280,7 +280,7 @@ The Kitchen Copilot app allows users to specify dietary restrictions for persona
 ```
 kitchen-copilot/
 ├── .env                                                  # Environment variables
-├── backend/                                              # Backend directory
+├── kitchen-copilot-backend/                              # Backend directory
 │   ├── main.py                                           # Main entry point
 │   ├── config.py                                         # Configuration and environment loading
 │   ├── utils/                                            # Utility functions
