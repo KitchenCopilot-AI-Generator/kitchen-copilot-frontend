@@ -1,11 +1,6 @@
 # TODO List
 
-1. Containerize the application.
-    - Create a Dockerfile for the application.
-    - Build and test the Docker image locally.
-    - Push the Docker image to Azure Container Registry.
-
-2. Host the frontend as an Azure Static Web App.
+1. Host the frontend as an Azure Static Web App.
     - Configure the frontend for deployment.
     - Set up an Azure Static Web App resource.
     - Deploy the frontend to Azure.
