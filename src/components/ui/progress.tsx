@@ -2,7 +2,6 @@
 
 import * as React from "react"
 import * as ProgressPrimitive from "@radix-ui/react-progress"
-
 import { cn } from "@/lib/utils"
 
 function Progress({
@@ -10,6 +9,8 @@ function Progress({
   value,
   ...props
 }: React.ComponentProps<typeof ProgressPrimitive.Root>) {
+  const isIndeterminate = value == null;
+
   return (
     <ProgressPrimitive.Root
       data-slot="progress"
@@ -21,8 +22,17 @@ function Progress({
     >
       <ProgressPrimitive.Indicator
         data-slot="progress-indicator"
-        className="bg-primary h-full w-full flex-1 transition-all"
-        style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
+        className={cn(
+          "bg-primary h-full",
+          isIndeterminate
+            ? "animate-progress-indeterminate w-full"
+            : "transition-all w-full"
+        )}
+        style={
+          isIndeterminate
+            ? undefined
+            : { transform: `translateX(-${100 - value}%)` }
+        }
       />
     </ProgressPrimitive.Root>
   )
