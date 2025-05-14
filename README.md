@@ -6,25 +6,46 @@ A sleek Next.js web application that uses AI to analyze your refrigerator conten
 
 ## 🧠 What It Does
 
-1. **Image Upload**  
-   Snap or upload a photo of your fridge.  
-   ![Image Upload](./assets/ImageUpload.png)  
-   Our AI scans the photo to detect individual ingredients with impressive accuracy.
+## 🧠 What It Does
 
-2. **Ingredient Detection**  
-   Instantly see a list of recognized ingredients. You can also manually edit or add missing ones.  
-   ![Detected Ingredients](./assets/Ingredients.png)
+### 1. Image Upload  
+Snap or upload a photo of your fridge. Our AI scans the photo to detect individual ingredients with impressive accuracy.
 
-3. **Set Allergens & Dietary Preferences**  
-   Filter out ingredients that conflict with dietary restrictions like gluten-free, vegan, or specific allergens such as nuts or dairy.  
-   ![Allergen Selection](./assets/Allergy.png)
+<p align="center">
+  <img src="./assets/ImageUpload.png" alt="Image Upload" width="600"/>
+</p>
 
-4. **Smart Recipe Suggestions**  
-   Based on what’s in your fridge (and what’s not), the app flags incompatible items and generates curated recipe ideas, factoring in:
-   - Cooking time
-   - Difficulty level
-   - Ingredients you’re missing  
-   ![Recipe Suggestions](./assets/Recipes.png)
+---
+
+### 2. Ingredient Detection  
+Instantly see a list of recognized ingredients. You can also manually edit or add missing ones.
+
+<p align="center">
+  <img src="./assets/Ingredients.png" alt="Detected Ingredients" width="600"/>
+</p>
+
+---
+
+### 3. Set Allergens & Dietary Preferences  
+Filter out ingredients that conflict with dietary restrictions like gluten-free, vegan, or specific allergens such as nuts or dairy.
+
+<p align="center">
+  <img src="./assets/Allergy.png" alt="Allergen Selection" width="600"/>
+</p>
+
+---
+
+### 4. Smart Recipe Suggestions  
+Based on what’s in your fridge (and what’s not), the app flags incompatible items and generates curated recipe ideas, factoring in:
+
+- Cooking time  
+- Difficulty level  
+- Ingredients you’re missing
+
+<p align="center">
+  <img src="./assets/Recipes.png" alt="Recipe Suggestions" width="600"/>
+</p>
+
 
 ---
 
