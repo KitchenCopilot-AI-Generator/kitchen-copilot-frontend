@@ -1,30 +1,54 @@
 # Kitchen Copilot Frontend
 
-A Next.js application that uses AI to analyze your refrigerator contents and suggest personalized recipes based on ingredients you already have.
+A sleek Next.js web application that uses AI to analyze your refrigerator contents from photos and generate smart, personalized recipes based on what you have — factoring in your dietary needs, allergens, missing ingredients, and cooking preferences.
 
-## Features
+---
 
-- Upload photos of your refrigerator
-- AI-powered ingredient detection
-- Personalized recipe suggestions
-- Dietary restriction filters
-- Responsive design with dark/light mode
+## 🧠 What It Does
 
-## Tech Stack
+1. **Image Upload**  
+   Snap or upload a photo of your fridge.  
+   ![Image Upload](./assets/ImageUpload.png)  
+   Our AI scans the photo to detect individual ingredients with impressive accuracy.
 
-- Next.js 15
-- React 19
-- TypeScript
-- Tailwind CSS
-- shadcn/ui components
-- Framer Motion animations
+2. **Ingredient Detection**  
+   Instantly see a list of recognized ingredients. You can also manually edit or add missing ones.  
+   ![Detected Ingredients](./assets/Ingredients.png)
 
-## Screenshots
+3. **Set Allergens & Dietary Preferences**  
+   Filter out ingredients that conflict with dietary restrictions like gluten-free, vegan, or specific allergens such as nuts or dairy.  
+   ![Allergen Selection](./assets/Allergy.png)
 
-![Ingredients](./assets/Ingredients.png)
-![Recipes](./assets/Recipes.png)
+4. **Smart Recipe Suggestions**  
+   Based on what’s in your fridge (and what’s not), the app flags incompatible items and generates curated recipe ideas, factoring in:
+   - Cooking time
+   - Difficulty level
+   - Ingredients you’re missing  
+   ![Recipe Suggestions](./assets/Recipes.png)
 
-## Getting Started
+---
+
+## ✨ Key Features
+
+- 📸 **Photo-based ingredient recognition**  
+- 🍽️ **Tailored recipe recommendations**  
+- ⚠️ **Allergen detection and dietary filters**  
+- 🕒 **Smart sorting by prep time, difficulty, and availability**  
+- 🌓 **Responsive UI with dark/light mode**
+
+---
+
+## 🛠 Tech Stack
+
+- **Framework:** Next.js 15, React 19  
+- **Language:** TypeScript  
+- **Styling:** Tailwind CSS  
+- **UI Components:** [shadcn/ui](https://ui.shadcn.com)  
+- **Animations:** Framer Motion  
+
+---
+
+## 🚀 Getting Started
 
 ### Prerequisites
 
@@ -33,29 +57,21 @@ A Next.js application that uses AI to analyze your refrigerator contents and sug
 
 ### Installation
 
-1. Clone the repository:
-
 ```bash
 git clone https://github.com/yourusername/kitchen-copilot-frontend.git
 cd kitchen-copilot-frontend
-```
-
-2. Install dependencies:
-
-```bash
 npm install
-# or
-yarn install
 ```
 
-3. Create a `.env.local` file in the root directory with the following variables:
+### Configure Environment Variables
+Create a `.env.local` file in the root directory with the following variables:
 
 ```
 NEXT_PUBLIC_API_URL=your_api_url_here
 NEXT_PUBLIC_FUNCTION_KEY=your_function_key_here
 ```
 
-4. Start the development server:
+### Run the App
 
 ```bash
 npm run dev
@@ -65,7 +81,7 @@ yarn dev
 
 5. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
 
-## Project Structure
+## 📁 Project Structure
 
 - `/src/app` - Next.js app router pages
 - `/src/components` - React components
@@ -74,13 +90,13 @@ yarn dev
 - `/src/lib` - Utility functions and API client
 - `/src/types` - TypeScript type definitions
 
-## Available Scripts
+## 📜 Scripts
 
 - `npm run dev` - Start the development server
 - `npm run build` - Build the application for production
 - `npm start` - Start the production server
 - `npm run lint` - Run ESLint
 
-## License
+## 📄 License
 
 This project is licensed under the MIT License.
