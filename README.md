@@ -2,10 +2,6 @@
 
 A sleek Next.js web application that uses AI to analyze your refrigerator contents from photos and generate smart, personalized recipes based on what you have — factoring in your dietary needs, allergens, missing ingredients, and cooking preferences.
 
----
-
-## 🧠 What It Does
-
 ## 🧠 What It Does
 
 ### 1. Image Upload  
@@ -15,8 +11,6 @@ Snap or upload a photo of your fridge. Our AI scans the photo to detect individu
   <img src="./assets/ImageUpload.png" alt="Image Upload" width="600"/>
 </p>
 
----
-
 ### 2. Ingredient Detection  
 Instantly see a list of recognized ingredients. You can also manually edit or add missing ones.
 
@@ -24,16 +18,12 @@ Instantly see a list of recognized ingredients. You can also manually edit or ad
   <img src="./assets/Ingredients.png" alt="Detected Ingredients" width="600"/>
 </p>
 
----
-
 ### 3. Set Allergens & Dietary Preferences  
 Filter out ingredients that conflict with dietary restrictions like gluten-free, vegan, or specific allergens such as nuts or dairy.
 
 <p align="center">
   <img src="./assets/Allergy.png" alt="Allergen Selection" width="600"/>
 </p>
-
----
 
 ### 4. Smart Recipe Suggestions  
 Based on what’s in your fridge (and what’s not), the app flags incompatible items and generates curated recipe ideas, factoring in:
@@ -46,9 +36,6 @@ Based on what’s in your fridge (and what’s not), the app flags incompatible 
   <img src="./assets/Recipes.png" alt="Recipe Suggestions" width="600"/>
 </p>
 
-
----
-
 ## ✨ Key Features
 
 - 📸 **Photo-based ingredient recognition**  
@@ -57,8 +44,6 @@ Based on what’s in your fridge (and what’s not), the app flags incompatible 
 - 🕒 **Smart sorting by prep time, difficulty, and availability**  
 - 🌓 **Responsive UI with dark/light mode**
 
----
-
 ## 🛠 Tech Stack
 
 - **Framework:** Next.js 15, React 19  
@@ -66,8 +51,6 @@ Based on what’s in your fridge (and what’s not), the app flags incompatible 
 - **Styling:** Tailwind CSS  
 - **UI Components:** [shadcn/ui](https://ui.shadcn.com)  
 - **Animations:** Framer Motion  
-
----
 
 ## 🚀 Getting Started
 
