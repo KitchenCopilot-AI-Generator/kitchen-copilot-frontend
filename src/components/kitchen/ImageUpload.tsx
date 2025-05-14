@@ -14,7 +14,6 @@ interface ImageUploadProps {
 
 export function ImageUpload({ onAnalysisComplete, onUploadStart }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
@@ -49,17 +48,6 @@ export function ImageUpload({ onAnalysisComplete, onUploadStart }: ImageUploadPr
       onUploadStart();
       setUploading(true);
       
-      // Simulate progress for better UX (actual upload might be faster/slower)
-      const progressInterval = setInterval(() => {
-        setUploadProgress((prev) => {
-          const newProgress = prev + 10;
-          if (newProgress >= 90) {
-            clearInterval(progressInterval);
-            return 90;
-          }
-          return newProgress;
-        });
-      }, 300);
 
       // Get the original file from the file input
       const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
@@ -70,9 +58,6 @@ export function ImageUpload({ onAnalysisComplete, onUploadStart }: ImageUploadPr
       const file = fileInput.files[0];
       const result = await analyzeImage(file);
       
-      // Complete the progress bar
-      clearInterval(progressInterval);
-      setUploadProgress(100);
       
       onAnalysisComplete(result);
       
@@ -82,7 +67,6 @@ export function ImageUpload({ onAnalysisComplete, onUploadStart }: ImageUploadPr
       console.error('Upload error:', error);
     } finally {
       setUploading(false);
-      setUploadProgress(0); // Reset progress
     }
   };
 
@@ -140,7 +124,7 @@ export function ImageUpload({ onAnalysisComplete, onUploadStart }: ImageUploadPr
 
       {uploading && (
         <div className="space-y-2">
-          <Progress value={uploadProgress} className="h-2" />
+          <Progress value={undefined} className="h-2" />
           <p className="text-xs text-center text-muted-foreground">
             Analyzing your ingredients...
           </p>
